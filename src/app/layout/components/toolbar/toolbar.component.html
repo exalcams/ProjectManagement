@@ -1,0 +1,31 @@
+<mat-toolbar class="p-0 mat-elevation-z1">
+
+    <div fxFlex fxFill fxLayout="row" fxLayoutAlign="start center">
+
+        <div class="ml-48 my-8" fxFlex="1 0 auto" fxLayout="column" fxLayoutAlign="start start">
+            <div fxFlex class="h2">Dashoboard</div>
+            <div fxFlex fxLayoutAlign="start start">
+                <span class="dayColor h5 mr-12">{{CurrentDate | date:'EEEE'}},</span>
+                <span class="h5">{{CurrentDate | date:'dd MMMM yyyy'}}</span>
+            </div>
+        </div>
+        <div fxFlex="0 1 auto" class="mr-12" fxLayout="row" fxLayoutAlign="end center">
+            <div class="search-wrapper" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon class="s-16" svgIcon="searchIcon"></mat-icon>
+                    <input [(ngModel)]="searchText" type="text" placeholder="Search" fxFlex>
+                </div>
+            </div>
+        </div>
+
+        <div fxFlex="0 1 auto" fxLayout="row" fxLayoutAlign="start center">
+            <span class="username" fxHide fxShow.gt-sm>{{CurrentLoggedInUser}}</span>
+            <img class="avatar1 mx-12" [src]="CurrentLoggedInUserProfile">
+            <div class="toolbar-separator"></div>
+            <!-- <mat-icon class="mx-12 powerIconCls" svgIcon="powerIcon"></mat-icon> -->
+            <mat-icon class="mx-12" svgIcon="powerOffIcon"></mat-icon>
+        </div>
+
+    </div>
+
+</mat-toolbar>

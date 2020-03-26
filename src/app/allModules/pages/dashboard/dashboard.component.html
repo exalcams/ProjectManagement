@@ -1,0 +1,154 @@
+<div id="dashboard" class="page-layout carded" fusePerfectScrollbar>
+  <div class="center" fxLayout="column" fxLayoutGap="10px">
+
+    <!-- <mat-card class="p-8 pt-4 pb-0 m-0">
+      <div fxLayout>
+        <div fxFlex fxLayoutAlign="start center" class="h2">
+          <b>Dashboard</b>
+        </div>
+      </div>
+    </mat-card> -->
+    <div class="sidenav-content mt-4" fxFlex fxLayout>
+      <div fxFlex="70">
+        <div>
+          <mat-card class="tile m-12 p-12" fxFlex fxLayout="column">
+            <div fxFlex fxLayout>
+              <div fxFlex>
+                <img src="assets/images/dashboard/new.png">
+              </div>
+              <div fxFlex>
+                <div class="borderBottom">
+                  New
+                </div>
+              </div>
+            </div>
+            <div fxFlex fxLayout class="my-8">
+              <div fxFlex="40" fxLayoutAlign="end start">
+                <span class="h1 mr-8">25</span>
+              </div>
+              <div fxFlex="60" fxLayoutAlign="center center">
+                <span class="subTitle">tasks for today</span>
+              </div>
+            </div>
+          </mat-card>
+          <mat-card class="tile m-12 p-12" fxFlex fxLayout="column">
+            <div fxFlex fxLayout>
+              <div fxFlex>
+                <img src="assets/images/dashboard/open.png">
+              </div>
+              <div fxFlex>
+                <div class="borderBottom">
+                  Open
+                </div>
+              </div>
+            </div>
+            <div fxFlex fxLayout class="my-8">
+              <div fxFlex="40" fxLayoutAlign="end start">
+                <span class="h1 mr-8">13</span>
+              </div>
+              <div fxFlex="60" fxLayoutAlign="start center">
+                <span class="subTitle">/ 25</span>
+              </div>
+            </div>
+          </mat-card>
+
+          <mat-card class="tile m-12 p-12" fxFlex fxLayout="column">
+            <div fxFlex fxLayout>
+              <div fxFlex>
+                <img src="assets/images/dashboard/escalate.png">
+              </div>
+              <div fxFlex>
+                <div class="borderBottom">
+                  Escalated
+                </div>
+              </div>
+            </div>
+            <div fxFlex fxLayout class="my-8">
+              <div fxFlex="40" fxLayoutAlign="end start">
+                <span class="h1 mr-8">02</span>
+              </div>
+              <div fxFlex="60" fxLayoutAlign="center center">
+                <span class="subTitle">issues for today</span>
+              </div>
+            </div>
+          </mat-card>
+
+          <mat-card class="tile m-12 p-12" fxFlex fxLayout="column">
+            <div fxFlex fxLayout>
+              <div fxFlex>
+                <img src="assets/images/dashboard/reWork.png">
+              </div>
+              <div fxFlex>
+                <div class="borderBottom">
+                  Rework
+                </div>
+              </div>
+            </div>
+            <div fxFlex fxLayout class="my-8">
+              <div fxFlex="40" fxLayoutAlign="end start">
+                <span class="h1 mr-8">01</span>
+              </div>
+              <div fxFlex="60" fxLayoutAlign="center center">
+                <span class="subTitle">issues for today</span>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+        <div fxLayout="column" class="mt-12 mx-12">
+          <div flex class="mt-10">
+            <div class="tableData" #TABLE>
+              <div style="overflow-x:auto;overflow-y:hidden ;">
+                <table class="table" mat-table [dataSource]="dataSource" matSort [@animateStagger]="{value:'50'}">
+
+                  <ng-container matColumnDef="TaskGroup">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Task Group </th>
+                    <td mat-cell *matCellDef="let element"> {{element.TaskGroup}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="TaskSubGroup">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Task Sub-Group </th>
+                    <td mat-cell *matCellDef="let element"> {{element.TaskSubGroup}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="Task">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Task </th>
+                    <td mat-cell *matCellDef="let element"> {{element.Task}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="Report">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Report </th>
+                    <td mat-cell *matCellDef="let element"> {{element.Report}} </td>
+                  </ng-container>
+
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;" matRipple style=" cursor: pointer;"></tr>
+                </table>
+                <!-- <div *ngIf="!allInvoiceDetails?.length">
+                  <mat-icon svgIcon="infoIcon" style="color: #1b56ca;margin-top: 10px;margin-left: 70px"></mat-icon>
+                  <span style="margin-left: 10px;">The table does not contain any data</span>
+                </div> -->
+              </div>
+            </div>
+          </div>
+          <div flex>
+            <mat-paginator [pageSizeOptions]="[10, 20, 30, 50, 75, 100]" showFirstLastButtons>
+            </mat-paginator>
+          </div>
+        </div>
+
+      </div>
+      <div fxFlex="30">
+        <div class="rightCard my-4 topLeftBorderRadius">
+        <div class="h2 m-8 ml-24 pt-12">Open Tickets (5)</div>
+        </div>
+        <div class="rightCard">
+          <div class="h2 m-8 ml-24 pt-12">Activity</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
+  </mat-progress-spinner>
+  <div id="overlay" *ngIf="isProgressBarVisibile"></div>
+</div>
