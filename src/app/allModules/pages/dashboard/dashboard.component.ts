@@ -42,7 +42,8 @@ export class DashboardComponent implements OnInit {
     selection = new SelectionModel<any>(true, []);
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
-
+    AllTickets: any[] = [];
+    AllActivities: any[] = [];
     constructor(
         private _router: Router,
         private _dashboardService: DashboardService,
@@ -77,11 +78,24 @@ export class DashboardComponent implements OnInit {
             { TaskGroup: '', TaskSubGroup: '', Task: '', Report: '' },
             { TaskGroup: '', TaskSubGroup: '', Task: '', Report: '' },
             { TaskGroup: '', TaskSubGroup: '', Task: '', Report: '' },
-        ]
+        ];
 
         this.dataSource = new MatTableDataSource(
             allInvoiceDetails
         );
+
+        this.AllTickets = [
+            { TicketNo: '1234', TicketDate: new Date(), Comment: 'Heading for ticket will come here' },
+            { TicketNo: '1235', TicketDate: new Date(), Comment: 'Heading for ticket will come here' },
+            { TicketNo: '1236', TicketDate: new Date(), Comment: 'Heading for ticket will come here' },
+            // { TicketNo: '1237', TicketDate: new Date(), Comment: 'Heading for ticket will come here' }
+        ];
+        this.AllActivities = [
+            { Profile: 'assets/images/avatars/carl.jpg', Interval: '12 min ago', Comment: 'Rupesh uploaded smartfarm file' },
+            { Profile: 'assets/images/avatars/Katina.jpg', Interval: '2 hr ago', Comment: 'Maria uploaded digital file' },
+            { Profile: 'assets/images/avatars/garry.jpg', Interval: '2 hr ago', Comment: 'You assigned @Rupesh to complete illustration' },
+            { Profile: 'assets/images/avatars/Velazquez.jpg', Interval: '1 day ago', Comment: 'Darmendra uploaded smartfarm file' }
+        ];
     }
 
     applyFilter(filterValue: string): void {

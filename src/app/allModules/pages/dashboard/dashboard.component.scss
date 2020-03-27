@@ -8,6 +8,7 @@
   }
   .center {
     padding: 5px !important;
+    background-color: white;
   }
   .cardHeader {
     background-color: #fffdf9;
@@ -109,8 +110,6 @@
       @extend .TablePadFont;
       color: white;
       background-color: #121214;
-      text-align: center !important;
-      padding-left: 88px !important;
     }
 
     td {
@@ -122,6 +121,11 @@
 
     tr {
       height: 40px;
+    }
+
+    .mat-sort-header-container {
+      display: flex;
+      justify-content: center;
     }
   }
 
@@ -161,14 +165,38 @@
       height: 36px;
     }
   }
-  .borderBottom {
+  .redBorderBottom {
     border-bottom: 2px solid #f3705a;
   }
+  .orangeBorderBottom {
+    border-bottom: 2px solid #ffd15c;
+  }
   .rightCard {
-    height: 300px !important;
-    background-color: lightgrey;
+    min-height: 300px !important;
+    background-color: #f5f5f5;
   }
   .topLeftBorderRadius {
     border-top-left-radius: 20px;
+  }
+  .ticketTile {
+    background-color: white;
+    border-left: 5px solid #cccccc;
+  }
+  .italicClass {
+    font-style: italic;
+  }
+  .avatar1 {
+    height: 40px !important;
+    width: 40px !important;
+    margin: 0 8px 0 0;
+    border-radius: 50%;
+    font-size: 17px;
+    font-weight: 500;
+    text-align: center;
+  }
+  .intervalclass {
+    @extend .italicClass;
+    @extend .semiBoldClass;
+    font-size: small;
   }
 }

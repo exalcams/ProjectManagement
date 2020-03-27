@@ -11,13 +11,13 @@
     <div class="sidenav-content mt-4" fxFlex fxLayout>
       <div fxFlex="70">
         <div>
-          <mat-card class="tile m-12 p-12" fxFlex fxLayout="column">
+          <mat-card class="tile m-12 py-12 pl-12 pr-0" fxFlex fxLayout="column">
             <div fxFlex fxLayout>
               <div fxFlex>
                 <img src="assets/images/dashboard/new.png">
               </div>
               <div fxFlex>
-                <div class="borderBottom">
+                <div class="redBorderBottom">
                   New
                 </div>
               </div>
@@ -31,13 +31,13 @@
               </div>
             </div>
           </mat-card>
-          <mat-card class="tile m-12 p-12" fxFlex fxLayout="column">
+          <mat-card class="tile m-12 py-12 pl-12 pr-0" fxFlex fxLayout="column">
             <div fxFlex fxLayout>
               <div fxFlex>
                 <img src="assets/images/dashboard/open.png">
               </div>
               <div fxFlex>
-                <div class="borderBottom">
+                <div class="orangeBorderBottom">
                   Open
                 </div>
               </div>
@@ -52,13 +52,13 @@
             </div>
           </mat-card>
 
-          <mat-card class="tile m-12 p-12" fxFlex fxLayout="column">
+          <mat-card class="tile m-12 py-12 pl-12 pr-0" fxFlex fxLayout="column">
             <div fxFlex fxLayout>
               <div fxFlex>
                 <img src="assets/images/dashboard/escalate.png">
               </div>
               <div fxFlex>
-                <div class="borderBottom">
+                <div class="redBorderBottom">
                   Escalated
                 </div>
               </div>
@@ -73,13 +73,13 @@
             </div>
           </mat-card>
 
-          <mat-card class="tile m-12 p-12" fxFlex fxLayout="column">
+          <mat-card class="tile m-12 py-12 pl-12 pr-0" fxFlex fxLayout="column">
             <div fxFlex fxLayout>
               <div fxFlex>
                 <img src="assets/images/dashboard/reWork.png">
               </div>
               <div fxFlex>
-                <div class="borderBottom">
+                <div class="orangeBorderBottom">
                   Rework
                 </div>
               </div>
@@ -140,10 +140,41 @@
       </div>
       <div fxFlex="30">
         <div class="rightCard my-4 topLeftBorderRadius">
-        <div class="h2 m-8 ml-24 pt-12">Open Tickets (5)</div>
+          <div class="h2 m-8 mx-24 pt-12">Open Tickets (5)</div>
+          <div *ngFor="let ticket of AllTickets;let first=first" class="m-12 ticketTile p-12"
+            [style.border-left-color]="first?'#efb577':'#cccccc'">
+            <div fxLayout>
+              <div fxFlex fxLayoutAlign="start center" class="boldClass">
+                Ticket No : {{ticket.TicketNo}}
+              </div>
+              <div fxFlex fxLayoutAlign="end center" class="italicClass">
+                {{ticket.TicketDate | date:'dd/MM/yyyy'}}
+              </div>
+            </div>
+            <div fxLayout class="mt-8">
+              <div fxFlex>
+                {{ticket.Comment}}
+              </div>
+            </div>
+          </div>
         </div>
         <div class="rightCard">
           <div class="h2 m-8 ml-24 pt-12">Activity</div>
+          <div *ngFor="let activity of AllActivities;let first=first" class="m-12 p-12">
+            <div fxLayout>
+              <div fxFlex="20" fxLayoutAlign="start center" class="boldClass">
+                <img class="avatar1 mx-12" [src]="activity.Profile">
+              </div>
+              <div fxFlex="80" fxLayout="column" class="mt-8">
+                <div fxFlex>
+                  {{activity.Comment}}
+                </div>
+                <div fxFlex class="intervalclass">
+                  {{activity.Interval}}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
