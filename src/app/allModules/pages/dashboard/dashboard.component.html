@@ -139,8 +139,8 @@
 
       </div>
       <div fxFlex="30">
-        <div class="rightCard my-4 topLeftBorderRadius">
-          <div class="h2 m-8 mx-24 pt-12">Open Tickets (5)</div>
+        <div class="rightCard mt-8 mb-4">
+          <div class="h2 m-8 mx-24 pt-12 subHeader">Open Tickets (5)</div>
           <div *ngFor="let ticket of AllTickets;let first=first" class="m-12 ticketTile p-12"
             [style.border-left-color]="first?'#efb577':'#cccccc'">
             <div fxLayout>
@@ -159,7 +159,7 @@
           </div>
         </div>
         <div class="rightCard">
-          <div class="h2 m-8 ml-24 pt-12">Activity</div>
+          <div class="h2 m-8 ml-24 pt-12 subHeader">Activity</div>
           <div *ngFor="let activity of AllActivities;let first=first" class="m-12 p-12">
             <div fxLayout>
               <div fxFlex="20" fxLayoutAlign="start center" class="boldClass">

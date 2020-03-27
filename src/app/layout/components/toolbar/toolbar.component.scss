@@ -66,12 +66,13 @@ toolbar {
   }
   .username {
     font-size: 16px;
+    font-weight: normal;
   }
   .dayColor {
     color: #d87060;
   }
-  .powerIconCls{
-      opacity: 1;
+  .powerIconCls {
+    opacity: 1;
   }
   .search {
     height: 36px;
@@ -94,5 +95,11 @@ toolbar {
       height: 36px;
       border: none;
     }
+  }
+  .boldClass {
+    font-weight: bold;
+  }
+  .toolbarSubtitle {
+    margin-top: -8px;
   }
 }
