@@ -53,11 +53,21 @@ import { FuseSharedModule } from '@fuse/shared.module';
 import { FormsModule } from '@angular/forms';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { DecimalPipe } from '@angular/common';
+import { TaskGroupComponent } from './task-group/task-group.component';
+import { ProjectComponent } from './project/project.component';
 
 const routes = [
     {
         path: 'dashboard',
         component: DashboardComponent
+    },
+    {
+        path: 'task-group',
+        component: TaskGroupComponent
+    },
+    {
+        path: 'project',
+        component: ProjectComponent
     },
     {
         path: '**',
@@ -118,8 +128,10 @@ const routes = [
         FuseWidgetModule,
 
         FormsModule
+
+
     ],
-    declarations: [DashboardComponent],
+    declarations: [DashboardComponent, TaskGroupComponent, ProjectComponent],
     providers: [
         DecimalPipe
     ],
