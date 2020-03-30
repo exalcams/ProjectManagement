@@ -1,0 +1,199 @@
+<div id="chat" class="page-layout carded fullwidth">
+  <div class="center normal" style="margin-top: -27px !important;padding:32px 0px 1px !important;">
+    <div fxLayout class="content-card1">
+      <div fxFlex="30" class="side-bar">
+        <mat-card class="cardHeader p-8" style="height: 52px !important">
+          <div fxLayout fxFlex fxLayoutAlign="center" class="h2">
+            <b>Task Groups (4)</b>
+          </div>
+        </mat-card>
+        <div class="sidenav-header">
+          <mat-toolbar>
+            <mat-toolbar-row fxLayout="row" class="px-8" fxLayoutAlign="space-between center">
+              <div class="search-wrapper" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                  <input [(ngModel)]="searchText" type="text" placeholder="Search" fxFlex>
+                  <mat-icon class="s-16">search</mat-icon>
+                </div>
+              </div>
+            </mat-toolbar-row>
+          </mat-toolbar>
+          <!-- <mat-card> -->
+          <div class="highLight mx-8 my-4 p-8">
+            <div fxLayout fxLayoutAlign="space-between center">
+              <div fxFlex><strong>Tick Number:1234</strong></div>
+              <div fxFlex fxLayoutAlign="end">24 / 03 / 2020</div>
+            </div>
+            <div style="font-size: 11px;margin-bottom: 5px">
+              <span style="margin-right: 10px">Heading for ticket will come here</span>
+            </div>
+          </div>
+          <!-- </mat-card> -->
+          <div class=" mx-8 my-4 p-8">
+            <div fxLayout fxLayoutAlign="space-between center">
+              <div fxFlex><strong>Tick Number:2345</strong></div>
+              <div fxFlex fxLayoutAlign="end">24 / 03 / 2020</div>
+            </div>
+            <div style="font-size: 11px;margin-bottom: 5px">
+              <span style="margin-right: 10px">Heading for ticket will come here</span>
+            </div>
+          </div>
+          <div class=" mx-8 my-4 p-8">
+            <div fxLayout fxLayoutAlign="space-between center">
+              <div fxFlex><strong>Tick Number:3456</strong></div>
+              <div fxFlex fxLayoutAlign="end">24 / 03 / 2020</div>
+            </div>
+            <div style="font-size: 11px;margin-bottom: 5px">
+              <span style="margin-right: 10px">Heading for ticket will come here</span>
+            </div>
+          </div>
+          <div class=" mx-8 my-4 p-8">
+            <div fxLayout fxLayoutAlign="space-between center">
+              <div fxFlex><strong>Tick Number:4567</strong></div>
+              <div fxFlex fxLayoutAlign="end">24 / 03 / 2020</div>
+            </div>
+            <div style="font-size: 11px;margin-bottom: 5px">
+              <span style="margin-right: 10px">Heading for ticket will come here</span>
+            </div>
+          </div>
+          
+          <!-- <mat-card class="mx-8 my-4 p-8">
+            <div fxLayout fxLayoutAlign="space-between center">
+              <div fxFlex>Tick Number:1234</div>
+              <div fxFlex fxLayoutAlign="end">24 / 03 / 2020</div>
+            </div>
+            <div style="font-size: 11px;margin-bottom: 5px">
+              <span style="margin-right: 10px">Heading for ticket will come here</span>
+            </div>
+          </mat-card>
+          <mat-card class="mx-8 my-4 p-8">
+            <div fxLayout fxLayoutAlign="space-between center">
+              <div fxFlex>Tick Number:1234</div>
+              <div fxFlex fxLayoutAlign="end">24 / 03 / 2020</div>
+            </div>
+            <div style="font-size: 11px;margin-bottom: 5px">
+              <span style="margin-right: 10px">Heading for ticket will come here</span>
+            </div>
+          </mat-card>
+          <mat-card class="mx-8 my-4 p-8">
+            <div fxLayout fxLayoutAlign="space-between center">
+              <div fxFlex>Tick Number:1234</div>
+              <div fxFlex fxLayoutAlign="end">24 / 03 / 2020</div>
+            </div>
+            <div style="font-size: 11px;margin-bottom: 5px">
+              <span style="margin-right: 10px">Heading for ticket will come here</span>
+            </div>
+          </mat-card>
+          <mat-card class="mx-8 my-4 p-8">
+            <div fxLayout fxLayoutAlign="space-between center">
+              <div fxFlex>Tick Number:1234</div>
+              <div fxFlex fxLayoutAlign="end">24 / 03 / 2020</div>
+            </div>
+            <div style="font-size: 11px;margin-bottom: 5px">
+              <span style="margin-right: 10px">Heading for ticket will come here</span>
+            </div>
+          </mat-card> -->
+        </div>
+      </div>
+      <div class="borderRight1"></div>
+      <div fxFlex="70" class="side-bar">
+        <mat-card class="cardHeader p-8">
+          <div fxLayout fxFlex class="h2" fxLayoutAlign="end">
+            <!-- <button mat-stroked-button color="warn">Delete</button>
+            <button mat-stroked-button color="warn">Save</button> -->
+            <button mat-raised-button color="warn">Delete</button>
+            <button mat-raised-button color="accent" style="margin-left: 10px">Save</button>
+          </div>
+        </mat-card>
+        <div class="sidenav-content" fxFlex fxLayout="column">
+          <mat-card style="margin-top: 5px;height: 100%;">
+            <form autocomplete="off" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" name="form" novalidate>
+              <div fxLayout="row" fxLayoutAlign="start">
+                <mat-form-field class="pl-8" fxFlex>
+                  <input matInput placeholder="Title">
+                </mat-form-field>
+                <mat-form-field class="pl-8" fxFlex>
+                  <input matInput placeholder="Owner">
+                </mat-form-field>
+                <img style="height: 16px;margin-top: 25px;margin-left: -16px" src="assets/images/logos/add-button.png">
+              </div>
+              <div fxLayout="row" fxLayoutAlign="start">
+                <div fxFlex="50">
+                  <mat-form-field class="pl-8" style="width: 100%;">
+                    <mat-label>Planned Start Date</mat-label>
+                    <input matInput [matDatepicker]="picker">
+                    <mat-datepicker-toggle style="color: #f6b570;" matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="50">
+                  <mat-form-field class="pl-8" style="width: 100%;">
+                    <mat-label>Planned End Date</mat-label>
+                    <input matInput [matDatepicker]="picker1">
+                    <mat-datepicker-toggle style="color: #f6b570;" matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div fxLayout="row" fxLayoutAlign="start">
+                <div fxFlex="50">
+                  <mat-form-field class="pl-8" style="width: 100%;">
+                    <mat-label>Actual Start Date</mat-label>
+                    <input matInput [matDatepicker]="picker2">
+                    <mat-datepicker-toggle style="color: #f6b570;" matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="50">
+                  <mat-form-field class="pl-8" style="width: 100%;">
+                    <mat-label>Actual End Date</mat-label>
+                    <input matInput [matDatepicker]="picker3">
+                    <mat-datepicker-toggle style="color: #f6b570;" matSuffix [for]="picker3"></mat-datepicker-toggle>
+                    <mat-datepicker #picker3></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div fxLayout="row" fxLayoutAlign="start">
+                <mat-form-field class="pl-8" fxFlex>
+                  <input matInput placeholder="Planned Effort (hrs)">
+                </mat-form-field>
+                <mat-form-field class="pl-8" fxFlex>
+                  <input matInput placeholder="Actual Effort (hrs)">
+                </mat-form-field>
+              </div>
+              <div fxLayout="row" fxLayoutAlign="start">
+                <div fxFlex="50">
+                  <mat-form-field class="pl-8" style="width: 100%;">
+                    <mat-label>Project</mat-label>
+                    <mat-select>
+                      <mat-option value=".Net">.Net</mat-option>
+                      <mat-option value="SAP(UI)">SAP(UI)</mat-option>
+                      <mat-option value="SAP(AB)">SAP(AB)</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="50" class="pl-8" style="width: 100%;">
+                </div>
+              </div>
+              <div fxLayout="row" fxLayoutAlign="start">
+                <div>
+                  <span><strong>Task Sub-Group</strong></span>
+                  <div class="borderclass"></div>
+                </div>
+                <img style="height: 15px;margin-left: 10px" src="assets/images/logos/add-button.png">
+              </div>
+              <div fxLayout>
+                <div fxFlex fxLayoutAlign="end">
+                  <button mat-fab style="background-color: #f6b570">
+                    <mat-icon style="color: white;">add</mat-icon>
+                  </button>
+                  <!-- <button mat-raised-button color="accent" (click)="SubmitClicked()">Submit</button> -->
+                </div>
+              </div>
+            </form>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
