@@ -1,12 +1,13 @@
-import { NgModule } from '@angular/core';	
-import {CommonModule} from "@angular/common";	
-import { CustomDatePipe } from './custom-date-pipe';	
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { CustomDatePipe } from './custom-date-pipe';
+import { RemoveLeadingZeroPipe } from './remove-leading-zero-pipe';
 
 
- @NgModule({	
-  declarations:[CustomDatePipe],	
-  imports:[CommonModule],	
-  exports:[CustomDatePipe] 	
-})	
+@NgModule({
+  declarations: [CustomDatePipe, RemoveLeadingZeroPipe],
+  imports: [CommonModule],
+  exports: [CustomDatePipe, RemoveLeadingZeroPipe]
+})
 
- export class SharedModule{} 
+export class SharedModule { } 

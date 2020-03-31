@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation, Compiler } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { delay, filter, take, takeUntil } from 'rxjs/operators';
@@ -7,6 +7,10 @@ import { FuseNavigationService } from '@fuse/components/navigation/navigation.se
 import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
 import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 import { AuthenticationDetails } from 'app/models/master';
+import { AuthService } from 'app/services/auth.service';
+import { MatDialog, MatSnackBar } from '@angular/material';
+import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
+import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 
 @Component({
     selector: 'navbar-vertical-style-1',
@@ -21,6 +25,8 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy {
     CurrentLoggedInUser: string;
     CurrentLoggedInUserProfile: string;
     CurrentLoggedInUserEmailAddress: string;
+    isShowIcon: boolean;
+    notificationSnackBarComponent: NotificationSnackBarComponent;
 
     // Private
     private _fusePerfectScrollbar: FusePerfectScrollbarDirective;
@@ -38,13 +44,19 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy {
         private _fuseConfigService: FuseConfigService,
         private _fuseNavigationService: FuseNavigationService,
         private _fuseSidebarService: FuseSidebarService,
-        private _router: Router
+        private _router: Router,
+        private _authService: AuthService,
+        private _compiler: Compiler,
+        public dialog: MatDialog,
+        public snackBar: MatSnackBar,
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
         this.CurrentLoggedInUser = 'Support';
         this.CurrentLoggedInUserEmailAddress = 'support@exalca.com';
         this.CurrentLoggedInUserProfile = 'assets/images/avatars/support.png';
+        this.isShowIcon = true;
+        this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -135,9 +147,9 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy {
             this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
             this.CurrentLoggedInUser = this.authenticationDetails.displayName;
             this.CurrentLoggedInUserEmailAddress = this.authenticationDetails.emailAddress;
-            if (this.authenticationDetails.profile && this.authenticationDetails.profile !== 'Empty') {
-                this.CurrentLoggedInUserProfile = this.authenticationDetails.profile;
-            }
+            // if (this.authenticationDetails.profile && this.authenticationDetails.profile !== 'Empty') {
+            //     this.CurrentLoggedInUserProfile = this.authenticationDetails.profile;
+            // }
         }
         this.toggleSidebarFolded();
     }
@@ -159,6 +171,8 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy {
      * Toggle sidebar opened status
      */
     toggleSidebarOpened(): void {
+        // console.log('Called')
+        this.isShowIcon = true;
         this._fuseSidebarService.getSidebar('navbar').toggleOpen();
     }
 
@@ -166,6 +180,34 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy {
      * Toggle sidebar folded status
      */
     toggleSidebarFolded(): void {
+        this.isShowIcon = !this.isShowIcon;
         this._fuseSidebarService.getSidebar('navbar').toggleFold();
+
+        // console.log(test.folded());
+        // }
+        // else{
+        //     this.isShowIcon=false;
+        //     this._fuseSidebarService.getSidebar('navbar').toggleFold();
+        // }
+
+    }
+
+    logOutClick(): void {
+        this._authService.SignOut(this.authenticationDetails.userID).subscribe(
+            (data) => {
+                localStorage.removeItem('authorizationData');
+                localStorage.removeItem('menuItemsData');
+                localStorage.removeItem('userPreferenceData');
+                this._compiler.clearCache();
+                this._router.navigate(['auth/login']);
+                this.notificationSnackBarComponent.openSnackBar('Signed out successfully', SnackBarStatus.success);
+            },
+            (err) => {
+                console.error(err);
+                this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+            }
+        );
+        // this._router.navigate(['auth/login']);
+        // this.notificationSnackBarComponent.openSnackBar('Signed out successfully', SnackBarStatus.success);
     }
 }

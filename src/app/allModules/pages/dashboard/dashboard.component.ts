@@ -35,8 +35,10 @@ export class DashboardComponent implements OnInit {
     displayedColumns: string[] = [
         'TaskGroup',
         'TaskSubGroup',
-        'Task',
-        'Report',
+        'TaskName',
+        'OwnerName',
+        'PlannedCompletionDate',
+        'Status'
     ];
     dataSource = new MatTableDataSource<any>();
     selection = new SelectionModel<any>(true, []);

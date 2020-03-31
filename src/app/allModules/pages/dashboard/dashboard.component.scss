@@ -1,5 +1,11 @@
 @import "src/@fuse/scss/fuse";
 #dashboard {
+  .topbarClass {
+    background: url("/assets/images/backgrounds/header 2.png") no-repeat;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
   .progressBarPostion {
     position: absolute !important;
     top: 350px;

@@ -179,8 +179,16 @@ navbar {
 
             .navbar-content {
                 flex: 1 1 auto;
-                padding-top: 32px;
+                //padding-top: 32px;
             }
         }
     }
+}
+
+.borderTop {
+  border-top-color: white !important;
+}
+.powerClass {
+  cursor: pointer !important;
+  //height: 25px;
 }
