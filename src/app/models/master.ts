@@ -4,7 +4,7 @@ export class UserWithRole {
     UserID: Guid;
     RoleID: Guid;
     UserName: string;
-    Plant:string;
+    Plant: string;
     Email: string;
     Password: string;
     ContactNumber: string;

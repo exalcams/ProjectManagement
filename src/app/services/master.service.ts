@@ -14,13 +14,13 @@ export class MasterService {
   baseAddress: string;
   NotificationEvent: Subject<any>;
 
-    GetNotification(): Observable<any> {
-        return this.NotificationEvent.asObservable();
-    }
+  GetNotification(): Observable<any> {
+    return this.NotificationEvent.asObservable();
+  }
 
-    TriggerNotification(eventName: string): void {
-        this.NotificationEvent.next(eventName);
-    }
+  TriggerNotification(eventName: string): void {
+    this.NotificationEvent.next(eventName);
+  }
 
   constructor(private _httpClient: HttpClient, private _authService: AuthService) {
     this.baseAddress = _authService.baseAddress;
@@ -71,10 +71,10 @@ export class MasterService {
       .pipe(catchError(this.errorHandler));
   }
 
-   // Reason
-   CreateReason(reason: Reason): Observable<any> {
+  // Reason
+  CreateReason(reason: Reason): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}api/Master/CreateReason`,
-    reason,
+      reason,
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'
@@ -90,7 +90,7 @@ export class MasterService {
 
   UpdateReason(reason: Reason): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}api/Master/UpdateReason`,
-    reason,
+      reason,
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'
@@ -101,7 +101,7 @@ export class MasterService {
 
   DeleteReason(reason: Reason): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}api/Master/DeleteReason`,
-    reason,
+      reason,
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'
@@ -169,21 +169,8 @@ export class MasterService {
 
   CreateUser(user: UserWithRole): Observable<any> {
 
-    const formData: FormData = new FormData();
-    // if (selectedFile) {
-    //   formData.append('selectedFile', selectedFile, selectedFile.name);
-    // }
-    // formData.append('UserID', user.UserID.toString());
-    formData.append('UserName', user.UserName);
-    formData.append('Plant', user.Plant);
-    formData.append('Email', user.Email);
-    formData.append('ContactNumber', user.ContactNumber);
-    formData.append('Password', user.Password);
-    formData.append('RoleID', user.RoleID.toString());
-    formData.append('CreatedBy', user.CreatedBy);
-
     return this._httpClient.post<any>(`${this.baseAddress}api/Master/CreateUser`,
-      formData,
+      user,
       // {
       //   headers: new HttpHeaders({
       //     'Content-Type': 'application/json'
@@ -199,21 +186,8 @@ export class MasterService {
   }
 
   UpdateUser(user: UserWithRole): Observable<any> {
-    const formData: FormData = new FormData();
-    // if (selectedFile) {
-    //   formData.append('selectedFile', selectedFile, selectedFile.name);
-    // }
-    formData.append('UserID', user.UserID.toString());
-    formData.append('UserName', user.UserName);
-    formData.append('Plant', user.Plant);
-    formData.append('Email', user.Email);
-    formData.append('ContactNumber', user.ContactNumber);
-    formData.append('Password', user.Password);
-    formData.append('RoleID', user.RoleID.toString());
-    formData.append('CreatedBy', user.CreatedBy);
-    formData.append('ModifiedBy', user.ModifiedBy);
     return this._httpClient.post<any>(`${this.baseAddress}api/Master/UpdateUser`,
-      formData,
+      user,
       // {
       //   headers: new HttpHeaders({
       //     'Content-Type': 'application/json'
@@ -242,10 +216,10 @@ export class MasterService {
   UpdateNotification(SelectedNotification: UserNotification): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}api/Notification/UpdateNotification`,
       SelectedNotification, {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json'
-        })
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
       })
+    })
       .pipe(catchError(this.errorHandler));
   }
 

@@ -1,18 +1,137 @@
-<div id="chat" class="page-layout carded fullwidth inner-scroll">
-  <div class="top-bg topBg"></div>
-  <div class="center">
-      <div class="content-card">
-          <mat-sidenav-container>
-              <mat-sidenav class="sidenav" position="start" opened="true" mode="side" fuseMatSidenavHelper="chat-left-sidenav"
-                  matIsLockedOpen="gt-md">
-                  <user-side-bar [AllUsers]="AllUsers" (UserSelectionChanged)="OnUserSelectionChanged($event)">
-                  </user-side-bar>
-              </mat-sidenav>
-              <user-main-content [currentSelectedUser]="SelectedUser" (SaveSucceed)='RefreshAllUsers($event)'
-                  (ShowProgressBarEvent)="OnShowProgressBarEvent($event)">
-              </user-main-content>
-          </mat-sidenav-container>
-          <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="ProgressBarPostion" color="accent" mode="indeterminate"></mat-progress-spinner>
-      </div>
-  </div>
+<div id="chat" class="page-layout carded fullwidth">
+    <div class="center normal" style="margin-top: -27px !important;padding:32px 0px 1px !important;">
+        <div fxLayout class="content-card1">
+            <div fxFlex="30" class="side-bar">
+                <mat-card class="cardHeader p-8" style="height: 52px !important;background-color: #fffdf9;">
+                    <div fxLayout fxFlex fxLayoutAlign="center" class="h2">
+                        <b>Users ({{AllUsers.length}})</b>
+                    </div>
+                </mat-card>
+                <div class="sidenav-header">
+                    <mat-toolbar>
+                        <mat-toolbar-row fxLayout="row" class="px-8" fxLayoutAlign="space-between center">
+                            <div class="search-wrapper" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                                <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                                    <input [(ngModel)]="searchText" type="text" placeholder="Search" fxFlex>
+                                    <mat-icon class="s-16">search</mat-icon>
+                                </div>
+                            </div>
+                        </mat-toolbar-row>
+                    </mat-toolbar>
+                </div>
+
+                <div class="sidenav-content" fusePerfectScrollbar fxFlex>
+                    <div *ngFor="let usr of AllUsers | filter: searchText">
+                        <div [attr.aria-label]="usr.UserName">
+                            <div class="mx-8 my-4 p-8" (click)="loadSelectedUser(usr)"
+                                [ngClass]="{'active accent2':selectID==usr.UserID}">
+                                <div fxLayout fxLayoutAlign="space-between center">
+                                    <div fxFlex><strong>{{usr.UserName}}</strong></div>
+                                </div>
+                                <div style="font-size: 11px">
+                                    <div style="margin-top: 10px;color: #2e2e2e">
+                                        <span style="margin-right: 10px">{{usr.UserName}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="(AllUsers | filter: searchText).length === 0" class="no-results-message">
+                        <span class="pl-12"> No results..</span>
+                    </div>
+                </div>
+            </div>
+            <div class="borderRight1"></div>
+            <div fxFlex="70" class="side-bar">
+                <mat-card class="cardHeader p-8" style="background-color: #fffdf9;">
+                    <div fxLayout fxFlex class="h2" fxLayoutAlign="end">
+                        <button (click)="DeleteClicked()" class="DeleteBtn mr-12" *ngIf="SelectedUser.UserID"
+                            mat-stroked-button>
+                            Delete</button>
+                        <button mat-raised-button class="mr-12" (click)="ResetControl()" *ngIf="!SelectedUser.UserID">
+                            Clear
+                        </button>
+                        <button (click)="SaveClicked()" class="SaveBtn" mat-raised-button>
+                            {{SelectedUser.UserID?'Update':'Create'}}</button>
+                    </div>
+                </mat-card>
+                <div class="sidenav-content" fxFlex fxLayout="column">
+                    <mat-card style="margin-top: 5px;height: 100%;">
+                        <form autocomplete="off" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" name="form"
+                            novalidate [formGroup]="userMainFormGroup">
+                            <div fxLayout="row" fxLayoutAlign="start">
+
+                                <mat-form-field class="pl-8" fxFlex="50">
+                                    <input matInput placeholder="User Name" formControlName="userName">
+                                    <mat-error
+                                        *ngIf="userMainFormGroup.get('userName').touched &&  userMainFormGroup.get('userName').hasError('required')">
+                                        User
+                                        Name required</mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="pl-8" fxFlex="50">
+                                    <input matInput placeholder="Email ID" formControlName="email">
+                                    <mat-error
+                                        *ngIf="userMainFormGroup.get('email').touched && userMainFormGroup.get('email').hasError('required')">
+                                        Email is required
+                                    </mat-error>
+                                    <mat-error *ngIf="userMainFormGroup.get('email').touched && !userMainFormGroup.get('email').hasError('required') &&
+                                            userMainFormGroup.get('email').hasError('email')">
+                                        Please enter a valid email address
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div fxLayout="row" fxLayoutAlign="start">
+
+                                <mat-form-field class="pl-8" fxFlex="50">
+                                    <input matInput placeholder="Mobile Number"
+                                        pattern="^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$" formControlName="contactNumber">
+                                    <mat-error
+                                        *ngIf="userMainFormGroup.get('contactNumber').touched && userMainFormGroup.get('contactNumber').hasError('required')">
+                                        Mobile Number is required
+                                    </mat-error>
+                                    <mat-error *ngIf="userMainFormGroup.get('contactNumber').touched && !userMainFormGroup.get('contactNumber').hasError('required') &&
+                                            userMainFormGroup.get('contactNumber').hasError('pattern')">
+                                        Please enter a valid Mobile Number
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field class="pl-8" fxFlex="50">
+                                    <mat-select placeholder="Role Name" formControlName="roleID">
+                                        <mat-option *ngFor="let rol of AllRoles" [value]="rol.RoleID">{{rol.RoleName}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error
+                                        *ngIf="userMainFormGroup.get('roleID').touched && userMainFormGroup.get('roleID').hasError('required')">
+                                        Role
+                                        Name required</mat-error>
+                                </mat-form-field>
+
+                            </div>
+                            <!-- <div fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto">
+                                <mat-form-field class="pl-8" fxFlex="50">
+                                    <input matInput placeholder="Plant" formControlName="plant">
+                                    <mat-error
+                                        *ngIf="userMainFormGroup.get('plant').touched &&  userMainFormGroup.get('plant').hasError('required')">
+                                        Plant required</mat-error>
+                                </mat-form-field>
+                            </div> -->
+                        </form>
+                    </mat-card>
+                </div>
+                <div fxLayout>
+                    <div fxFlex fxLayoutAlign="end">
+                      <button class="floatBtn" mat-fab (click)="ResetControl()">
+                        <mat-icon style="color: white;">add</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+            </div>
+        </div>
+        <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent"
+            mode="indeterminate">
+        </mat-progress-spinner>
+        <div id="overlay" *ngIf="IsProgressBarVisibile"></div>
+    </div>
 </div>
