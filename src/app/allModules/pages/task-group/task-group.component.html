@@ -43,7 +43,7 @@
             </mat-card> -->
           </div>
 
-          <div class=" mx-8 my-4 p-8">
+          <div class="unselecthighLight mx-8 my-4 p-8">
             <div fxLayout fxLayoutAlign="space-between center">
               <div fxFlex><strong>Tick Number:2345</strong></div>
               <div fxFlex fxLayoutAlign="end">24 / 03 / 2020</div>
@@ -54,7 +54,7 @@
               </div>
             </div>
           </div>
-          <div class=" mx-8 my-4 p-8">
+          <div class="unselecthighLight mx-8 my-4 p-8">
             <div fxLayout fxLayoutAlign="space-between center">
               <div fxFlex><strong>Tick Number:3456</strong></div>
               <div fxFlex fxLayoutAlign="end">24 / 03 / 2020</div>
@@ -65,7 +65,7 @@
               </div>
             </div>
           </div>
-          <div class=" mx-8 my-4 p-8">
+          <div class="unselecthighLight mx-8 my-4 p-8">
             <div fxLayout fxLayoutAlign="space-between center">
               <div fxFlex><strong>Tick Number:4567</strong></div>
               <div fxFlex fxLayoutAlign="end">24 / 03 / 2020</div>
@@ -170,13 +170,13 @@
                   </mat-form-field>
                 </div>
                 <div fxFlex="50">
-                  <mat-form-field class="pl-8" style="width: 49%;">
+                  <mat-form-field class="pl-8" style="width: 50%;">
                     <mat-label>Actual Start Date</mat-label>
                     <input matInput [matDatepicker]="picker2">
                     <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                     <mat-datepicker #picker2></mat-datepicker>
                   </mat-form-field>
-                  <mat-form-field class="pl-8" style="width: 49%;">
+                  <mat-form-field class="pl-8" style="width: 50%;">
                     <mat-label>Actual End Date</mat-label>
                     <input matInput [matDatepicker]="picker3">
                     <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
@@ -227,13 +227,13 @@
                       </mat-form-field>
                     </div>
                     <div fxFlex="50">
-                      <mat-form-field class="pl-8" style="width: 49%;">
+                      <mat-form-field class="pl-8" style="width: 50%;">
                         <mat-label>Planned Start Date</mat-label>
                         <input matInput [matDatepicker]="picker4">
                         <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
                         <mat-datepicker #picker4></mat-datepicker>
                       </mat-form-field>
-                      <mat-form-field class="pl-8" style="width: 49%;">
+                      <mat-form-field class="pl-8" style="width: 50%;">
                         <mat-label>Planned End Date</mat-label>
                         <input matInput [matDatepicker]="picker5">
                         <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
@@ -257,16 +257,18 @@
                       </mat-form-field>
                     </div>
                     <div fxFlex="50">
-                      <mat-form-field class="pl-8" style="width: 49%;">
+                      <mat-form-field class="pl-8" style="width: 50%;">
                         <input matInput placeholder="Planned Effort (hrs)">
                       </mat-form-field>
-                      <mat-form-field class="pl-8" style="width: 49%;">
+                      <mat-form-field class="pl-8" style="width: 50%;">
                         <input matInput placeholder="Actual Effort (hrs)">
                       </mat-form-field>
                     </div>
                   </div>
                   <div fxLayout="row" fxLayoutAlign="end">
-                    <img style="height: 20px;" src="assets/images/logos/add-button.png">
+                      <button mat-stroked-button  style="margin-left: 10px;height: 30px;color: #efb577;"><span
+                        style="color: #efb577;">Add</span></button>
+                    <!-- <img style="height: 20px;" src="assets/images/logos/add-button.png"> -->
                   </div>
                   <!-- <div fxLayout="row" fxLayoutAlign="start"> -->
                     <div style="margin-left: 8px;margin-top: 10px;">
