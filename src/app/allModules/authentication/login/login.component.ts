@@ -204,20 +204,6 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.MenuItems.indexOf('Task Group') >= 0) {
-      this.children.push(
-        {
-          id: 'taskGroup',
-          title: 'Task Group',
-          translate: 'NAV.SAMPLE.TITLE',
-          type: 'item',
-          icon: 'taskGroupIcon',
-          isSvgIcon: true,
-          // icon: 'dashboard',
-          url: '/pages/task-group',
-        }
-      );
-    }
     if (this.MenuItems.indexOf('Project') >= 0) {
       this.children.push(
         {
@@ -232,6 +218,35 @@ export class LoginComponent implements OnInit {
         }
       );
     }
+    if (this.MenuItems.indexOf('Task Group') >= 0) {
+      this.children.push(
+        {
+          id: 'taskGroup',
+          title: 'Task Group',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          icon: 'taskGroupIcon',
+          isSvgIcon: true,
+          // icon: 'dashboard',
+          url: '/pages/task-group',
+        }
+      );
+    }
+    if (this.MenuItems.indexOf('Task') >= 0) {
+      this.children.push(
+        {
+          id: 'task',
+          title: 'Task',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          icon: 'taskIcon',
+          isSvgIcon: true,
+          // icon: 'dashboard',
+          url: '/pages/task',
+        }
+      );
+    }
+
     // if (this.MenuItems.indexOf('InvoiceDetails') >= 0) {
     //   this.children.push(
     //     {

@@ -55,6 +55,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { DecimalPipe } from '@angular/common';
 import { TaskGroupComponent } from './task-group/task-group.component';
 import { ProjectComponent } from './project/project.component';
+import { TaskComponent } from './task/task.component';
 
 const routes = [
     {
@@ -68,6 +69,10 @@ const routes = [
     {
         path: 'project',
         component: ProjectComponent
+    },
+    {
+        path: 'task',
+        component: TaskComponent
     },
     {
         path: '**',
@@ -131,7 +136,7 @@ const routes = [
 
 
     ],
-    declarations: [DashboardComponent, TaskGroupComponent, ProjectComponent],
+    declarations: [DashboardComponent, TaskGroupComponent, ProjectComponent, TaskComponent],
     providers: [
         DecimalPipe
     ],
