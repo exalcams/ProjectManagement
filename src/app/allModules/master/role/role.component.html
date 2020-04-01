@@ -1,18 +1,104 @@
-<div id="chat" class="page-layout carded fullwidth inner-scroll">
-  <div class="top-bg topBg"></div>
-  <div class="center">
-      <div class="content-card">
-          <mat-sidenav-container>
-              <mat-sidenav class="sidenav" position="start" opened="true" mode="side" fuseMatSidenavHelper="chat-left-sidenav"
-                  matIsLockedOpen="gt-md">
-                  <role-side-bar [AllRoles]="AllRoles" (RoleSelectionChanged)="OnRoleSelectionChanged($event)">
-                  </role-side-bar>
-              </mat-sidenav>
-              <role-main-content [currentSelectedRole]="SelectedRole" (SaveSucceed)='RefreshAllRoles($event)'
-              (ShowProgressBarEvent)="OnShowProgressBarEvent($event)">
-              </role-main-content>
-          </mat-sidenav-container>
-          <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="ProgressBarPostion" color="accent" mode="indeterminate"></mat-progress-spinner>
-      </div>
-  </div>
+<div id="chat" class="page-layout carded fullwidth">
+    <div class="center normal" style="margin-top: -27px !important;padding:32px 0px 1px !important;">
+        <div fxLayout class="content-card1">
+            <div fxFlex="30" class="side-bar">
+                <mat-card class="cardHeader p-8" style="height: 52px !important;background-color: #fffdf9;">
+                    <div fxLayout fxFlex fxLayoutAlign="center" class="h2">
+                        <b>Roles ({{AllRoles.length}})</b>
+                    </div>
+                </mat-card>
+                <div class="sidenav-header">
+                    <mat-toolbar>
+                        <mat-toolbar-row fxLayout="row" class="px-8" fxLayoutAlign="space-between center">
+                            <div class="search-wrapper" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                                <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                                    <input [(ngModel)]="searchText" type="text" placeholder="Search" fxFlex>
+                                    <mat-icon class="s-16">search</mat-icon>
+                                </div>
+                            </div>
+                        </mat-toolbar-row>
+                    </mat-toolbar>
+                </div>
+
+                <div class="sidenav-content" fusePerfectScrollbar fxFlex>
+                    <div *ngFor="let usr of AllRoles | filter: searchText">
+                        <div [attr.aria-label]="usr.RoleName">
+                            <div class="mx-8 my-4 p-8" (click)="loadSelectedRole(usr)"
+                                [ngClass]="{'active accent2':selectID==usr.RoleID}">
+                                <div fxLayout fxLayoutAlign="space-between center">
+                                    <div fxFlex><strong>{{usr.RoleName}}</strong></div>
+                                </div>
+                                <!-- <div style="font-size: 11px">
+                                    <div style="margin-top: 10px;color: #2e2e2e">
+                                        <span style="margin-right: 10px">{{usr.RoleName}}</span>
+                                    </div>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="(AllRoles | filter: searchText).length === 0" class="no-results-message">
+                        <span class="pl-12"> No results..</span>
+                    </div>
+                </div>
+            </div>
+            <div class="borderRight1"></div>
+            <div fxFlex="70" class="side-bar">
+                <mat-card class="cardHeader p-8" style="background-color: #fffdf9;">
+                    <div fxLayout fxFlex class="h2" fxLayoutAlign="end">
+                        <button (click)="DeleteClicked()" class="DeleteBtn mr-12" *ngIf="SelectedRole.RoleID"
+                            mat-stroked-button>
+                            Delete</button>
+                        <button mat-raised-button class="mr-12" (click)="ResetControl()" *ngIf="!SelectedRole.RoleID">
+                            Clear
+                        </button>
+                        <button (click)="SaveClicked()" class="SaveBtn" mat-raised-button>
+                            {{SelectedRole.RoleID?'Update':'Create'}}</button>
+                    </div>
+                </mat-card>
+                <div class="sidenav-content" fxFlex fxLayout="column">
+                    <mat-card style="margin-top: 5px;height: 100%;">
+                        <form autocomplete="off" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" name="form"
+                            novalidate [formGroup]="roleMainFormGroup">
+                            <div fxLayout="row" fxLayoutAlign="start">
+                                <mat-form-field fxFlex="100">
+                                    <input matInput placeholder="Role Name" formControlName="roleName">
+                                    <mat-error
+                                        *ngIf="roleMainFormGroup.get('roleName').touched && roleMainFormGroup.get('roleName').hasError('required')">
+                                        Role
+                                        Name required</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto"
+                                *ngIf="roleMainFormGroup.get('roleName').value!=='Administrator'">
+                                <mat-form-field fxFlex="100">
+                                    <mat-select placeholder="App Name" formControlName="appIDList" multiple
+                                        (selectionChange)="OnAppNameChanged()">
+                                        <mat-option *ngFor="let mp of AllMenuApps" [value]="mp.AppID">{{mp.AppName}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error
+                                        *ngIf="roleMainFormGroup.get('appIDList').touched && roleMainFormGroup.get('appIDList').hasError('required')">
+                                        App Name required</mat-error>
+                                </mat-form-field>
+                                <!-- <mat-error *ngIf="roleMainFormGroup.get('appIDList').touched && roleMainFormGroup.get('appIDList').hasError('appIDRequired')">App
+                                    Name required</mat-error>
+                                </mat-form-field> -->
+                            </div>
+                        </form>
+                    </mat-card>
+                </div>
+                <div fxLayout>
+                    <div fxFlex fxLayoutAlign="end">
+                        <button class="floatBtn" mat-fab (click)="ResetControl()">
+                            <mat-icon style="color: white;">add</mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent"
+            mode="indeterminate">
+        </mat-progress-spinner>
+        <div id="overlay" *ngIf="IsProgressBarVisibile"></div>
+    </div>
 </div>
