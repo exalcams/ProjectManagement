@@ -4,9 +4,10 @@
 
 export const environment = {
     production: false,
-    hmr       : false,
-    baseAddress : 'http://localhost:6540/',
-    clientId : 'ngAuthApp'
+    hmr: false,
+    // baseAddress : 'http://localhost:44392/',
+    baseAddress: 'http://localhost:60789/',
+    clientId: 'ngAuthApp'
 };
 
 /*
