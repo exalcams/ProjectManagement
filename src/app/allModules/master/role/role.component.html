@@ -23,8 +23,8 @@
                 <div class="sidenav-content" fusePerfectScrollbar fxFlex>
                     <div *ngFor="let usr of AllRoles | filter: searchText">
                         <div [attr.aria-label]="usr.RoleName">
-                            <div class="mx-8 my-4 p-8" (click)="loadSelectedRole(usr)"
-                                [ngClass]="{'active accent2':selectID==usr.RoleID}">
+                            <div class="mx-8 mb-8 mt-0 p-8 leftCard" (click)="loadSelectedRole(usr)"
+                                [style.border-left-color]="selectID==usr.RoleID?'#efb577':'#cccccc'">
                                 <div fxLayout fxLayoutAlign="space-between center">
                                     <div fxFlex><strong>{{usr.RoleName}}</strong></div>
                                 </div>

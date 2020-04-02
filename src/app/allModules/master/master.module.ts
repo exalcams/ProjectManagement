@@ -5,17 +5,14 @@ import {
     // tslint:disable-next-line:max-line-length
     MatButtonModule, MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule,
     MatStepperModule, MatListModule, MatMenuModule, MatRadioModule, MatSidenavModule, MatToolbarModule,
-    MatSpinner, MatProgressSpinner, MatProgressSpinnerModule, MatTooltip, MatTooltipModule
+    MatProgressSpinnerModule, MatTooltipModule
 } from '@angular/material';
 
 import { FuseSharedModule } from '@fuse/shared.module';
-import { FuseProgressBarModule } from '@fuse/components';
 import { FileUploadModule } from 'ng2-file-upload';
 import { MenuAppComponent } from './menu-app/menu-app.component';
 import { RoleComponent } from './role/role.component';
 import { UserComponent } from './user/user.component';
-import { MenuAppSideBarComponent } from './menu-app/menu-app-side-bar/menu-app-side-bar.component';
-import { MenuAppMainContentComponent } from './menu-app/menu-app-main-content/menu-app-main-content.component';
 import { ReasonComponent } from './reason/reason.component';
 
 const menuRoutes: Routes = [
@@ -41,8 +38,6 @@ const menuRoutes: Routes = [
         UserComponent,
         RoleComponent,
         MenuAppComponent,
-        MenuAppSideBarComponent,
-        MenuAppMainContentComponent,
         ReasonComponent,
     ],
     imports: [

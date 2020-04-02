@@ -1,17 +1,87 @@
-<div id="chat" class="page-layout carded fullwidth inner-scroll">
-  <div class="top-bg topBg"></div>
-  <div class="center">
-      <div class="content-card">
-          <mat-sidenav-container>
-              <mat-sidenav class="sidenav" position="start" opened="true" mode="side" fuseMatSidenavHelper="chat-left-sidenav"
-                  matIsLockedOpen="gt-md">
-                  <menu-app-side-bar [AllMenuApps]="AllMenuApps" (MenuAppSelectionChanged)="OnMenuAppSelectionChanged($event)">
-                  </menu-app-side-bar>
-              </mat-sidenav>
-              <menu-app-main-content [currentSelectedMenuApp]="SelectedMenuApp" (SaveSucceed)='RefreshAllMenuApps($event)'
-                  (ShowProgressBarEvent)="OnShowProgressBarEvent($event)"></menu-app-main-content>
-          </mat-sidenav-container>
-          <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="ProgressBarPostion" color="accent" mode="indeterminate"></mat-progress-spinner>
-      </div>
-  </div>
+<div id="chat" class="page-layout carded fullwidth">
+    <div class="center normal" style="margin-top: -27px !important;padding:32px 0px 1px !important;">
+        <div fxLayout class="content-card1">
+            <div fxFlex="30" class="side-bar">
+                <mat-card class="cardHeader p-8" style="height: 52px !important;background-color: #fffdf9;">
+                    <div fxLayout fxFlex fxLayoutAlign="center" class="h2">
+                        <b>MenuApps ({{AllMenuApps.length}})</b>
+                    </div>
+                </mat-card>
+                <div class="sidenav-header">
+                    <mat-toolbar>
+                        <mat-toolbar-row fxLayout="row" class="px-8" fxLayoutAlign="space-between center">
+                            <div class="search-wrapper" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                                <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                                    <input [(ngModel)]="searchText" type="text" placeholder="Search" fxFlex>
+                                    <mat-icon class="s-16">search</mat-icon>
+                                </div>
+                            </div>
+                        </mat-toolbar-row>
+                    </mat-toolbar>
+                </div>
+
+                <div class="sidenav-content" fusePerfectScrollbar fxFlex>
+                    <div *ngFor="let usr of AllMenuApps | filter: searchText">
+                        <div [attr.aria-label]="usr.MenuAppName">
+                            <div class="mx-8 mb-8 mt-0 p-8 leftCard" (click)="loadSelectedMenuApp(usr)"
+                                [style.border-left-color]="selectID==usr.AppID?'#efb577':'#cccccc'">
+                                <div fxLayout fxLayoutAlign="space-between center">
+                                    <div fxFlex><strong>{{usr.AppName}}</strong></div>
+                                </div>
+                                <!-- <div style="font-size: 11px">
+                                    <div style="margin-top: 10px;color: #2e2e2e">
+                                        <span style="margin-right: 10px">{{usr.MenuAppName}}</span>
+                                    </div>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="(AllMenuApps | filter: searchText).length === 0" class="no-results-message">
+                        <span class="pl-12"> No results..</span>
+                    </div>
+                </div>
+            </div>
+            <div class="borderRight1"></div>
+            <div fxFlex="70" class="side-bar">
+                <mat-card class="cardHeader p-8" style="background-color: #fffdf9;">
+                    <div fxLayout fxFlex class="h2" fxLayoutAlign="end">
+                        <button (click)="DeleteClicked()" class="DeleteBtn mr-12" *ngIf="SelectedMenuApp.AppID"
+                            mat-stroked-button>
+                            Delete</button>
+                        <button mat-raised-button class="mr-12" (click)="ResetControl()" *ngIf="!SelectedMenuApp.AppID">
+                            Clear
+                        </button>
+                        <button (click)="SaveClicked()" class="SaveBtn" mat-raised-button>
+                            {{SelectedMenuApp.AppID?'Update':'Create'}}</button>
+                    </div>
+                </mat-card>
+                <div class="sidenav-content" fxFlex fxLayout="column">
+                    <mat-card style="margin-top: 5px;height: 100%;">
+                        <form autocomplete="off" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" name="form"
+                            novalidate [formGroup]="menuAppMainFormGroup">
+                            <div fxLayout="row wrap" fxLayoutAlign="start" fxFlex="1 0 auto">
+                                <mat-form-field fxFlex="100">
+                                    <input matInput placeholder="App Name" formControlName="appName">
+                                    <mat-error
+                                        *ngIf="menuAppMainFormGroup.get('appName').touched && menuAppMainFormGroup.get('appName').hasError('required')">
+                                        App Name required</mat-error>
+                                </mat-form-field>
+                            </div>
+                        </form>
+                    </mat-card>
+                </div>
+                <div fxLayout>
+                    <div fxFlex fxLayoutAlign="end">
+                        <button class="floatBtn" mat-fab (click)="ResetControl()">
+                            <mat-icon style="color: white;">add</mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent"
+            mode="indeterminate">
+        </mat-progress-spinner>
+        <div id="overlay" *ngIf="IsProgressBarVisibile"></div>
+    </div>
 </div>
