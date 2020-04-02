@@ -23,14 +23,14 @@
                 <div class="sidenav-content" fusePerfectScrollbar fxFlex>
                     <div *ngFor="let usr of AllUsers | filter: searchText">
                         <div [attr.aria-label]="usr.UserName">
-                            <div class="mx-8 my-4 p-8" (click)="loadSelectedUser(usr)"
-                                [ngClass]="{'active accent2':selectID==usr.UserID}">
+                            <div class="mx-8 mb-8 mt-0 p-8 leftCard" (click)="loadSelectedUser(usr)"
+                                [style.border-left-color]="selectID==usr.UserID?'#efb577':'#cccccc'">
                                 <div fxLayout fxLayoutAlign="space-between center">
                                     <div fxFlex><strong>{{usr.UserName}}</strong></div>
                                 </div>
                                 <div style="font-size: 11px">
                                     <div style="margin-top: 10px;color: #2e2e2e">
-                                        <span style="margin-right: 10px">{{usr.email}}</span>
+                                        <span style="margin-right: 10px">{{usr.Email}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -122,11 +122,11 @@
                 </div>
                 <div fxLayout>
                     <div fxFlex fxLayoutAlign="end">
-                      <button class="floatBtn" mat-fab (click)="ResetControl()">
-                        <mat-icon style="color: white;">add</mat-icon>
-                      </button>
+                        <button class="floatBtn" mat-fab (click)="ResetControl()">
+                            <mat-icon style="color: white;">add</mat-icon>
+                        </button>
                     </div>
-                  </div>
+                </div>
             </div>
         </div>
         <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent"

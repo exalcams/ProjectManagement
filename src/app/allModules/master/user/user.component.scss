@@ -225,10 +225,15 @@
     color: white;
   }
   .accent2 {
+    border-left: 5px solid #1b1917 !important;
+  }
+  .leftCard {
     @include mat-elevation(2);
     background: white;
     border-left: 5px solid #efb577;
     margin-left: 20px;
-    margin-top: 8px;
+  }
+  .mat-toolbar-multiple-rows {
+    min-height: 58px !important;
   }
 }
