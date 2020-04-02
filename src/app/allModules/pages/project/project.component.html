@@ -4,9 +4,10 @@
       <div fxFlex="30" class="side-bar">
         <mat-card class="cardHeader p-8" style="height: 52px !important;background-color: #fffdf9;">
           <div fxLayout fxFlex fxLayoutAlign="center" class="h2">
-            <b>Projects (4)</b>
+            <b>Projects ({{this.AllProjectsCount}})</b>
           </div>
         </mat-card>
+
         <div class="sidenav-header">
           <mat-toolbar>
             <mat-toolbar-row fxLayout="row" class="px-8" fxLayoutAlign="space-between center">
@@ -19,22 +20,26 @@
             </mat-toolbar-row>
           </mat-toolbar>
 
-          <mat-card class="highLight mx-8 my-4 p-8">
+          <!-- *ngFor="let project of AllProjects" -->
+          <!-- [ngClass]="{
+            'highLight' : S073R4?.length == 2,
+            'unselecthighLight' : S073R4?.length == 0,
+         }" -->
+          <mat-card class="highLight mx-8 my-4 p-8" *ngFor="let project of AllProjects">
             <div fxLayout fxLayoutAlign="space-between center">
-              <div fxFlex><strong>Project Title:DS</strong></div>
-              <!-- <div fxFlex fxLayoutAlign="end">Owner:MS</div> -->
+              <div fxFlex><strong>Project Title:{{project.Title}}</strong></div>
             </div>
             <div style="font-size: 11px">
               <div style="margin-top: 10px;color: #2e2e2e">
-                <span style="margin-right: 10px">Owner:MS</span>
+                <span style="margin-right: 10px">Owner:{{project.OwnerID}}</span>
               </div>
             </div>
           </mat-card>
 
+          <!-- 
           <div class="unselecthighLight mx-8 my-4 p-8">
             <div fxLayout fxLayoutAlign="space-between center">
               <div fxFlex><strong>Project Title:E-way Bill</strong></div>
-              <!-- <div fxFlex fxLayoutAlign="end">Owner:MS</div> -->
             </div>
             <div style="font-size: 11px">
               <div style="margin-top: 10px;color: #2e2e2e">
@@ -46,7 +51,6 @@
           <div class="unselecthighLight mx-8 my-4 p-8">
             <div fxLayout fxLayoutAlign="space-between center">
               <div fxFlex><strong>Project Title:Icon</strong></div>
-              <!-- <div fxFlex fxLayoutAlign="end">Owner:MS</div> -->
             </div>
             <div style="font-size: 11px">
               <div style="margin-top: 10px;color: #2e2e2e">
@@ -54,17 +58,18 @@
               </div>
             </div>
           </div>
+
           <div class="unselecthighLight mx-8 my-4 p-8">
             <div fxLayout fxLayoutAlign="space-between center">
               <div fxFlex><strong>Project Title:PM</strong></div>
-              <!-- <div fxFlex fxLayoutAlign="end">Owner:MS</div> -->
             </div>
             <div style="font-size: 11px">
               <div style="margin-top: 10px;color: #2e2e2e">
                 <span style="margin-right: 10px">Owner:MS</span>
               </div>
             </div>
-          </div>
+          </div> -->
+
         </div>
       </div>
       <div class="borderRight1"></div>
@@ -74,8 +79,10 @@
             <button mat-stroked-button color="warn" style="background-color: white;"><span style="color: #ef8377;">Delete</span></button>
           </div> -->
           <div fxLayout fxFlex class="h2" fxLayoutAlign="end">
-            <button mat-stroked-button color="warn" style="background-color: white;"><span style="color: #ef8377;">Delete</span></button>
-            <button mat-raised-button  style="margin-left: 10px;background-color: #efb577;"><span style="color: white;">Save</span></button>
+            <button mat-stroked-button color="warn" style="background-color: white;"><span
+                style="color: #ef8377;">Delete</span></button>
+            <button mat-raised-button style="margin-left: 10px;background-color: #efb577;"><span
+                style="color: white;">Save</span></button>
           </div>
         </mat-card>
         <div class="sidenav-content" fxFlex fxLayout="column">
@@ -88,12 +95,12 @@
                   </mat-form-field>
                 </div>
                 <div fxFlex="50">
-                <mat-form-field class="pl-8" style="width: 100%;">
-                  <input matInput placeholder="Owner">
-                </mat-form-field>
+                  <mat-form-field class="pl-8" style="width: 100%;">
+                    <input matInput placeholder="Owner">
+                  </mat-form-field>
+                </div>
               </div>
-              </div>
-            
+
               <!-- <div fxLayout="row" fxLayoutAlign="start">
                 <div>
                   <span>Task Sub-Group</span>
