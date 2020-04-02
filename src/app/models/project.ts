@@ -7,6 +7,7 @@ export class Project {
     CreatedBy: string;
     ModifiedOn?: Date;
     ModifiedBy: string;
+    OwnerMaster: Owner;
 
 }
 export class Owner {

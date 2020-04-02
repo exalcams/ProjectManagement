@@ -24,15 +24,16 @@
             'highLight' : S073R4?.length == 2,
             'unselecthighLight' : S073R4?.length == 0,
          }" -->
-          <mat-card class="highLight mx-8 my-4 p-8" *ngFor="let project of AllProjects | filter: searchText"
+          <mat-card class="mx-8 my-4 p-8 leftCard" *ngFor="let project of AllProjects | filter: searchText"
           (click)="loadSelectedProject(project)"
-            [ngClass]="{'active accent2':selectID==project.ProjectID}">
+          [style.border-left-color]="selectID==project.ProjectID?'#efb577':'#cccccc'">
             <div fxLayout fxLayoutAlign="space-between center" >
               <div fxFlex><strong>{{project.Title}}</strong></div>
+              <div fxFlex fxLayoutAlign="end">{{project.CreatedOn | date:'dd/MM/yyyy'}}</div>
             </div>
             <div style="font-size: 11px">
               <div style="margin-top: 10px;color: #2e2e2e">
-                <span style="margin-right: 10px">{{project.OwnerID}}</span>
+                <span style="margin-right: 10px">{{project.OwnerMaster.OwnerName}}</span>
               </div>
             </div>
             <div *ngIf="(AllProjects | filter: searchText).length === 0" class="no-results-message">

@@ -8,6 +8,13 @@
     left: 55%;
   }
 
+  .leftCard {
+    @include mat-elevation(2);
+    background: white;
+    border-left: 5px solid #efb577;
+    margin-left: 20px;
+    cursor: pointer;
+  }
   .center {
     padding: 32px !important;
     max-width: 2000px;
