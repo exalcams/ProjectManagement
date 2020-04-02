@@ -1,16 +1,12 @@
 @import "src/@fuse/scss/fuse";
 
 fuse-sidebar {
-
     &.navbar-fuse-sidebar {
         overflow: hidden;
 
         &.folded:not(.unfolded) {
-
             navbar {
-
                 navbar-vertical-style-1 {
-
                     .navbar-top {
                         padding: 12px 0;
                         justify-content: center;
@@ -21,7 +17,6 @@ fuse-sidebar {
                         }
 
                         .logo {
-
                             .logo-icon {
                                 width: 32px;
                                 height: 32px;
@@ -34,7 +29,6 @@ fuse-sidebar {
                     }
 
                     .navbar-scroll-container {
-
                         .user {
                             padding: 12px 0;
                             height: 64px;
@@ -64,6 +58,11 @@ fuse-sidebar {
                             padding-top: 0;
                         }
                     }
+                    .navbar-down {
+                        .buttons {
+                            display: none;
+                        }
+                    }
                 }
             }
         }
@@ -71,7 +70,6 @@ fuse-sidebar {
 }
 
 navbar {
-
     &.vertical-style-1 {
         display: flex;
         flex-direction: column;
@@ -80,9 +78,7 @@ navbar {
         height: 100%;
 
         &.right-navbar {
-
             .toggle-sidebar-opened {
-
                 mat-icon {
                     transform: rotate(180deg);
                 }
@@ -107,7 +103,7 @@ navbar {
             height: 64px;
             padding: 12px 12px 12px 20px;
 
-            @include media-breakpoint('xs') {
+            @include media-breakpoint("xs") {
                 min-height: 56px;
                 max-height: 56px;
                 height: 56px;
@@ -144,7 +140,7 @@ navbar {
             -webkit-overflow-scrolling: touch;
 
             background: linear-gradient(rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0) 30%),
-            linear-gradient(rgba(0, 0, 0, 0.25) 0, rgba(0, 0, 0, 0) 40%);
+                linear-gradient(rgba(0, 0, 0, 0.25) 0, rgba(0, 0, 0, 0) 40%);
 
             background-repeat: no-repeat;
             background-size: 100% 40px, 100% 10px;
@@ -186,9 +182,9 @@ navbar {
 }
 
 .borderTop {
-  border-top-color: white !important;
+    border-top-color: white !important;
 }
 .powerClass {
-  cursor: pointer !important;
-  //height: 25px;
+    cursor: pointer !important;
+    //height: 25px;
 }
