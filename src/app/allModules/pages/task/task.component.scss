@@ -9,9 +9,9 @@
     @include media-breakpoint-down(md) {
       padding: 0 !important;
     }
-.content-pos{
-    margin-top: -27px !important;
-}
+    .content-pos {
+      margin-top: -27px !important;
+    }
     .content-card1 {
       display: flex;
       flex: 1;
@@ -57,7 +57,7 @@
   .borderBottom1 {
     border-bottom: 1px solid #efb577;
     border-radius: 1px;
-    
+
     // opacity: 0.1;
     // margin-left: -20px;
     // margin-top: 35px;
@@ -98,7 +98,7 @@
 
     input {
       padding: 0 12px 0 8px;
-      background-color: #ffffff;;
+      background-color: #ffffff;
       height: 36px;
       border: none;
     }
@@ -177,8 +177,11 @@
     border-radius: 10px;
     background-color: #48c22b;
   }
-  .roundedbuttonstyle{
-    margin-top: -45px;float: right;height: 46px;width: 46px;
+  .roundedbuttonstyle {
+    margin-top: -45px;
+    float: right;
+    height: 46px;
+    width: 46px;
     background-color: #f6b570;
   }
   @mixin TableBorderRight($color) {
@@ -240,12 +243,12 @@
   //     height: 40px;
   //   }
   // }
-  .borderclass{
+  .borderclass {
     border-bottom: 2px solid #efb577 !important;
     margin-left: 10px !important;
     // margin-right: 840px !important
   }
-  .task-sub-group{
+  .task-sub-group {
     margin-top: 20px !important;
     display: block !important;
     flex-direction: row !important;
@@ -254,5 +257,28 @@
   .float {
     position: fixed;
     bottom: 80px !important;
+  }
+  .floatBtn {
+    position: fixed;
+    bottom: 80px !important;
+    right: 20px !important;
+    background-color: #f6b570 !important;
+  }
+  .DeleteBtn {
+    color: #ef8377;
+    background-color: white;
+  }
+  .SaveBtn {
+    background-color: #efb577;
+    color: white;
+  }
+  .leftCard {
+    @include mat-elevation(2);
+    background: white;
+    border-left: 5px solid #efb577;
+    margin-left: 20px;
+  }
+  .mat-toolbar-multiple-rows {
+    min-height: 58px !important;
   }
 }
