@@ -1,6 +1,20 @@
 @import "src/@fuse/scss/fuse";
 
-#chat {
+#project {
+  .progressBarPostion {
+    position: absolute !important;
+    bottom: 50%;
+    z-index: 1;
+    left: 55%;
+  }
+
+  .leftCard {
+    @include mat-elevation(2);
+    background: white;
+    border-left: 5px solid #efb577;
+    margin-left: 20px;
+    cursor: pointer;
+  }
   .center {
     padding: 32px !important;
     max-width: 2000px;
@@ -9,9 +23,9 @@
     @include media-breakpoint-down(md) {
       padding: 0 !important;
     }
-.content-pos{
-    margin-top: -27px !important;
-}
+    .content-pos {
+      margin-top: -27px !important;
+    }
     .content-card1 {
       display: flex;
       flex: 1;
@@ -54,20 +68,23 @@
     // margin-left: -20px;
     // margin-top: 35px;
   }
+
   .borderBottom1 {
     border-bottom: 1px solid #efb577;
     border-radius: 1px;
-    
+
     // opacity: 0.1;
     // margin-left: -20px;
     // margin-top: 35px;
   }
+
   .borderRightSide {
     // margin-right: 20px;
     // margin-left: -24px;
     padding: 5px;
     padding-left: 10px;
   }
+
   .borderRightSide1 {
     margin-right: 20px;
     margin-left: -24px;
@@ -98,7 +115,7 @@
 
     input {
       padding: 0 12px 0 8px;
-      background-color: #ffffff;;
+      background-color: #ffffff;
       height: 36px;
       border: none;
     }
@@ -177,14 +194,17 @@
     border-radius: 10px;
     background-color: #48c22b;
   }
-  .roundedbuttonstyle{
-    margin-top: -45px;float: right;height: 46px;width: 46px;
+  .roundedbuttonstyle {
+    margin-top: -45px;
+    float: right;
+    height: 46px;
+    width: 46px;
     background-color: #f6b570;
   }
   table {
     width: 100%;
-    th{
-     // background: #082f7d;
+    th {
+      // background: #082f7d;
       color: white;
       //font-family: Ubuntu;
       // padding-left: 25px;
@@ -192,19 +212,18 @@
       padding: 5px;
       border-right: 1px solid #e0e0e0;
       font-size: 10px;
-
     }
-    td{
-        padding-left: 15px;
-        border-right: 1px solid #ffffff;
-        padding: 5px;
-        font-size: 10px;
+    td {
+      padding-left: 15px;
+      border-right: 1px solid #ffffff;
+      padding: 5px;
+      font-size: 10px;
     }
-    tr{
+    tr {
       height: 40px;
     }
   }
-  .borderclass{
+  .borderclass {
     border-bottom: 2px solid #efb577 !important;
     margin-left: 10px !important;
   }

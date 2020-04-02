@@ -7,4 +7,18 @@ export class Project {
     CreatedBy: string;
     ModifiedOn?: Date;
     ModifiedBy: string;
+    OwnerMaster: Owner;
+
+}
+export class Owner {
+    OwnerID: number;
+    MailID: string;
+    OwnerName: string;
+    PhoneNumber: string;
+    IsActive: boolean;
+    CreatedOn: Date;
+    CreatedBy: string;
+    ModifiedOn?: Date;
+    ModifiedBy: string;
+ 
 }

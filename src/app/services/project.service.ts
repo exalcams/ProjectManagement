@@ -38,8 +38,12 @@ export class ProjectService {
     return this._httpClient.get<any>(`${this.baseAddress}api/Project/GetAllProjects`)
       .pipe(catchError(this.errorHandler));
   }
+  
+  GetAllOwners(): Observable<any | string> {
+    return this._httpClient.get<any>(`${this.baseAddress}api/Project/GetAllOwners`)
+      .pipe(catchError(this.errorHandler));
+  }
 
-  // Project
   CreateProject(project: Project): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}api/Project/CreateProject`,
       project,

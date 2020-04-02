@@ -1,4 +1,4 @@
-<div id="chat" class="page-layout carded fullwidth">
+<div id="project" class="page-layout carded fullwidth">
   <div class="center normal" style="margin-top: -27px !important;padding:32px 0px 1px !important;">
     <div fxLayout class="content-card1">
       <div fxFlex="30" class="side-bar">
@@ -7,7 +7,6 @@
             <b>Projects ({{this.AllProjectsCount}})</b>
           </div>
         </mat-card>
-
         <div class="sidenav-header">
           <mat-toolbar>
             <mat-toolbar-row fxLayout="row" class="px-8" fxLayoutAlign="space-between center">
@@ -25,16 +24,23 @@
             'highLight' : S073R4?.length == 2,
             'unselecthighLight' : S073R4?.length == 0,
          }" -->
-          <mat-card class="highLight mx-8 my-4 p-8" *ngFor="let project of AllProjects">
-            <div fxLayout fxLayoutAlign="space-between center">
-              <div fxFlex><strong>Project Title:{{project.Title}}</strong></div>
+          <mat-card class="mx-8 my-4 p-8 leftCard" *ngFor="let project of AllProjects | filter: searchText"
+          (click)="loadSelectedProject(project)"
+          [style.border-left-color]="selectID==project.ProjectID?'#efb577':'#cccccc'">
+            <div fxLayout fxLayoutAlign="space-between center" >
+              <div fxFlex><strong>{{project.Title}}</strong></div>
+              <div fxFlex fxLayoutAlign="end">{{project.CreatedOn | date:'dd/MM/yyyy'}}</div>
             </div>
             <div style="font-size: 11px">
               <div style="margin-top: 10px;color: #2e2e2e">
-                <span style="margin-right: 10px">Owner:{{project.OwnerID}}</span>
+                <span style="margin-right: 10px">{{project.OwnerMaster.OwnerName}}</span>
               </div>
             </div>
+            <div *ngIf="(AllProjects | filter: searchText).length === 0" class="no-results-message">
+              <span class="pl-12"> No results..</span>
+          </div>
           </mat-card>
+
 
           <!-- 
           <div class="unselecthighLight mx-8 my-4 p-8">
@@ -72,6 +78,7 @@
 
         </div>
       </div>
+
       <div class="borderRight1"></div>
       <div fxFlex="70" class="side-bar">
         <mat-card class="cardHeader p-8" style="background-color: #fffdf9;">
@@ -79,24 +86,48 @@
             <button mat-stroked-button color="warn" style="background-color: white;"><span style="color: #ef8377;">Delete</span></button>
           </div> -->
           <div fxLayout fxFlex class="h2" fxLayoutAlign="end">
-            <button mat-stroked-button color="warn" style="background-color: white;"><span
-                style="color: #ef8377;">Delete</span></button>
-            <button mat-raised-button style="margin-left: 10px;background-color: #efb577;"><span
-                style="color: white;">Save</span></button>
+            <button (click)="DeleteClicked()" *ngIf="SelectedProject.ProjectID" mat-stroked-button color="warn"
+              style="background-color: white;"><span style="color: #ef8377;">Delete</span>
+            </button>
+            <button mat-raised-button class="mr-12" (click)="ResetControl()" *ngIf="!SelectedProject.ProjectID">
+              Clear
+            </button>
+            <button (click)="SaveClicked()" mat-raised-button style="margin-left: 10px;background-color: #efb577;">
+              <span style="color: white;"> {{SelectedProject.ProjectID?'Update':'Create'}}</span>
+            </button>
           </div>
         </mat-card>
         <div class="sidenav-content" fxFlex fxLayout="column">
           <mat-card style="margin-top: 5px;height: 100%;">
-            <form autocomplete="off" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" name="form" novalidate>
+            <form autocomplete="off" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto"
+              [formGroup]="projectMainFormGroup" novalidate>
               <div fxLayout="row" fxLayoutAlign="start">
                 <div fxFlex="50">
-                  <mat-form-field class="pl-8" style="width: 80%;">
+                  <!-- <mat-form-field class="pl-8" style="width: 80%;">
                     <input matInput placeholder="Title">
+                  </mat-form-field> -->
+                  <mat-form-field class="pl-8" style="width: 80%;">
+                    <input matInput placeholder="Title" formControlName="Title">
+                    <mat-error
+                      *ngIf="projectMainFormGroup.get('Title').touched &&  projectMainFormGroup.get('Title').hasError('required')">
+                      Title required</mat-error>
                   </mat-form-field>
                 </div>
                 <div fxFlex="50">
-                  <mat-form-field class="pl-8" style="width: 100%;">
+                  <!-- <mat-form-field class="pl-8" style="width: 100%;" >
                     <input matInput placeholder="Owner">
+                  </mat-form-field> -->
+                  <mat-form-field class="p-8" style="width: 100%;">
+                    <mat-select placeholder="Owner" formControlName="OwnerID"
+                      (selectionChange)="onOwnerChange($event.value)">
+                      <mat-option *ngFor="let rol of AllOwners" [value]="rol.OwnerID"
+                        (click)="onOwnerClick(rol.OwnerName)">
+                        {{rol.OwnerName}}</mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="projectMainFormGroup.get('OwnerID').touched && projectMainFormGroup.get('OwnerID').hasError('required')">
+                      Owner
+                      Name required</mat-error>
                   </mat-form-field>
                 </div>
               </div>
@@ -114,7 +145,7 @@
               </div> -->
               <div fxLayout>
                 <div fxFlex fxLayoutAlign="end">
-                  <button class="float" mat-fab style="background-color: #f6b570">
+                  <button class="float" mat-fab style="background-color: #f6b570" (click)="ResetControl()">
                     <mat-icon style="color: white;">add</mat-icon>
                   </button>
                 </div>
@@ -125,4 +156,7 @@
       </div>
     </div>
   </div>
+  <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
+  </mat-progress-spinner>
+  <div id="overlay" *ngIf="IsProgressBarVisibile"></div>
 </div>

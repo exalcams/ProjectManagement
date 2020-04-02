@@ -1,10 +1,10 @@
-<div id="chat" class="page-layout carded fullwidth">
+<div id="taskgroup" class="page-layout carded fullwidth">
   <div class="center normal" style="margin-top: -27px !important;padding:32px 0px 1px !important;">
     <div fxLayout class="content-card1">
       <div fxFlex="23" class="side-bar">
         <mat-card class="cardHeader p-8" style="height: 52px !important;background-color: #fffdf9;">
           <div fxLayout fxFlex fxLayoutAlign="center" class="h2">
-            <b>Task Groups (4)</b>
+            <b>Task Groups ({{this.AllTaskGroupsCount}})</b>
           </div>
         </mat-card>
         <div class="sidenav-header" style="background-color: #f5f5f5;">
@@ -19,16 +19,21 @@
             </mat-toolbar-row>
           </mat-toolbar>
 
-          <div >
-            <mat-card class="highLight mx-8 my-4 p-8">
+          <div>
+            <mat-card class="mx-8 my-4 p-8 leftCard" *ngFor="let taskGroup of AllTaskGroups | filter: searchText"
+              (click)="loadSelectedTaskGroup(taskGroup)"
+              [style.border-left-color]="selectID==taskGroup.TaskGroupID?'#efb577':'#cccccc'">
               <div fxLayout fxLayoutAlign="space-between center">
-                <div fxFlex><strong>Tick Number:1234</strong></div>
-                <div fxFlex fxLayoutAlign="end">24 / 03 / 2020</div>
+                <div fxFlex><strong>{{taskGroup.Title}}</strong></div>
+                <div fxFlex fxLayoutAlign="end">{{taskGroup.PlannedStartDate | date:'dd/MM/yyyy'}}</div>
               </div>
               <div style="font-size: 11px">
                 <div style="margin-top: 10px;color: #2e2e2e">
-                  <span style="margin-right: 10px">china.mastan@exalca.com</span>
+                  <span style="margin-right: 10px">{{taskGroup.OwnerMaster.OwnerName}}</span>
                 </div>
+              </div>
+              <div *ngIf="(AllTaskGroups | filter: searchText).length === 0" class="no-results-message">
+                <span class="pl-12"> No results..</span>
               </div>
             </mat-card>
             <!-- <mat-card *ngFor="let ada of AllSources | filter: searchText" class="mx-8 my-4 p-8"
@@ -43,7 +48,7 @@
             </mat-card> -->
           </div>
 
-          <div class="unselecthighLight mx-8 my-4 p-8">
+          <!-- <div class="unselecthighLight mx-8 my-4 p-8">
             <div fxLayout fxLayoutAlign="space-between center">
               <div fxFlex><strong>Tick Number:2345</strong></div>
               <div fxFlex fxLayoutAlign="end">24 / 03 / 2020</div>
@@ -75,8 +80,7 @@
                 <span style="margin-right: 10px">china.mastan@exalca.com</span>
               </div>
             </div>
-          </div>
-
+          </div> -->
           <!-- <mat-card class="mx-8 my-4 p-8">
             <div fxLayout fxLayoutAlign="space-between center">
               <div fxFlex>Tick Number:1234</div>
@@ -113,40 +117,57 @@
               <span style="margin-right: 10px">china.mastan@exalca.com</span>
             </div>
           </mat-card> -->
+
         </div>
       </div>
       <div class="borderRight1"></div>
       <div fxFlex="77" class="side-bar">
+
         <mat-card class="cardHeader p-8" style="background-color: #fffdf9;">
           <!-- <div fxLayout fxFlex class="h2" fxLayoutAlign="start">
             <button mat-stroked-button color="warn" style="background-color: white;"><span
                 style="color: #ef8377;">Delete</span></button>
           </div> -->
           <div fxLayout fxFlex class="h2" fxLayoutAlign="end">
-            <button mat-stroked-button color="warn" style="background-color: white;"><span
-                style="color: #ef8377;">Delete</span></button>
-            <button mat-raised-button style="margin-left: 10px;background-color: #efb577;"><span
-                style="color: white;">Save</span></button>
+            <button (click)="DeleteClicked()" *ngIf="SelectedTaskGroup.TaskGroupID" mat-stroked-button color="warn"
+              style="background-color: white;"><span style="color: #ef8377;">Delete</span>
+            </button>
+            <button mat-raised-button class="mr-12" (click)="ResetControl()" *ngIf="!SelectedTaskGroup.TaskGroupID">
+              Clear
+            </button>
+            <button (click)="SaveClicked()" mat-raised-button style="margin-left: 10px;background-color: #efb577;"><span
+                style="color: white;"> {{SelectedTaskGroup.TaskGroupID?'Update':'Create'}}</span>
+            </button>
           </div>
         </mat-card>
+
         <div class="sidenav-content" fxFlex fxLayout="column">
           <mat-card style="margin-top: 5px;">
-            <form autocomplete="off" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" name="form" novalidate>
+
+            <form autocomplete="off" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" name="form"
+              [formGroup]="taskGroupMainFormGroup" novalidate>
+
               <div fxLayout="row" fxLayoutAlign="start">
                 <div fxFlex="50">
                   <mat-form-field class="pl-8" style="width: 80%;">
-                    <input matInput placeholder="Title">
+                    <input matInput placeholder="Title" formControlName="Title">
+                    <mat-error
+                      *ngIf="taskGroupMainFormGroup.get('Title').touched &&  taskGroupMainFormGroup.get('Title').hasError('required')">
+                      Title required</mat-error>
                   </mat-form-field>
                 </div>
                 <div fxFlex="50">
-                  <mat-form-field class="pl-8" style="width: 100%;">
-                    <mat-label>Owner</mat-label>
-                    <mat-select>
-                      <mat-option value="">MS</mat-option>
-                      <mat-option value="PD">PD</mat-option>
-                      <mat-option value="VI">VI</mat-option>
-                      <mat-option value="RN">RN</mat-option>
+                  <mat-form-field class="pl-8" style="width: 80%;">
+                    <mat-select placeholder="Owner" formControlName="OwnerID"
+                      (selectionChange)="onOwnerChange($event.value)">
+                      <mat-option *ngFor="let rol of AllOwners" [value]="rol.OwnerID"
+                        (click)="onOwnerClick(rol.OwnerName)">
+                        {{rol.OwnerName}}</mat-option>
                     </mat-select>
+                    <mat-error
+                      *ngIf="taskGroupMainFormGroup.get('OwnerID').touched && taskGroupMainFormGroup.get('OwnerID').hasError('required')">
+                      Owner
+                      Name required</mat-error>
                   </mat-form-field>
                   <!-- <mat-form-field class="pl-8" style="width: 80%;">
                     <input matInput placeholder="Owner">
@@ -154,199 +175,271 @@
                   <img style="height: 16px;margin-top: 25px;margin-left: -16px" src="assets/images/logos/add-button.png"> -->
                 </div>
               </div>
+
               <div fxLayout="row" fxLayoutAlign="start">
                 <div fxFlex="50">
+
                   <mat-form-field class="pl-8" style="width: 40%;">
                     <mat-label>Planned Start Date</mat-label>
-                    <input matInput [matDatepicker]="picker">
+                    <input matInput [matDatepicker]="picker" formControlName="PlannedStartDate">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
+                    <mat-error
+                      *ngIf="taskGroupMainFormGroup.get('PlannedStartDate').touched && taskGroupMainFormGroup.get('PlannedStartDate').hasError('required')">
+                      Planned Start date is required
+                    </mat-error>
                   </mat-form-field>
+
                   <mat-form-field class="pl-8" style="width: 40%;">
                     <mat-label>Planned End Date</mat-label>
-                    <input matInput [matDatepicker]="picker1">
+                    <input matInput [matDatepicker]="picker1" formControlName="PlannedEndDate">
                     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                     <mat-datepicker #picker1></mat-datepicker>
+                    <mat-error
+                      *ngIf="taskGroupMainFormGroup.get('PlannedEndDate').touched && taskGroupMainFormGroup.get('PlannedEndDate').hasError('required')">
+                      Planned End date is required
+                    </mat-error>
                   </mat-form-field>
+
                 </div>
+
                 <div fxFlex="50">
-                  <mat-form-field class="pl-8" style="width: 50%;">
+
+                  <mat-form-field class="pl-8" style="width: 40%;">
                     <mat-label>Actual Start Date</mat-label>
-                    <input matInput [matDatepicker]="picker2">
+                    <input matInput [matDatepicker]="picker2" formControlName="ActualStartDate">
                     <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                     <mat-datepicker #picker2></mat-datepicker>
+                    <mat-error
+                      *ngIf="taskGroupMainFormGroup.get('ActualStartDate').touched && taskGroupMainFormGroup.get('ActualStartDate').hasError('required')">
+                      Actual Start date is required
+                    </mat-error>
                   </mat-form-field>
-                  <mat-form-field class="pl-8" style="width: 50%;">
+
+                  <mat-form-field class="pl-8" style="width: 40%;">
                     <mat-label>Actual End Date</mat-label>
-                    <input matInput [matDatepicker]="picker3">
+                    <input matInput [matDatepicker]="picker3" formControlName="ActualEndDate">
                     <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
                     <mat-datepicker #picker3></mat-datepicker>
+                    <mat-error
+                      *ngIf="taskGroupMainFormGroup.get('ActualEndDate').touched && taskGroupMainFormGroup.get('ActualEndDate').hasError('required')">
+                      Actual End date is required
+                    </mat-error>
                   </mat-form-field>
+
                 </div>
               </div>
+
               <div fxLayout="row" fxLayoutAlign="start">
                 <div fxFlex="50">
+
                   <mat-form-field class="pl-8" style="width: 40%;">
-                    <input matInput placeholder="Planned Effort (hrs)">
+                    <input matInput placeholder="Planned Effort (hrs)" formControlName="PlannedEffort">
+                    <mat-error
+                      *ngIf="taskGroupMainFormGroup.get('PlannedEffort').touched &&  taskGroupMainFormGroup.get('PlannedEffort').hasError('required')">
+                      Planned Effort required</mat-error>
                   </mat-form-field>
+
                   <mat-form-field class="pl-8" style="width: 40%;">
-                    <input matInput placeholder="Actual Effort (hrs)">
+                    <input matInput placeholder="Actual Effort (hrs)" formControlName="ActualEffort">
+                    <mat-error
+                      *ngIf="taskGroupMainFormGroup.get('ActualEffort').touched &&  taskGroupMainFormGroup.get('ActualEffort').hasError('required')">
+                      Actual Effort required</mat-error>
                   </mat-form-field>
+
                 </div>
                 <div fxFlex="50">
                   <mat-form-field class="pl-8" style="width: 100%;">
-                    <mat-label>Project</mat-label>
-                    <mat-select>
-                      <mat-option value=".Net">.Net</mat-option>
-                      <mat-option value="SAP(UI)">SAP(UI)</mat-option>
-                      <mat-option value="SAP(AB)">SAP(AB)</mat-option>
+                    <mat-select placeholder="Project" formControlName="ProjectID"
+                      (selectionChange)="onProjectChange($event.value)">
+                      <mat-option *ngFor="let project of AllProjects" [value]="project.ProjectID"
+                        (click)="onProjectClick(project.Title)">
+                        {{project.Title}}</mat-option>
                     </mat-select>
+                    <mat-error
+                      *ngIf="taskGroupMainFormGroup.get('ProjectID').touched && taskGroupMainFormGroup.get('ProjectID').hasError('required')">
+                      Project
+                      Name required</mat-error>
                   </mat-form-field>
                 </div>
               </div>
+
+              <!-- Sub-Group information -->
               <div class="task-sub-group">
                 <div>
                   <span style="border-bottom: 2px solid #efb577 !important;"><strong>Task Sub-Group</strong></span>
-                  <!-- <div></div> -->
                 </div>
-                <div autocomplete="off" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" name="form"
-                  novalidate>
-                  <div fxLayout="row" fxLayoutAlign="start">
-                    <div fxFlex="50">
-                      <mat-form-field class="pl-8" style="width: 40%;">
-                        <input matInput placeholder="Title">
-                      </mat-form-field>
-                      <mat-form-field class="pl-8" style="width: 40%;">
-                        <mat-label>Owner</mat-label>
-                        <mat-select>
-                          <mat-option value="">MS</mat-option>
-                          <mat-option value="PD">PD</mat-option>
-                          <mat-option value="VI">VI</mat-option>
-                          <mat-option value="RN">RN</mat-option>
-                        </mat-select>
-                      </mat-form-field>
+                <div>
+                  <form [formGroup]="taskSubGroupMainFormGroup" fxLayout="column" fxLayoutAlign="start"
+                    fxFlex="1 0 auto" autocomplete="off" name="form" novalidate>
+
+                    <div fxLayout="row" fxLayoutAlign="start">
+                      <div fxFlex="50">
+                        <mat-form-field class="pl-8" style="width: 40%;">
+                          <input matInput placeholder="Title" formControlName="Title">
+                          <mat-error
+                            *ngIf="taskSubGroupMainFormGroup.get('Title').touched &&  taskSubGroupMainFormGroup.get('Title').hasError('required')">
+                            Title required</mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field class="pl-8" style="width: 40%;">
+                          <mat-select placeholder="Owner" formControlName="OwnerID"
+                            (selectionChange)="onOwnerChange($event.value)">
+                            <mat-option *ngFor="let rol of AllOwners" [value]="rol.OwnerID"
+                              (click)="onOwnerClick(rol.OwnerName)">
+                              {{rol.OwnerName}}</mat-option>
+                          </mat-select>
+                          <mat-error
+                            *ngIf="taskSubGroupMainFormGroup.get('OwnerID').touched && taskSubGroupMainFormGroup.get('OwnerID').hasError('required')">
+                            Owner
+                            Name required</mat-error>
+                        </mat-form-field>
+                      </div>
+                      <div fxFlex="50">
+                        <mat-form-field class="pl-8" style="width: 40%;">
+                          <mat-label>Planned Start Date</mat-label>
+                          <input matInput [matDatepicker]="picker4" formControlName="PlannedStartDate">
+                          <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                          <mat-datepicker #picker4></mat-datepicker>
+                          <mat-error
+                            *ngIf="taskSubGroupMainFormGroup.get('PlannedStartDate').touched && taskSubGroupMainFormGroup.get('PlannedStartDate').hasError('required')">
+                            Planned Start date is required
+                          </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field class="pl-8" style="width: 40%;">
+                          <mat-label>Planned End Date</mat-label>
+                          <input matInput [matDatepicker]="picker5" formControlName="PlannedEndDate">
+                          <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
+                          <mat-datepicker #picker5></mat-datepicker>
+                          <mat-error
+                            *ngIf="taskSubGroupMainFormGroup.get('PlannedEndDate').touched && taskSubGroupMainFormGroup.get('PlannedEndDate').hasError('required')">
+                            To date is required
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
                     </div>
-                    <div fxFlex="50">
-                      <mat-form-field class="pl-8" style="width: 50%;">
-                        <mat-label>Planned Start Date</mat-label>
-                        <input matInput [matDatepicker]="picker4">
-                        <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
-                        <mat-datepicker #picker4></mat-datepicker>
-                      </mat-form-field>
-                      <mat-form-field class="pl-8" style="width: 50%;">
-                        <mat-label>Planned End Date</mat-label>
-                        <input matInput [matDatepicker]="picker5">
-                        <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
-                        <mat-datepicker #picker5></mat-datepicker>
-                      </mat-form-field>
+
+                    <div fxLayout="row" fxLayoutAlign="start">
+                      <div fxFlex="50">
+                        <mat-form-field class="pl-8" style="width: 40%;">
+                          <mat-label>Actual Start Date</mat-label>
+                          <input matInput [matDatepicker]="picker6" formControlName="ActualStartDate">
+                          <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
+                          <mat-datepicker #picker6></mat-datepicker>
+                          <mat-error
+                            *ngIf="taskSubGroupMainFormGroup.get('ActualStartDate').touched && taskSubGroupMainFormGroup.get('ActualStartDate').hasError('required')">
+                            To date is required
+                          </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field class="pl-8" style="width: 40%;">
+                          <mat-label>Actual End Date</mat-label>
+                          <input matInput [matDatepicker]="picker7" formControlName="ActualEndDate">
+                          <mat-datepicker-toggle matSuffix [for]="picker7"></mat-datepicker-toggle>
+                          <mat-datepicker #picker7></mat-datepicker>
+                          <mat-error
+                            *ngIf="taskSubGroupMainFormGroup.get('ActualEndDate').touched && taskSubGroupMainFormGroup.get('ActualEndDate').hasError('required')">
+                            To date is required
+                          </mat-error>
+                        </mat-form-field>
+
+                      </div>
+                      <div fxFlex="50">
+                        <mat-form-field class="pl-8" style="width: 40%;">
+                          <input matInput placeholder="Planned Effort (hrs)" formControlName="PlannedEffort">
+                          <mat-error
+                            *ngIf="taskSubGroupMainFormGroup.get('PlannedEffort').touched &&  taskSubGroupMainFormGroup.get('PlannedEffort').hasError('required')">
+                            Planned Effort required</mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field class="pl-8" style="width: 40%;">
+                          <input matInput placeholder="Actual Effort (hrs)" formControlName="ActualEffort">
+                          <mat-error
+                            *ngIf="taskSubGroupMainFormGroup.get('ActualEffort').touched &&  taskSubGroupMainFormGroup.get('ActualEffort').hasError('required')">
+                            Actual Effort required</mat-error>
+                        </mat-form-field>
+                      </div>
                     </div>
-                  </div>
-                  <div fxLayout="row" fxLayoutAlign="start">
-                    <div fxFlex="50">
-                      <mat-form-field class="pl-8" style="width: 40%;">
-                        <mat-label>Actual Start Date</mat-label>
-                        <input matInput [matDatepicker]="picker6">
-                        <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
-                        <mat-datepicker #picker6></mat-datepicker>
-                      </mat-form-field>
-                      <mat-form-field class="pl-8" style="width: 40%;">
-                        <mat-label>Actual End Date</mat-label>
-                        <input matInput [matDatepicker]="picker7">
-                        <mat-datepicker-toggle matSuffix [for]="picker7"></mat-datepicker-toggle>
-                        <mat-datepicker #picker7></mat-datepicker>
-                      </mat-form-field>
+
+                    <div fxLayout="row" fxLayoutAlign="end">
+                      <button (click)="SubGroupResetControl()" mat-stroked-button
+                        style="margin-left: 10px;height: 30px;color: #efb577;"><span
+                          style="color: #efb577;">Add</span></button>
                     </div>
-                    <div fxFlex="50">
-                      <mat-form-field class="pl-8" style="width: 50%;">
-                        <input matInput placeholder="Planned Effort (hrs)">
-                      </mat-form-field>
-                      <mat-form-field class="pl-8" style="width: 50%;">
-                        <input matInput placeholder="Actual Effort (hrs)">
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <div fxLayout="row" fxLayoutAlign="end">
-                      <button mat-stroked-button  style="margin-left: 10px;height: 30px;color: #efb577;"><span
-                        style="color: #efb577;">Add</span></button>
-                    <!-- <img style="height: 20px;" src="assets/images/logos/add-button.png"> -->
-                  </div>
-                  <!-- <div fxLayout="row" fxLayoutAlign="start"> -->
+
                     <div style="margin-left: 8px;margin-top: 10px;">
-                      <!-- <div flex class="mt-10">
-                        <div class="tableData" #TABLE>
-                          <div style="overflow-x:auto;overflow-y:hidden ;"> -->
-                            <table class="table" mat-table [dataSource]="dataSource" matSort
-                              [@animateStagger]="{value:'50'}">
+                      <table class="table" mat-table [dataSource]="dataSource" matSort [@animateStagger]="{value:'50'}">
 
-                              <ng-container matColumnDef="Title">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Title </th>
-                                <td mat-cell *matCellDef="let element"> {{element.Title}} </td>
-                              </ng-container>
+                        <ng-container matColumnDef="Title">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Title </th>
+                          <td mat-cell *matCellDef="let element"> {{element.Title}} </td>
+                        </ng-container>
 
-                              <ng-container matColumnDef="Owner">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Owner </th>
-                                <td mat-cell *matCellDef="let element"> {{element.Owner}} </td>
-                              </ng-container>
+                        <ng-container matColumnDef="Owner">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Owner </th>
+                          <td mat-cell *matCellDef="let element"> {{element.OwnerName}} </td>
+                        </ng-container>
 
-                              <ng-container matColumnDef="PlannedStartDate">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> PlStartDate </th>
-                                <td mat-cell *matCellDef="let element"> {{element.PlannedStartDate}} </td>
-                              </ng-container>
+                        <ng-container matColumnDef="PlannedStartDate">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> PlStartDate </th>
+                          <td mat-cell *matCellDef="let element"> {{element.PlannedStartDate | date:'dd/MM/yyyy'}} </td>
+                        </ng-container>
 
-                              <ng-container matColumnDef="PlannedEndDate">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> PlEndDate </th>
-                                <td mat-cell *matCellDef="let element"> {{element.PlannedEndDate}} </td>
-                              </ng-container>
+                        <ng-container matColumnDef="PlannedEndDate">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> PlEndDate </th>
+                          <td mat-cell *matCellDef="let element"> {{element.PlannedEndDate | date:'dd/MM/yyyy'}} </td>
+                        </ng-container>
 
-                              <ng-container matColumnDef="ActualStartDate">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> AcStartDate </th>
-                                <td mat-cell *matCellDef="let element"> {{element.ActualStartDate}} </td>
-                              </ng-container>
+                        <ng-container matColumnDef="ActualStartDate">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> AcStartDate </th>
+                          <td mat-cell *matCellDef="let element"> {{element.ActualStartDate | date:'dd/MM/yyyy'}} </td>
+                        </ng-container>
 
-                              <ng-container matColumnDef="ActualEndDate">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> AcEndDate </th>
-                                <td mat-cell *matCellDef="let element"> {{element.ActualEndDate}} </td>
-                              </ng-container>
+                        <ng-container matColumnDef="ActualEndDate">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> AcEndDate </th>
+                          <td mat-cell *matCellDef="let element"> {{element.ActualEndDate | date:'dd/MM/yyyy'}} </td>
+                        </ng-container>
 
-                              <ng-container matColumnDef="PlannedEffort">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> PlannedEffort </th>
-                                <td mat-cell *matCellDef="let element"> {{element.PlannedEffort}} </td>
-                              </ng-container>
+                        <ng-container matColumnDef="PlannedEffort">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> PlannedEffort </th>
+                          <td mat-cell *matCellDef="let element"> {{element.PlannedEffort}} </td>
+                        </ng-container>
 
-                              <ng-container matColumnDef="ActualEffort">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> ActualEffort </th>
-                                <td mat-cell *matCellDef="let element"> {{element.ActualEffort}} </td>
-                              </ng-container>
+                        <ng-container matColumnDef="ActualEffort">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> ActualEffort </th>
+                          <td mat-cell *matCellDef="let element"> {{element.ActualEffort}} </td>
+                        </ng-container>
 
-                              <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
-                              <tr mat-row *matRowDef="let row; columns: displayedColumns;" matRipple
-                                style=" cursor: pointer;"></tr>
-                            </table>
-                            <!-- <div *ngIf="!allInvoiceDetails?.length">
-                              <mat-icon svgIcon="infoIcon" style="color: #1b56ca;margin-top: 10px;margin-left: 70px"></mat-icon>
-                              <span style="margin-left: 10px;">The table does not contain any data</span>
-                            </div> -->
-                          <!-- </div>
-                        </div>
-                      </div> -->
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;" matRipple
+                          style=" cursor: pointer;">
+                        </tr>
+                      </table>
+                      <!-- <div *ngIf="!allInvoiceDetails?.length">
+                            <mat-icon svgIcon="infoIcon" style="color: #1b56ca;margin-top: 10px;margin-left: 70px"></mat-icon>
+                            <span style="margin-left: 10px;">The table does not contain any data</span>
+                          </div> -->
                       <div>
                         <mat-paginator [pageSizeOptions]="[10, 20, 30, 50, 75, 100]" showFirstLastButtons>
                         </mat-paginator>
                       </div>
                     </div>
-                  <!-- </div> -->
 
+                  </form>
                 </div>
               </div>
+
               <div fxLayout>
                 <div fxFlex fxLayoutAlign="end">
-                  <button class="float" mat-fab style="background-color: #f6b570">
+                  <button class="float" mat-fab style="background-color: #f6b570" (click)="ResetControl()">
                     <mat-icon style="color: white;">add</mat-icon>
                   </button>
-                  <!-- <button mat-raised-button color="accent" (click)="SubmitClicked()">Submit</button> -->
                 </div>
               </div>
+
             </form>
+
           </mat-card>
         </div>
       </div>
