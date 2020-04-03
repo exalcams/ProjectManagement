@@ -160,6 +160,7 @@
                   <mat-form-field class="pl-8" style="width: 80%;">
                     <mat-select placeholder="Owner" formControlName="OwnerID"
                       >
+                     
                       <mat-option *ngFor="let rol of AllOwners" [value]="rol.OwnerID"
                         (click)="onOwnerClick(rol.OwnerName)">
                         {{rol.OwnerName}}</mat-option>
@@ -259,6 +260,24 @@
                       *ngIf="taskGroupMainFormGroup.get('ActualEffort').touched &&  taskGroupMainFormGroup.get('ActualEffort').hasError('required')">
                       Actual Effort required</mat-error>
                   </mat-form-field>
+<<<<<<< HEAD
+=======
+
+                </div>
+                <div fxFlex="50">
+                  <mat-form-field class="pl-8" style="width: 100%;">
+                    <mat-select placeholder="Project" formControlName="ProjectID"
+                      >
+                      <mat-option *ngFor="let project of AllProjects" [value]="project.ProjectID"
+                        (click)="onProjectClick(project.Title)">
+                        {{project.Title}}</mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="taskGroupMainFormGroup.get('ProjectID').touched && taskGroupMainFormGroup.get('ProjectID').hasError('required')">
+                      Project
+                      Name required</mat-error>
+                  </mat-form-field>
+>>>>>>> error fix on build..
                 </div>
               </div>
 
