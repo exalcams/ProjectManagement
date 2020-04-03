@@ -132,8 +132,7 @@ const routes = [
         FuseMaterialColorPickerModule,
         FuseWidgetModule,
 
-        FormsModule
-
+        FormsModule,
 
     ],
     declarations: [DashboardComponent, TaskGroupComponent, ProjectComponent, TaskComponent],
