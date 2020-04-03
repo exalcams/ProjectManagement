@@ -170,6 +170,8 @@ export class ProjectComponent implements OnInit {
       },
       (err) => {
         console.error(err);
+        this.ResetControl();
+        console.log(JSON.parse(err.toString()));
         this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
         this.IsProgressBarVisibile = false;
       }
