@@ -1,18 +1,19 @@
 @import "src/@fuse/scss/fuse";
 
 #taskgroup {
-  .progressBarPostion {
-    position: absolute !important;
-    bottom: 50%;
-    z-index: 1;
-    left: 55%;
-  }
+  // .progressBarPostion {
+  //   position: absolute !important;
+  //   bottom: 50%;
+  //   z-index: 1;
+  //   left: 55%;
+  // }
 
   .leftCard {
     @include mat-elevation(2);
     background: white;
     border-left: 5px solid #efb577;
     margin-left: 20px;
+    cursor: pointer;
   }
   .center {
     padding: 32px !important;

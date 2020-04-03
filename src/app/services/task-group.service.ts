@@ -5,6 +5,7 @@ import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import { TaskGroup } from 'app/models/task-group';
+import { $ } from 'protractor';
 
 @Injectable({
     providedIn: 'root'
@@ -43,7 +44,13 @@ export class TaskGroupService {
         return this._httpClient.get<any>(`${this.baseAddress}api/Project/GetAllTaskSubGroups`)
             .pipe(catchError(this.errorHandler));
     }
-    
+
+    GetAllTaskSubGroupsBasedTaskGroup(taskGroupID: number): Observable<any | string> {
+        return this._httpClient.get<any>(`${this.baseAddress}api/Project/GetAllTaskSubGroupsBasedTaskGroup?TaskGroupID=` + taskGroupID)
+            .pipe(catchError(this.errorHandler));
+    }
+
+
     GetAllOwners(): Observable<any | string> {
         return this._httpClient.get<any>(`${this.baseAddress}api/Project/GetAllOwners`)
             .pipe(catchError(this.errorHandler));
@@ -53,7 +60,7 @@ export class TaskGroupService {
         return this._httpClient.get<any>(`${this.baseAddress}api/Project/GetAllProjects`)
             .pipe(catchError(this.errorHandler));
     }
-    
+
 
     CreateTaskGroup(project: TaskGroup): Observable<any> {
         return this._httpClient.post<any>(`${this.baseAddress}api/Project/CreateTaskGroup`,
@@ -78,7 +85,7 @@ export class TaskGroupService {
     }
 
     DeleteTaskGroup(project: TaskGroup): Observable<any> {
-        return this._httpClient.post<any>(`${this.baseAddress}api/TaskGroup/DeleteTaskGroup`,
+        return this._httpClient.post<any>(`${this.baseAddress}api/Project/DeleteTaskGroup`,
             project,
             {
                 headers: new HttpHeaders({

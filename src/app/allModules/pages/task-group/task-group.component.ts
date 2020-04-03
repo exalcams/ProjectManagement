@@ -38,7 +38,9 @@ export class TaskGroupComponent implements OnInit {
   AllOwners: Owner[] = [];
   AllProjects: Project[] = [];
   searchText = '';
+  isDeveloper: boolean;
   displayedColumns: string[] = [
+    'select',
     'Title',
     'Owner',
     'PlannedStartDate',
@@ -62,6 +64,7 @@ export class TaskGroupComponent implements OnInit {
     this.authenticationDetails = new AuthenticationDetails();
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.IsProgressBarVisibile = true;
+    this.isDeveloper = false;
   }
 
   ngOnInit(): void {
@@ -69,6 +72,9 @@ export class TaskGroupComponent implements OnInit {
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+      if (this.authenticationDetails.userRole === 'Developer') {
+        this.isDeveloper = true;
+      }
       this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
       if (this.MenuItems.indexOf('Task Group') < 0) {
         this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
@@ -99,7 +105,6 @@ export class TaskGroupComponent implements OnInit {
       this.GetAllOwners();
       this.GetAllProjects();
       this.GetAllTaskGroups();
-      this.GetAllTaskSubGroups();
     } else {
       this._router.navigate(['/auth/login']);
     }
@@ -115,7 +120,6 @@ export class TaskGroupComponent implements OnInit {
     // this.selectID = Guid.createEmpty();
     this.selectID = 0;
     this.taskGroupMainFormGroup.reset();
-    this.AllTaskSubGroups = null;
     Object.keys(this.taskGroupMainFormGroup.controls).forEach(key => {
       this.taskGroupMainFormGroup.get(key).markAsUntouched();
     });
@@ -124,7 +128,15 @@ export class TaskGroupComponent implements OnInit {
     Object.keys(this.taskSubGroupMainFormGroup.controls).forEach(key => {
       this.taskSubGroupMainFormGroup.get(key).markAsUntouched();
     });
-    // this.fileToUpload = null;
+    this.AllTaskSubGroups = [];
+    // this.AllTaskSubGroups.push(new TaskSubGroup());
+    this.dataSource = new MatTableDataSource(this.AllTaskSubGroups);
+    // this.AllTaskSubGroups.forEach(item => {
+    //   const index: number = this.AllTaskSubGroups.findIndex(d => d === item);
+    //   console.log(this.AllTaskSubGroups.findIndex(d => d === item));
+    //   this.AllTaskSubGroups.splice(index, 1);
+    //   this.dataSource = new MatTableDataSource<TaskSubGroup>(this.AllTaskSubGroups);
+    // });
   }
 
   GetAllOwners(): void {
@@ -177,6 +189,13 @@ export class TaskGroupComponent implements OnInit {
   loadSelectedTaskGroup(selectedTaskGroup: TaskGroup): void {
     this.selectID = selectedTaskGroup.TaskGroupID;
     this.SelectedTaskGroup = selectedTaskGroup;
+    // if (this.selectID) {
+    //   this.isDeveloper = true;
+    // }
+    // else{
+    //   this.isDeveloper = false;
+    // }
+    this.GetAllTaskSubGroupsBasedTaskGroup(selectedTaskGroup.TaskGroupID);
     this.SetTaskGroupValues();
   }
 
@@ -192,6 +211,45 @@ export class TaskGroupComponent implements OnInit {
     this.taskGroupMainFormGroup.get('ActualStartDate').patchValue(this.SelectedTaskGroup.ActualStartDate);
     this.taskGroupMainFormGroup.get('ActualEndDate').patchValue(this.SelectedTaskGroup.ActualEndDate);
     this.taskGroupMainFormGroup.get('ActualEffort').patchValue(this.SelectedTaskGroup.ActualEffort);
+  }
+
+  GetAllTaskSubGroupsBasedTaskGroup(taskGroupID: number): void {
+    this.IsProgressBarVisibile = true;
+    this._taskGroupService.GetAllTaskSubGroupsBasedTaskGroup(taskGroupID).subscribe(
+      (data) => {
+        this.IsProgressBarVisibile = false;
+        // this.AllTaskSubGroups = <TaskSubGroup[]>data;
+        this.AllTaskSubGroups = JSON.parse(data.toString());
+        this.AllTaskSubGroupsCount = this.AllTaskSubGroups.length;
+        console.log(this.AllTaskSubGroups);
+        // if (this.AllTaskSubGroups && this.AllTaskSubGroups.length) {
+        //   this.AllTaskSubGroups  = this.AllTaskSubGroups.filter(
+        //     x => x.OwnerMaster.OwnerName
+        // );
+        // this.AllOwners = this.AllOwners.filter(x => x.OwnerID = this.SelectedTaskSubGroup.OwnerID);
+        // Loops through AllTaskSubGroups
+        this.AllTaskSubGroups.forEach(x => {
+          x.OwnerName = this.getOwnerNameByOwnerID(x.OwnerID);
+        });
+        // this.AllOwners = this.AllOwners.filter(x => x.OwnerID = this.SelectedTaskSubGroup.OwnerID);
+        this.dataSource = new MatTableDataSource(this.AllTaskSubGroups);
+        // console.log(this.AllTaskSubGroups);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        // }
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+      }
+    );
+  }
+  getOwnerNameByOwnerID(OwnerID: number): any {
+    this.AllOwners = this.AllOwners.filter(x => x.OwnerID = OwnerID);
+    if (this.AllOwners.length > 0) {
+      return this.AllOwners[0].OwnerName;
+    }
   }
 
   GetAllTaskSubGroups(): void {
@@ -269,11 +327,8 @@ export class TaskGroupComponent implements OnInit {
     this.taskSubGroupMainFormGroup.get('ActualEffort').patchValue(this.SelectedTaskSubGroup.ActualEffort);
   }
 
-  onOwnerChange(): void {
-
-  }
-
   LoadTaskSubGroupTable(taskSubGroup: TaskSubGroup): void {
+    // this.AllTaskSubGroups = [];
     this.AllTaskSubGroups.push(taskSubGroup);
     if (this.AllTaskSubGroups.length > 0) {
       this.dataSource = new MatTableDataSource(this.AllTaskSubGroups);
@@ -433,5 +488,60 @@ export class TaskGroupComponent implements OnInit {
         // this.isCustomer = false;
       }
     }
+  }
+
+  onOwnerChange(): void {
+
+  }
+
+  onProjectClick(selectedProjectTitle: string): void {
+    console.log(selectedProjectTitle);
+    if (selectedProjectTitle) {
+      if (selectedProjectTitle === 'Customer') {
+        // this.isCustomer = true;
+      } else {
+        // this.isCustomer = false;
+      }
+    }
+  }
+
+  onProjectChange(): void {
+
+  }
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected(): any {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  RemoveSelectedRows(): void {
+    this.selection.selected.forEach(item => {
+      const index: number = this.AllTaskSubGroups.findIndex(d => d === item);
+      console.log(this.AllTaskSubGroups.findIndex(d => d === item));
+      this.AllTaskSubGroups.splice(index, 1);
+      this.dataSource = new MatTableDataSource<TaskSubGroup>(this.AllTaskSubGroups);
+    });
+    this.selection = new SelectionModel<Element>(true, []);
+  }
+
+  RemoveSelectedRow(row: TaskSubGroup): void {
+    //  this.AllTaskSubGroups.forEach(item => {
+    //   const index: number = this.AllTaskSubGroups.findIndex(d => d.TaskSubGroupID === item.TaskSubGroupID);
+    //   // console.log(this.AllTaskSubGroups.findIndex(d => d === item));
+    //   this.AllTaskSubGroups.splice(index, 1);
+    //   this.dataSource = new MatTableDataSource<TaskSubGroup>(this.AllTaskSubGroups);
+    // });
+    this.AllTaskSubGroups = this.AllTaskSubGroups.filter(({ TaskSubGroupID }) => TaskSubGroupID !== row.TaskSubGroupID);
+    // this.selection = new SelectionModel<Element>(true, []);
+    this.dataSource = new MatTableDataSource<TaskSubGroup>(this.AllTaskSubGroups);
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle(): void {
+    this.isAllSelected() ?
+      this.selection.clear() :
+      this.dataSource.data.forEach(row => this.selection.select(row));
   }
 }
