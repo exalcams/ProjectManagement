@@ -13,7 +13,7 @@ import { NotificationDialogComponent } from 'app/notifications/notification-dial
 import { TaskGroup, Owner, TaskSubGroup } from 'app/models/task-group';
 import { TaskGroupService } from 'app/services/task-group.service';
 import { Project } from 'app/models/project';
-import { IDropdownSettings } from 'ng-multiselect-dropdown';
+// import { IDropdownSettings } from 'ng-multiselect-dropdown';
 
 @Component({
   selector: 'app-task-group',
