@@ -159,7 +159,7 @@
                 <div fxFlex="50">
                   <mat-form-field class="pl-8" style="width: 80%;">
                     <mat-select placeholder="Owner" formControlName="OwnerID"
-                      (selectionChange)="onOwnerChange($event.value)">
+                      >
                       <mat-option *ngFor="let rol of AllOwners" [value]="rol.OwnerID"
                         (click)="onOwnerClick(rol.OwnerName)">
                         {{rol.OwnerName}}</mat-option>
@@ -212,7 +212,7 @@
 
                   <mat-form-field class="pl-8" style="width: 40%;">
                     <mat-select placeholder="Project" formControlName="ProjectID"
-                      (selectionChange)="onProjectChange($event.value)">
+                      >
                       <mat-option *ngFor="let project of AllProjects" [value]="project.ProjectID"
                         (click)="onProjectClick(project.Title)">
                         {{project.Title}}</mat-option>
@@ -282,7 +282,7 @@
 
                         <mat-form-field class="pl-8" style="width: 40%;">
                           <mat-select placeholder="Owner" formControlName="OwnerID"
-                            (selectionChange)="onOwnerChange($event.value)">
+                            >
                             <mat-option *ngFor="let rol of AllOwners" [value]="rol.OwnerID"
                               (click)="onOwnerClick(rol.OwnerName)">
                               {{rol.OwnerName}}</mat-option>

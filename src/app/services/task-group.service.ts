@@ -25,7 +25,7 @@ export class TaskGroupService {
 
     constructor(private _httpClient: HttpClient, private _authService: AuthService) {
         this.baseAddress = _authService.baseAddress;
-        this.baseAddress = 'http://localhost:44392/';
+        // this.baseAddress = 'http://localhost:44392/';
         this.NotificationEvent = new Subject();
     }
 

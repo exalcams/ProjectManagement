@@ -119,7 +119,7 @@
                   </mat-form-field> -->
                   <mat-form-field class="p-8" style="width: 100%;">
                     <mat-select placeholder="Owner" formControlName="OwnerID"
-                      (selectionChange)="onOwnerChange($event.value)">
+                     >
                       <mat-option *ngFor="let rol of AllOwners" [value]="rol.OwnerID"
                         (click)="onOwnerClick(rol.OwnerName)">
                         {{rol.OwnerName}}</mat-option>
