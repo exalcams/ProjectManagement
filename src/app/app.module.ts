@@ -20,7 +20,7 @@ import { NotificationSnackBarComponent } from './notifications/notification-snac
 import { DatePipe } from '@angular/common';
 import { NotificationDialogComponent } from './notifications/notification-dialog/notification-dialog.component';
 import { WINDOW_PROVIDERS } from './window.providers';
-import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+// import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 
 const appRoutes: Routes = [
@@ -59,7 +59,7 @@ const appRoutes: Routes = [
         RouterModule.forRoot(appRoutes, { preloadingStrategy: PreloadAllModules, useHash: true }),
 
         TranslateModule.forRoot(),
-        NgMultiSelectDropDownModule.forRoot(),
+        // NgMultiSelectDropDownModule.forRoot(),
 
 
         // Material moment date module
