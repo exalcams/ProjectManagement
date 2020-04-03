@@ -1,6 +1,12 @@
 @import "src/@fuse/scss/fuse";
 
 #chat {
+  .progressBarPostion {
+    position: absolute !important;
+    bottom: 50%;
+    z-index: 1;
+    left: 55%;
+  }
   .center {
     padding: 32px !important;
     max-width: 2000px;
@@ -277,8 +283,21 @@
     background: white;
     border-left: 5px solid #efb577;
     margin-left: 20px;
+    cursor: pointer !important;
   }
   .mat-toolbar-multiple-rows {
     min-height: 58px !important;
+  }
+  .addIcon {
+    height: 20px;
+    margin-top: 25px;
+    cursor: pointer !important;
+  }
+  .removeIcon {
+    height: 20px;
+    cursor: pointer !important;
+  }
+  .mat-column-Action {
+    max-width: 104px !important;
   }
 }
