@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef } from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
 import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatDialog, MatDialogConfig } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
-import { MenuApp, AuthenticationDetails } from 'app/models/master';
+import { MenuApp, AuthenticationDetails, UserView } from 'app/models/master';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MasterService } from 'app/services/master.service';
@@ -25,6 +25,7 @@ export class TaskComponent implements OnInit {
   AllMenuApps: MenuApp[] = [];
   SelectedMenuApp: MenuApp;
   authenticationDetails: AuthenticationDetails;
+  CurrentUserID: Guid;
   CurrentUserRole = '';
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
@@ -43,25 +44,25 @@ export class TaskComponent implements OnInit {
   LogicsByTask: Logic[] = [];
   ValidationsByTask: Validation[] = [];
   InputdisplayedColumns: string[] = [
-    'Action',
     'Field',
     'Validation',
-    'Remarks'
+    'Remarks',
+    'Action'
   ];
   OutputdisplayedColumns: string[] = [
-    'Action',
     'Level',
     'Field',
     'Validation',
-    'Remarks'
+    'Remarks',
+    'Action'
   ];
   LogicdisplayedColumns: string[] = [
-    'Action',
-    'LogicText'
+    'LogicText',
+    'Action'
   ];
   ValidationdisplayedColumns: string[] = [
-    'Action',
-    'ValidationText'
+    'ValidationText',
+    'Action'
   ];
   sketchdisplayedColumns: string[] = [
     'Text'
@@ -72,8 +73,14 @@ export class TaskComponent implements OnInit {
   ValidationdataSource = new MatTableDataSource<Validation>();
   sketchdataSource = new MatTableDataSource<any>();
   selection = new SelectionModel<any>(true, []);
+  AllDevelopers: UserView[] = [];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild('inputValidation') inputValidation: ElementRef;
+  @ViewChild('inputRemarks') inputRemarks: ElementRef;
+  @ViewChild('outputField') outputField: ElementRef;
+  @ViewChild('outputValidation') outputValidation: ElementRef;
+  @ViewChild('outputRemarks') outputRemarks: ElementRef;
   constructor(
     private _masterService: MasterService,
     private _projectService: ProjectService,
@@ -93,6 +100,7 @@ export class TaskComponent implements OnInit {
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+      this.CurrentUserID = this.authenticationDetails.userID;
       this.CurrentUserRole = this.authenticationDetails.userRole;
       this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
       if (this.MenuItems.indexOf('Task') < 0) {
@@ -104,7 +112,8 @@ export class TaskComponent implements OnInit {
       this.InitializeOutputFormGroup();
       this.InitializeLogicFormGroup();
       this.InitializeValidationFormGroup();
-      this.GetAllTasks();
+      this.GetAllDevelopers();
+      this.GetAllTask();
     } else {
       this._router.navigate(['/auth/login']);
     }
@@ -239,6 +248,23 @@ export class TaskComponent implements OnInit {
     this.ValidationdataSource = new MatTableDataSource(this.ValidationsByTask);
   }
 
+  GetAllDevelopers(): void {
+    this._masterService.GetAllDevelopers().subscribe(
+      (data) => {
+        this.AllDevelopers = <UserView[]>data;
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+  GetAllTask(): void {
+    if (this.CurrentUserRole.toLocaleLowerCase() === 'developer') {
+      this.GetAllTasksByDeveloper();
+    } else {
+      this.GetAllTasks();
+    }
+  }
   GetAllTasks(): void {
     this.IsProgressBarVisibile = true;
     this._projectService.GetAllTasks().subscribe(
@@ -256,6 +282,26 @@ export class TaskComponent implements OnInit {
       }
     );
   }
+
+
+  GetAllTasksByDeveloper(): void {
+    this.IsProgressBarVisibile = true;
+    this._projectService.GetAllTasksByDeveloper(this.CurrentUserID).subscribe(
+      (data) => {
+        this.IsProgressBarVisibile = false;
+        this.AllTasks = <Task[]>data;
+        if (this.AllTasks && this.AllTasks.length) {
+          this.loadSelectedTask(this.AllTasks[0]);
+        }
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+      }
+    );
+  }
+
   loadSelectedTask(selectedTask: Task): void {
     this.SelectedTask = selectedTask;
     this.selectID = selectedTask.TaskID;
@@ -381,6 +427,47 @@ export class TaskComponent implements OnInit {
       this.ClearOutputFormGroup();
     } else {
       this.ShowValidationErrors(this.outputFormGroup);
+    }
+  }
+
+  LogicEnterKeyDown(): boolean {
+    this.AddLogicToTable();
+    return true;
+  }
+
+  keytab(elementName): void {
+    // const element = event.srcElement.nextElementSibling; // get the sibling element
+    // if (element) {
+    //   (element as ElementRef).nativeElement.focus();
+    // }
+    // else {
+    //   return;
+    // }
+    // ;
+    switch (elementName) {
+      case 'inputValidation': {
+        this.inputValidation.nativeElement.focus();
+        break;
+      }
+      case 'inputRemarks': {
+        this.inputRemarks.nativeElement.focus();
+        break;
+      }
+      case 'outputField': {
+        this.outputField.nativeElement.focus();
+        break;
+      }
+      case 'outputValidation': {
+        this.outputValidation.nativeElement.focus();
+        break;
+      }
+      case 'outputRemarks': {
+        this.outputRemarks.nativeElement.focus();
+        break;
+      }
+      default: {
+        break;
+      }
     }
   }
 
@@ -529,7 +616,7 @@ export class TaskComponent implements OnInit {
         this.ResetControl();
         this.notificationSnackBarComponent.openSnackBar('Task created successfully', SnackBarStatus.success);
         this.IsProgressBarVisibile = false;
-        this.GetAllTasks();
+        this.GetAllTask();
       },
       (err) => {
         console.error(err);
@@ -552,7 +639,7 @@ export class TaskComponent implements OnInit {
         this.ResetControl();
         this.notificationSnackBarComponent.openSnackBar('Task updated successfully', SnackBarStatus.success);
         this.IsProgressBarVisibile = false;
-        this.GetAllTasks();
+        this.GetAllTask();
       },
       (err) => {
         console.error(err);
@@ -572,7 +659,7 @@ export class TaskComponent implements OnInit {
         this.ResetControl();
         this.notificationSnackBarComponent.openSnackBar('Task deleted successfully', SnackBarStatus.success);
         this.IsProgressBarVisibile = false;
-        this.GetAllTasks();
+        this.GetAllTask();
       },
       (err) => {
         console.error(err);

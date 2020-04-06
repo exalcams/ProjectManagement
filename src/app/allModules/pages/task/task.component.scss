@@ -115,6 +115,7 @@
     flex-direction: column;
     .sidenav-content {
       overflow: auto;
+      overflow-x: hidden;
       -webkit-overflow-scrolling: touch;
     }
   }
@@ -197,7 +198,7 @@
   .TablePadFont {
     padding: 5px;
     font-size: 12px;
-    min-width: 100px !important;
+    // min-width: 100px !important;
   }
 
   table {
@@ -224,6 +225,10 @@
     .mat-sort-header-container {
       display: flex;
       justify-content: center;
+    }
+
+    .tableLeftBorder{
+      border-left: 1px solid rgba(0, 0, 0, 0.12);
     }
   }
   // table {
@@ -269,6 +274,7 @@
     bottom: 80px !important;
     right: 20px !important;
     background-color: #f6b570 !important;
+    z-index: 100;
   }
   .DeleteBtn {
     color: #ef8377;
@@ -291,13 +297,11 @@
   .addIcon {
     height: 20px;
     margin-top: 25px;
+    padding-left: 4px;
     cursor: pointer !important;
   }
   .removeIcon {
     height: 20px;
     cursor: pointer !important;
-  }
-  .mat-column-Action {
-    max-width: 104px !important;
   }
 }

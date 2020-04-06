@@ -62,7 +62,7 @@
               [formGroup]="taskFormGroup">
               <div fxLayout="row" fxLayoutAlign="start">
                 <div fxFlex="50">
-                  <mat-form-field class="pl-8" style="width: 80%;">
+                  <mat-form-field class="pl-8 pr-24" style="width: 100%;">
                     <input matInput placeholder="Title" formControlName="Title">
                     <mat-error
                       *ngIf="taskFormGroup.get('Title').touched && taskFormGroup.get('Title').hasError('required')">
@@ -73,10 +73,9 @@
                 <div fxFlex="50">
                   <mat-form-field class="pl-8" style="width: 100%;">
                     <mat-select placeholder="Type" formControlName="Type">
-                      <mat-option value="MS">MS</mat-option>
-                      <mat-option value="PD">PD</mat-option>
-                      <mat-option value="VI">VI</mat-option>
-                      <mat-option value="RN">RN</mat-option>
+                      <mat-option value="UI">UI</mat-option>
+                      <mat-option value="Service">Service</mat-option>
+                      <mat-option value="General">General</mat-option>
                     </mat-select>
                     <mat-error
                       *ngIf="taskFormGroup.get('Type').touched && taskFormGroup.get('Type').hasError('required')">
@@ -87,7 +86,7 @@
               </div>
               <div fxLayout="row" fxLayoutAlign="start">
                 <div fxFlex="50">
-                  <mat-form-field class="pl-8" style="width: 80%;">
+                  <mat-form-field class="pl-8 pr-24" style="width: 100%;">
                     <input matInput placeholder="Estimated Effort" formControlName="EstimatedEffort">
                     <mat-error
                       *ngIf="taskFormGroup.get('EstimatedEffort').touched && taskFormGroup.get('EstimatedEffort').hasError('required')">
@@ -101,7 +100,8 @@
                 </div>
                 <div fxFlex="50">
                   <mat-form-field class="pl-8" style="width: 100%;">
-                    <input matInput [matDatepicker]="picker1" formControlName="CompletionBefore">
+                    <input matInput placeholder="Completion Before" [matDatepicker]="picker1"
+                      formControlName="CompletionBefore">
                     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                     <mat-datepicker #picker1></mat-datepicker>
                     <!-- <input matInput placeholder="Completion Before" formControlName="CompletionBefore"> -->
@@ -114,8 +114,11 @@
               </div>
               <div fxLayout="row" fxLayoutAlign="start">
                 <div fxFlex="50">
-                  <mat-form-field class="pl-8" style="width: 80%;">
-                    <input matInput placeholder="Assigned To" formControlName="AssignedTo">
+                  <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                    <mat-select placeholder="Assigned To" formControlName="AssignedTo">
+                      <mat-option [value]="dev.UserID" *ngFor="let dev of AllDevelopers">{{dev.UserName}}</mat-option>
+                    </mat-select>
+                    <!-- <input matInput placeholder="Assigned To" formControlName="AssignedTo"> -->
                     <mat-error
                       *ngIf="taskFormGroup.get('AssignedTo').touched && taskFormGroup.get('AssignedTo').hasError('required')">
                       Assigned To is required
@@ -138,8 +141,9 @@
               </div>
               <div fxLayout="row" fxLayoutAlign="start">
                 <div fxFlex="50">
-                  <mat-form-field class="pl-8" style="width: 80%;" *ngIf="(CurrentUserRole | lowercase)==='developer'">
-                    <input matInput [matDatepicker]="picker2" formControlName="AcceptedCompletionDate">
+                  <mat-form-field class="pl-8" style="width: 100%;" *ngIf="(CurrentUserRole | lowercase)==='developer'">
+                    <input matInput placeholder="Accepted Completion Date" [matDatepicker]="picker2"
+                      formControlName="AcceptedCompletionDate">
                     <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                     <mat-datepicker #picker2></mat-datepicker>
                     <!-- <input matInput placeholder="Accepted Completion Date" formControlName="AcceptedCompletionDate"> -->
@@ -160,64 +164,69 @@
               <div *ngIf="(CurrentUserRole  | lowercase)==='team lead'">
                 <form autocomplete="off" fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto" name="form" novalidate
                   [formGroup]="inputFormGroup">
-                  <div fxFlex="30">
-                    <mat-form-field class="pl-8" style="width: 80%;">
-                      <input matInput placeholder="Field" formControlName="Field">
+                  <div fxFlex="25">
+                    <mat-form-field class="pl-8 pr-12" style="width: 100%;">
+                      <input matInput placeholder="Field" formControlName="Field"
+                        (keyup.enter)="keytab('inputValidation')">
                       <mat-error
                         *ngIf="inputFormGroup.get('Field').touched && inputFormGroup.get('Field').hasError('required')">
                         Field is required
                       </mat-error>
                     </mat-form-field>
                   </div>
-                  <div fxFlex="30">
-                    <mat-form-field class="pl-8" style="width: 80%;">
-                      <input matInput placeholder="Validation" formControlName="Validation">
+                  <div fxFlex="25">
+                    <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                      <input matInput placeholder="Validation" formControlName="Validation" #inputValidation
+                        (keyup.enter)="keytab('inputRemarks')">
                       <mat-error
                         *ngIf="inputFormGroup.get('Validation').touched && inputFormGroup.get('Validation').hasError('required')">
                         Validation is required
                       </mat-error>
                     </mat-form-field>
                   </div>
-                  <div fxFlex="30">
-                    <mat-form-field class="pl-8" style="width: 80%;">
-                      <input matInput placeholder="Remarks" formControlName="Remarks">
+                  <div fxFlex="45">
+                    <mat-form-field class="pl-8 pr-12" style="width: 100%;">
+                      <input matInput placeholder="Remarks" formControlName="Remarks" #inputRemarks
+                        (keydown.enter)="AddInputToTable()">
                       <mat-error
                         *ngIf="inputFormGroup.get('Remarks').touched && inputFormGroup.get('Remarks').hasError('required')">
                         Remarks is required
                       </mat-error>
                     </mat-form-field>
                   </div>
-                  <div fxFlex="10" fxLayoutAlign="start">
+                  <div fxFlex="5" fxLayoutAlign="start">
                     <img class="addIcon" src="assets/images/logos/add-button.png" (click)="AddInputToTable()">
                   </div>
                 </form>
               </div>
               <div style="margin-left: 8px;margin-top: 10px;">
-                <table class="table" mat-table [dataSource]="InputdataSource" matSort [@animateStagger]="{value:'50'}">
-
-                  <ng-container matColumnDef="Action">
-                    <th [style.display]="(CurrentUserRole  | lowercase)==='team lead'?'table-cell':'none'"
-                      mat-header-cell *matHeaderCellDef mat-sort-header style="width: 40px;"> </th>
-                    <td [style.display]="(CurrentUserRole  | lowercase)==='team lead'?'table-cell':'none'" mat-cell
-                      *matCellDef="let element" style="width: 40px;">
-                      <img class="removeIcon" src="assets/images/remove-button.png"
-                        (click)="RemoveInputFromTable(element)">
-                    </td>
-                  </ng-container>
+                <table *ngIf="InputsByTask?.length" class="table" mat-table [dataSource]="InputdataSource" matSort
+                  [@animateStagger]="{value:'50'}">
 
                   <ng-container matColumnDef="Field">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Field </th>
-                    <td mat-cell *matCellDef="let element"> {{element.Field}} </td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;"> Field </th>
+                    <td mat-cell *matCellDef="let element" style="width: 25%;" class="tableLeftBorder">
+                      {{element.Field}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="Validation">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Validation </th>
-                    <td mat-cell *matCellDef="let element"> {{element.Validation}} </td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;"> Validation </th>
+                    <td mat-cell *matCellDef="let element" style="width: 25%;"> {{element.Validation}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="Remarks">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Remarks </th>
-                    <td mat-cell *matCellDef="let element"> {{element.Remarks}} </td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 45%;"> Remarks </th>
+                    <td mat-cell *matCellDef="let element" style="width: 45%;"> {{element.Remarks}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="Action">
+                    <th [style.display]="(CurrentUserRole  | lowercase)==='team lead'?'table-cell':'none'"
+                      mat-header-cell *matHeaderCellDef mat-sort-header style="width: 5%;"> </th>
+                    <td [style.display]="(CurrentUserRole  | lowercase)==='team lead'?'table-cell':'none'" mat-cell
+                      *matCellDef="let element" style="width: 5%;">
+                      <img class="removeIcon" src="assets/images/remove-button.png"
+                        (click)="RemoveInputFromTable(element)">
+                    </td>
                   </ng-container>
 
                   <tr mat-header-row *matHeaderRowDef="InputdisplayedColumns;sticky: true"></tr>
@@ -232,16 +241,16 @@
               </div>
             </div>
 
-            <div fxFlex fxLayout="column" *ngIf="(CurrentUserRole | lowercase)==='developer'">
+            <div fxFlex fxLayout="column">
               <div style="margin-left: 7px">
                 <span><strong>Output Table</strong></span>
               </div>
               <div>
                 <form autocomplete="off" fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto" name="form" novalidate
-                  [formGroup]="outputFormGroup">
-                  <div fxFlex="25">
-                    <mat-form-field class="pl-8" style="width: 80%;">
-                      <input matInput placeholder="Level" formControlName="Level">
+                  [formGroup]="outputFormGroup" *ngIf="(CurrentUserRole | lowercase)!=='developer'">
+                  <div fxFlex="10">
+                    <mat-form-field class="pl-8 pr-12" style="width: 100%;">
+                      <input matInput placeholder="Level" formControlName="Level" (keyup.enter)="keytab('outputField')">
                       <mat-error
                         *ngIf="outputFormGroup.get('Level').touched && outputFormGroup.get('Level').hasError('required')">
                         Level is required
@@ -249,8 +258,9 @@
                     </mat-form-field>
                   </div>
                   <div fxFlex="20">
-                    <mat-form-field class="pl-8" style="width: 80%;">
-                      <input matInput placeholder="Field" formControlName="Field">
+                    <mat-form-field class="pl-8 pr-12" style="width: 100%;">
+                      <input matInput placeholder="Field" formControlName="Field" #outputField
+                        (keyup.enter)="keytab('outputValidation')">
                       <mat-error
                         *ngIf="outputFormGroup.get('Field').touched && outputFormGroup.get('Field').hasError('required')">
                         Field is required
@@ -258,57 +268,61 @@
                     </mat-form-field>
                   </div>
                   <div fxFlex="20">
-                    <mat-form-field class="pl-8" style="width: 80%;">
-                      <input matInput placeholder="Validation" formControlName="Validation">
+                    <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                      <input matInput placeholder="Validation" formControlName="Validation" #outputValidation
+                        (keyup.enter)="keytab('outputRemarks')">
                       <mat-error
                         *ngIf="outputFormGroup.get('Validation').touched && outputFormGroup.get('Validation').hasError('required')">
                         Validation is required
                       </mat-error>
                     </mat-form-field>
                   </div>
-                  <div fxFlex="25">
-                    <mat-form-field class="pl-8" style="width: 80%;">
-                      <input matInput placeholder="Remarks" formControlName="Remarks">
+                  <div fxFlex="45">
+                    <mat-form-field class="pl-8 pr-12" style="width: 100%;">
+                      <input matInput placeholder="Remarks" formControlName="Remarks" #outputRemarks
+                        (keydown.enter)="AddOutputToTable()">
                       <mat-error
                         *ngIf="outputFormGroup.get('Remarks').touched && outputFormGroup.get('Remarks').hasError('required')">
                         Remarks is required
                       </mat-error>
                     </mat-form-field>
                   </div>
-                  <div fxFlex="10" fxLayoutAlign="start">
+                  <div fxFlex="5" fxLayoutAlign="start">
                     <img class="addIcon" src="assets/images/logos/add-button.png" (click)="AddOutputToTable()">
                   </div>
                 </form>
               </div>
               <div style="margin-left: 8px;margin-top: 10px;">
-                <table class="table" mat-table [dataSource]="OutputdataSource" matSort [@animateStagger]="{value:'50'}">
-
-                  <ng-container matColumnDef="Action">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 40px;"> </th>
-                    <td mat-cell *matCellDef="let element" style="width: 40px;">
-                      <img class="removeIcon" src="assets/images/remove-button.png"
-                        (click)="RemoveOutputFromTable(element)">
-                    </td>
-                  </ng-container>
+                <table *ngIf="OutputsByTask?.length" class="table" mat-table [dataSource]="OutputdataSource" matSort
+                  [@animateStagger]="{value:'50'}">
 
                   <ng-container matColumnDef="Level">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Level </th>
-                    <td mat-cell *matCellDef="let element"> {{element.Level}} </td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> Level </th>
+                    <td mat-cell *matCellDef="let element" style="width: 10%;" class="tableLeftBorder">
+                      {{element.Level}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="Field">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Field </th>
-                    <td mat-cell *matCellDef="let element"> {{element.Field}} </td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Field </th>
+                    <td mat-cell *matCellDef="let element" style="width: 20%;"> {{element.Field}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="Validation">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Validation </th>
-                    <td mat-cell *matCellDef="let element"> {{element.Validation}} </td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Validation </th>
+                    <td mat-cell *matCellDef="let element" style="width: 20%;"> {{element.Validation}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="Remarks">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Remarks </th>
-                    <td mat-cell *matCellDef="let element"> {{element.Remarks}} </td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 45%;"> Remarks </th>
+                    <td mat-cell *matCellDef="let element" style="width: 45%;"> {{element.Remarks}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="Action">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 5%;"> </th>
+                    <td mat-cell *matCellDef="let element" style="width: 5%;">
+                      <img class="removeIcon" src="assets/images/remove-button.png"
+                        (click)="RemoveOutputFromTable(element)">
+                    </td>
                   </ng-container>
 
                   <tr mat-header-row *matHeaderRowDef="OutputdisplayedColumns;sticky: true"></tr>
@@ -327,43 +341,46 @@
               <div fxFlex fxLayout="row" fxLayoutAlign="start">
                 <div fxFlex="50" fxLayout="column">
                   <div style="margin-left: 7px">
-                    <span><strong>Logic Table</strong></span>
+                    <!-- <span><strong>Logic Table</strong></span> -->
                   </div>
                   <div *ngIf="(CurrentUserRole  | lowercase)==='team lead'">
                     <form autocomplete="off" fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto" name="form"
                       novalidate [formGroup]="logicFormGroup">
-                      <div fxFlex="70">
-                        <mat-form-field class="pl-8" style="width: 80%;">
-                          <input matInput placeholder="LogicText" formControlName="LogicText">
+                      <div fxFlex="90">
+                        <mat-form-field class="pl-8 pr-12" style="width: 100%;">
+                          <input matInput placeholder="LogicText" formControlName="LogicText"
+                            (keydown.enter)="LogicEnterKeyDown($event)">
                           <mat-error
                             *ngIf="logicFormGroup.get('LogicText').touched && logicFormGroup.get('LogicText').hasError('required')">
                             Logic Text is required
                           </mat-error>
                         </mat-form-field>
                       </div>
-                      <div fxFlex="30" fxLayout="start">
+                      <div fxFlex="10" fxLayout="start">
                         <img class="addIcon" src="assets/images/logos/add-button.png" (click)="AddLogicToTable()">
                       </div>
                     </form>
                   </div>
                   <div style="margin-left: 8px;margin-top: 10px;">
-                    <table class="table" mat-table [dataSource]="LogicdataSource" matSort
+                    <table *ngIf="LogicsByTask?.length" class="table" mat-table [dataSource]="LogicdataSource" matSort
                       [@animateStagger]="{value:'50'}">
+
+                      <ng-container matColumnDef="LogicText">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 90%;"> LogicText </th>
+                        <td mat-cell *matCellDef="let element" style="width: 90%;" class="tableLeftBorder">
+                          {{element.LogicText}} </td>
+                      </ng-container>
 
                       <ng-container matColumnDef="Action">
                         <th [style.display]="(CurrentUserRole  | lowercase)==='team lead'?'table-cell':'none'"
-                          mat-header-cell *matHeaderCellDef mat-sort-header style="width: 40px;"> </th>
+                          mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> </th>
                         <td [style.display]="(CurrentUserRole  | lowercase)==='team lead'?'table-cell':'none'" mat-cell
-                          *matCellDef="let element" style="width: 40px;">
+                          *matCellDef="let element" style="width: 10%;">
                           <img class="removeIcon" src="assets/images/remove-button.png"
                             (click)="RemoveLogicFromTable(element)">
                         </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="LogicText">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> LogicText </th>
-                        <td mat-cell *matCellDef="let element"> {{element.LogicText}} </td>
-                      </ng-container>
 
                       <tr mat-header-row *matHeaderRowDef="LogicdisplayedColumns;sticky: true"></tr>
                       <tr mat-row *matRowDef="let row; columns: LogicdisplayedColumns;" matRipple
@@ -379,42 +396,44 @@
                 </div>
                 <div fxFlex="50" fxLayout="column">
                   <div style="margin-left: 7px">
-                    <span><strong>Validation Table</strong></span>
+                    <!-- <span><strong>Validation Table</strong></span> -->
                   </div>
                   <div *ngIf="(CurrentUserRole  | lowercase)==='team lead'">
                     <form autocomplete="off" fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto" name="form"
                       novalidate [formGroup]="validationFormGroup">
-                      <div fxFlex="70">
-                        <mat-form-field class="pl-8" style="width: 80%;">
-                          <input matInput placeholder="Validation Text" formControlName="ValidationText">
+                      <div fxFlex="90">
+                        <mat-form-field class="pl-8 pr-12" style="width: 100%;">
+                          <input matInput placeholder="Validation Text" formControlName="ValidationText"
+                            (keydown.enter)="AddValidationToTable()">
                           <mat-error
                             *ngIf="validationFormGroup.get('ValidationText').touched && validationFormGroup.get('ValidationText').hasError('required')">
                             Validation Text is required
                           </mat-error>
                         </mat-form-field>
                       </div>
-                      <div fxFlex="30" fxLayout="start">
+                      <div fxFlex="10" fxLayout="start">
                         <img class="addIcon" src="assets/images/logos/add-button.png" (click)="AddValidationToTable()">
                       </div>
                     </form>
                   </div>
                   <div style="margin-left: 8px;margin-top: 10px;">
-                    <table class="table" mat-table [dataSource]="ValidationdataSource" matSort
-                      [@animateStagger]="{value:'50'}">
+                    <table *ngIf="ValidationsByTask?.length" class="table" mat-table [dataSource]="ValidationdataSource"
+                      matSort [@animateStagger]="{value:'50'}">
+
+                      <ng-container matColumnDef="ValidationText">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 90%;"> ValidationText </th>
+                        <td mat-cell *matCellDef="let element" style="width: 90%;" class="tableLeftBorder">
+                          {{element.ValidationText}} </td>
+                      </ng-container>
 
                       <ng-container matColumnDef="Action">
                         <th [style.display]="(CurrentUserRole  | lowercase)==='team lead'?'table-cell':'none'"
-                          mat-header-cell *matHeaderCellDef mat-sort-header style="width: 40px;"> </th>
+                          mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> </th>
                         <td [style.display]="(CurrentUserRole  | lowercase)==='team lead'?'table-cell':'none'" mat-cell
-                          *matCellDef="let element" style="width: 40px;">
+                          *matCellDef="let element" style="width: 10%;">
                           <img class="removeIcon" src="assets/images/remove-button.png"
                             (click)="RemoveValidationFromTable(element)">
                         </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="ValidationText">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> ValidationText </th>
-                        <td mat-cell *matCellDef="let element"> {{element.ValidationText}} </td>
                       </ng-container>
 
                       <tr mat-header-row *matHeaderRowDef="ValidationdisplayedColumns;sticky: true"></tr>
@@ -454,7 +473,7 @@
                   </div>
                   <div>
                     <div fxFlex="40">
-                      <mat-form-field class="pl-8" style="width: 80%;">
+                      <mat-form-field class="pl-8"style="width: 100%;">
                         <input matInput placeholder="Text">
                       </mat-form-field>
                     </div>

@@ -14,6 +14,10 @@ export class UserWithRole {
     ModifiedOn?: Date;
     ModifiedBy: string;
 }
+export class UserView {
+    UserID: Guid;
+    UserName: string;
+}
 export class RoleWithApp {
     RoleID: Guid;
     RoleName: string;
