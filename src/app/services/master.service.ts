@@ -4,7 +4,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { MenuApp, RoleWithApp, UserWithRole, UserNotification, Reason } from 'app/models/master';
+import { MenuApp, RoleWithApp, UserWithRole, UserNotification, Reason, UserView } from 'app/models/master';
 
 @Injectable({
   providedIn: 'root'
@@ -182,6 +182,11 @@ export class MasterService {
 
   GetAllUsers(): Observable<UserWithRole[] | string> {
     return this._httpClient.get<UserWithRole[]>(`${this.baseAddress}api/Master/GetAllUsers`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAllDevelopers(): Observable<UserView[] | string> {
+    return this._httpClient.get<UserView[]>(`${this.baseAddress}api/Master/GetAllDevelopers`)
       .pipe(catchError(this.errorHandler));
   }
 

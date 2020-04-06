@@ -6,6 +6,7 @@ import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import { Project } from 'app/models/project';
 import { Task, TaskView, Logic, Validation } from 'app/models/task';
+import { Guid } from 'guid-typescript';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +40,7 @@ export class ProjectService {
     return this._httpClient.get<any>(`${this.baseAddress}api/Project/GetAllProjects`)
       .pipe(catchError(this.errorHandler));
   }
-  
+
   GetAllOwners(): Observable<any | string> {
     return this._httpClient.get<any>(`${this.baseAddress}api/Project/GetAllOwners`)
       .pipe(catchError(this.errorHandler));
@@ -82,6 +83,11 @@ export class ProjectService {
 
   GetAllTasks(): Observable<Task[] | string> {
     return this._httpClient.get<Task[]>(`${this.baseAddress}api/Project/GetAllTasks`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAllTasksByDeveloper(UserID: Guid): Observable<Task[] | string> {
+    return this._httpClient.get<Task[]>(`${this.baseAddress}api/Project/GetAllTasksByDeveloper?UserID=${UserID}`)
       .pipe(catchError(this.errorHandler));
   }
 
