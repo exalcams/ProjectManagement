@@ -123,7 +123,7 @@ export class TaskComponent implements OnInit {
     this.taskFormGroup = this._formBuilder.group({
       Title: ['', Validators.required],
       Type: ['', Validators.required],
-      EstimatedEffort: ['', Validators.required],
+      EstimatedEffort: ['', [Validators.required, Validators.pattern('^[0-9]*([.][0-9]{1,3})?$')]],
       CompletionBefore: ['', Validators.required],
       AssignedTo: ['', Validators.required],
       AcceptedEffort: [''],
@@ -134,7 +134,7 @@ export class TaskComponent implements OnInit {
 
   DynamicallyAddAcceptedValidation(): void {
     if (this.CurrentUserRole.toLocaleLowerCase() === 'developer') {
-      this.taskFormGroup.get('AcceptedEffort').setValidators(Validators.required);
+      this.taskFormGroup.get('AcceptedEffort').setValidators([Validators.required, Validators.pattern('^[0-9]*([.][0-9]{1,3})?$')]);
       this.taskFormGroup.get('AcceptedEffort').updateValueAndValidity();
       this.taskFormGroup.get('AcceptedCompletionDate').setValidators(Validators.required);
       this.taskFormGroup.get('AcceptedCompletionDate').updateValueAndValidity();

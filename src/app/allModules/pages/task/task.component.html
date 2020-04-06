@@ -93,6 +93,10 @@
                       *ngIf="taskFormGroup.get('EstimatedEffort').touched && taskFormGroup.get('EstimatedEffort').hasError('required')">
                       Estimated Effort is required
                     </mat-error>
+                    <mat-error *ngIf="taskFormGroup.get('EstimatedEffort').touched && !taskFormGroup.get('EstimatedEffort').hasError('required')
+                    &&taskFormGroup.get('EstimatedEffort').hasError('pattern')">
+                      Enter a valid number
+                    </mat-error>
                   </mat-form-field>
                 </div>
                 <div fxFlex="50">
@@ -124,6 +128,10 @@
                     <mat-error
                       *ngIf="taskFormGroup.get('AcceptedEffort').touched && taskFormGroup.get('AcceptedEffort').hasError('required')">
                       Accepted Effort is required
+                    </mat-error>
+                    <mat-error *ngIf="taskFormGroup.get('AcceptedEffort').touched && !taskFormGroup.get('AcceptedEffort').hasError('required')
+                    &&taskFormGroup.get('AcceptedEffort').hasError('pattern')">
+                      Enter a valid number
                     </mat-error>
                   </mat-form-field>
                 </div>
@@ -188,8 +196,8 @@
                 <table class="table" mat-table [dataSource]="InputdataSource" matSort [@animateStagger]="{value:'50'}">
 
                   <ng-container matColumnDef="Action">
-                    <th [style.display]="(CurrentUserRole  | lowercase)==='team lead'?'table-cell':'none'" mat-header-cell
-                      *matHeaderCellDef mat-sort-header style="width: 40px;"> </th>
+                    <th [style.display]="(CurrentUserRole  | lowercase)==='team lead'?'table-cell':'none'"
+                      mat-header-cell *matHeaderCellDef mat-sort-header style="width: 40px;"> </th>
                     <td [style.display]="(CurrentUserRole  | lowercase)==='team lead'?'table-cell':'none'" mat-cell
                       *matCellDef="let element" style="width: 40px;">
                       <img class="removeIcon" src="assets/images/remove-button.png"
