@@ -7,7 +7,7 @@ import { NotificationSnackBarComponent } from 'app/notifications/notification-sn
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MasterService } from 'app/services/master.service';
 import { Router } from '@angular/router';
-import { Task, TaskView, Input, Output, Logic, Validation } from 'app/models/task';
+import { Task, TaskView, Input, Output, Logic, Validation, TaskSubGroupView, SketchView } from 'app/models/task';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { ProjectService } from 'app/services/project.service';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
@@ -35,6 +35,7 @@ export class TaskComponent implements OnInit {
   logicFormGroup: FormGroup;
   validationFormGroup: FormGroup;
   searchText = '';
+  AllTaskSubGroupView: TaskSubGroupView[] = [];
   AllTasks: Task[] = [];
   selectID: number;
   SelectedTask: Task;
@@ -43,6 +44,7 @@ export class TaskComponent implements OnInit {
   OutputsByTask: Output[] = [];
   LogicsByTask: Logic[] = [];
   ValidationsByTask: Validation[] = [];
+  SketchViewsByTask: SketchView[] = [];
   InputdisplayedColumns: string[] = [
     'Field',
     'Validation',
@@ -81,6 +83,12 @@ export class TaskComponent implements OnInit {
   @ViewChild('outputField') outputField: ElementRef;
   @ViewChild('outputValidation') outputValidation: ElementRef;
   @ViewChild('outputRemarks') outputRemarks: ElementRef;
+  @ViewChild('logicText') logicText: ElementRef;
+  @ViewChild('validationText') validationText: ElementRef;
+  @ViewChild('fileInput1') fileInput1: ElementRef;
+  fileToUpload: File;
+  fileToUploadList: File[] = [];
+  math = Math;
   constructor(
     private _masterService: MasterService,
     private _projectService: ProjectService,
@@ -113,6 +121,7 @@ export class TaskComponent implements OnInit {
       this.InitializeLogicFormGroup();
       this.InitializeValidationFormGroup();
       this.GetAllDevelopers();
+      this.GetAllTaskSubGroupView();
       this.GetAllTask();
     } else {
       this._router.navigate(['/auth/login']);
@@ -135,6 +144,7 @@ export class TaskComponent implements OnInit {
       EstimatedEffort: ['', [Validators.required, Validators.pattern('^[0-9]*([.][0-9]{1,3})?$')]],
       CompletionBefore: ['', Validators.required],
       AssignedTo: ['', Validators.required],
+      TaskSubGroupID: ['', Validators.required],
       AcceptedEffort: [''],
       AcceptedCompletionDate: ['']
     });
@@ -201,6 +211,7 @@ export class TaskComponent implements OnInit {
     this.ClearOutputDataSource();
     this.ClearLogicDataSource();
     this.ClearValidationDataSource();
+    this.ClearSketchFiles();
   }
 
   ClearInputFormGroup(): void {
@@ -247,7 +258,15 @@ export class TaskComponent implements OnInit {
     this.ValidationsByTask = [];
     this.ValidationdataSource = new MatTableDataSource(this.ValidationsByTask);
   }
-
+  ClearSketchFiles(): void {
+    this.SketchViewsByTask = [];
+    this.fileToUploadList = [];
+    this.fileToUpload = null;
+  }
+  // ClearFileList(): void {
+  //   this.fileToUpload = null;
+  //   this.fileToUploadList = [];
+  // }
   GetAllDevelopers(): void {
     this._masterService.GetAllDevelopers().subscribe(
       (data) => {
@@ -258,6 +277,18 @@ export class TaskComponent implements OnInit {
       }
     );
   }
+  GetAllTaskSubGroupView(): void {
+    this._projectService.GetAllTaskSubGroupView().subscribe(
+      (data) => {
+        this.IsProgressBarVisibile = false;
+        this.AllTaskSubGroupView = <TaskSubGroupView[]>data;
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+
   GetAllTask(): void {
     if (this.CurrentUserRole.toLocaleLowerCase() === 'developer') {
       this.GetAllTasksByDeveloper();
@@ -308,7 +339,12 @@ export class TaskComponent implements OnInit {
     this.SetTaskValues();
     this.GetTaskSubItems();
   }
-
+  typeSelected(event): void {
+    const selectedType = event.value;
+    if (event.value) {
+      this.SelectedTask.Type = event.value;
+    }
+  }
   applyFilter(filterValue: string): void {
     this.InputdataSource.filter = filterValue.trim().toLowerCase();
   }
@@ -320,6 +356,7 @@ export class TaskComponent implements OnInit {
     this.taskFormGroup.get('EstimatedEffort').patchValue(this.SelectedTask.EstimatedEffort);
     this.taskFormGroup.get('CompletionBefore').patchValue(this.SelectedTask.CompletionBefore);
     this.taskFormGroup.get('AssignedTo').patchValue(this.SelectedTask.AssignedTo);
+    this.taskFormGroup.get('TaskSubGroupID').patchValue(this.SelectedTask.TaskSubGroupID);
     this.taskFormGroup.get('AcceptedEffort').patchValue(this.SelectedTask.AcceptedEffort);
     this.taskFormGroup.get('AcceptedCompletionDate').patchValue(this.SelectedTask.AcceptedCompletionDate);
   }
@@ -329,6 +366,7 @@ export class TaskComponent implements OnInit {
     this.GetOutputsByTask();
     this.GetLogicsByTask();
     this.GetValidationsByTask();
+    this.GetSketchViewsByTask();
   }
 
   GetInputsByTask(): void {
@@ -394,6 +432,26 @@ export class TaskComponent implements OnInit {
       }
     );
   }
+  GetSketchViewsByTask(): void {
+    this.IsProgressBarVisibile = true;
+    this._projectService.GetSketchViewsByTask(this.SelectedTask.TaskID).subscribe(
+      (data) => {
+        this.IsProgressBarVisibile = false;
+        this.fileToUploadList = [];
+        this.SketchViewsByTask = data as SketchView[];
+        this.SketchViewsByTask.forEach(x => {
+          const fil: File = new File([], x.AttachmentName);
+          // fil.size = x.Size;
+          this.fileToUploadList.push(fil);
+        });
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+        // this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+      }
+    );
+  }
 
   AddInputToTable(): void {
     if (this.inputFormGroup.valid) {
@@ -429,9 +487,27 @@ export class TaskComponent implements OnInit {
       this.ShowValidationErrors(this.outputFormGroup);
     }
   }
+  InputEnterKeyDown(): boolean {
+    this.inputRemarks.nativeElement.blur();
+    this.AddInputToTable();
+    return true;
+  }
+
+  OutputEnterKeyDown(): boolean {
+    this.outputRemarks.nativeElement.blur();
+    this.AddOutputToTable();
+    return true;
+  }
 
   LogicEnterKeyDown(): boolean {
+    this.logicText.nativeElement.blur();
     this.AddLogicToTable();
+    return true;
+  }
+
+  ValidationEnterKeyDown(): boolean {
+    this.validationText.nativeElement.blur();
+    this.AddValidationToTable();
     return true;
   }
 
@@ -562,6 +638,7 @@ export class TaskComponent implements OnInit {
     this.SelectedTask.EstimatedEffort = this.SelectedTaskView.EstimatedEffort = this.taskFormGroup.get('EstimatedEffort').value;
     this.SelectedTask.CompletionBefore = this.SelectedTaskView.CompletionBefore = this.taskFormGroup.get('CompletionBefore').value;
     this.SelectedTask.AssignedTo = this.SelectedTaskView.AssignedTo = this.taskFormGroup.get('AssignedTo').value;
+    this.SelectedTask.TaskSubGroupID = this.SelectedTaskView.TaskSubGroupID = this.taskFormGroup.get('TaskSubGroupID').value;
     this.SelectedTask.AcceptedEffort = this.SelectedTaskView.AcceptedEffort = this.taskFormGroup.get('AcceptedEffort').value;
     this.SelectedTask.AcceptedCompletionDate = this.SelectedTaskView.AcceptedCompletionDate = this.taskFormGroup.get('AcceptedCompletionDate').value;
   }
@@ -606,17 +683,33 @@ export class TaskComponent implements OnInit {
   }
 
   CreateTask(): void {
-    this.GetTaskValues();
-    this.GetTaskSubItemValues();
+    // this.GetTaskValues();
+    // this.GetTaskSubItemValues();
     this.SelectedTaskView.CreatedBy = this.authenticationDetails.userID.toString();
     this.IsProgressBarVisibile = true;
     this._projectService.CreateTask(this.SelectedTaskView).subscribe(
       (data) => {
-        // console.log(data);
-        this.ResetControl();
-        this.notificationSnackBarComponent.openSnackBar('Task created successfully', SnackBarStatus.success);
-        this.IsProgressBarVisibile = false;
-        this.GetAllTask();
+        this.SelectedTask.TaskID = +data;
+        if (this.fileToUploadList && this.fileToUploadList.length) {
+          this._projectService.AddTaskAttachment(this.SelectedTask.TaskID, this.CurrentUserID, this.fileToUploadList).subscribe(
+            (dat) => {
+              this.ResetControl();
+              this.notificationSnackBarComponent.openSnackBar('Task created successfully', SnackBarStatus.success);
+              this.IsProgressBarVisibile = false;
+              this.GetAllTask();
+            },
+            (err) => {
+              console.error(err);
+              this.IsProgressBarVisibile = false;
+              this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+            }
+          );
+        } else {
+          this.ResetControl();
+          this.notificationSnackBarComponent.openSnackBar('Task created successfully', SnackBarStatus.success);
+          this.IsProgressBarVisibile = false;
+          this.GetAllTask();
+        }
       },
       (err) => {
         console.error(err);
@@ -628,18 +721,33 @@ export class TaskComponent implements OnInit {
   }
 
   UpdateTask(): void {
-    this.GetTaskValues();
-    this.GetTaskSubItemValues();
+    // this.GetTaskValues();
+    // this.GetTaskSubItemValues();
     this.SelectedTaskView.TaskID = this.SelectedTask.TaskID;
     this.SelectedTaskView.ModifiedBy = this.authenticationDetails.userID.toString();
     this.IsProgressBarVisibile = true;
     this._projectService.UpdateTask(this.SelectedTaskView).subscribe(
       (data) => {
-        // console.log(data);
-        this.ResetControl();
-        this.notificationSnackBarComponent.openSnackBar('Task updated successfully', SnackBarStatus.success);
-        this.IsProgressBarVisibile = false;
-        this.GetAllTask();
+        if (this.fileToUploadList && this.fileToUploadList.length) {
+          this._projectService.AddTaskAttachment(this.SelectedTask.TaskID, this.CurrentUserID, this.fileToUploadList).subscribe(
+            (dat) => {
+              this.ResetControl();
+              this.notificationSnackBarComponent.openSnackBar('Task updated successfully', SnackBarStatus.success);
+              this.IsProgressBarVisibile = false;
+              this.GetAllTask();
+            },
+            (err) => {
+              console.error(err);
+              this.IsProgressBarVisibile = false;
+              this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+            }
+          );
+        } else {
+          this.ResetControl();
+          this.notificationSnackBarComponent.openSnackBar('Task updated successfully', SnackBarStatus.success);
+          this.IsProgressBarVisibile = false;
+          this.GetAllTask();
+        }
       },
       (err) => {
         console.error(err);
@@ -680,17 +788,32 @@ export class TaskComponent implements OnInit {
   SaveClicked(): void {
     if (this.taskFormGroup.valid) {
       // const file: File = this.fileToUpload;
-      if (this.SelectedTask.TaskID) {
-        const Actiontype = 'Update';
-        const Catagory = 'Task';
-        this.OpenConfirmationDialog(Actiontype, Catagory);
+      this.GetTaskValues();
+      this.GetTaskSubItemValues();
+      if (this.SelectedTask.Type.toLocaleLowerCase() === 'ui') {
+        if (this.SelectedTaskView.Inputs && this.SelectedTaskView.Inputs.length &&
+          this.SelectedTaskView.Inputs.length > 0) {
+          this.SetActionToOpenConfirmation();
+        } else {
+          this.notificationSnackBarComponent.openSnackBar('Please add atleast one record for input table', SnackBarStatus.danger);
+        }
       } else {
-        const Actiontype = 'Create';
-        const Catagory = 'Task';
-        this.OpenConfirmationDialog(Actiontype, Catagory);
+        this.SetActionToOpenConfirmation();
       }
     } else {
       this.ShowValidationErrors(this.taskFormGroup);
+    }
+  }
+
+  SetActionToOpenConfirmation(): void {
+    if (this.SelectedTask.TaskID) {
+      const Actiontype = 'Update';
+      const Catagory = 'Task';
+      this.OpenConfirmationDialog(Actiontype, Catagory);
+    } else {
+      const Actiontype = 'Create';
+      const Catagory = 'Task';
+      this.OpenConfirmationDialog(Actiontype, Catagory);
     }
   }
 
@@ -706,4 +829,10 @@ export class TaskComponent implements OnInit {
     }
   }
 
+  handleFileInput(evt): void {
+    if (evt.target.files && evt.target.files.length > 0) {
+      this.fileToUpload = evt.target.files[0];
+      this.fileToUploadList.push(this.fileToUpload);
+    }
+  }
 }

@@ -8,6 +8,7 @@ export class CommonClass {
 
 export class Task extends CommonClass {
     TaskID: number;
+    TaskSubGroupID: number;
     Title: string;
     Type: string;
     EstimatedEffort: number;
@@ -37,17 +38,26 @@ export class Output extends CommonClass {
 export class Logic extends CommonClass {
     LogicID: number;
     TaskID: number;
-    LogicText: number;
+    LogicText: string;
 }
 
 export class Validation extends CommonClass {
     ValidationID: number;
     TaskID: number;
-    ValidationText: number;
+    ValidationText: string;
+}
+
+export class SketchView extends CommonClass {
+    SketchID: number;
+    TaskID: number;
+    AttachmentName: string;
+    DocumentType: string;
+    ContentLength: number;
 }
 
 export class TaskView extends CommonClass {
     TaskID: number;
+    TaskSubGroupID: number;
     Title: string;
     Type: string;
     EstimatedEffort: number;
@@ -70,6 +80,7 @@ export class TaskView extends CommonClass {
 
 export class CreateTaskView extends CommonClass {
     TaskID: number;
+    TaskSubGroupID: number;
     Title: string;
     Type: string;
     EstimatedEffort: number;
@@ -84,6 +95,7 @@ export class CreateTaskView extends CommonClass {
 
 export class UpdateTaskView extends CommonClass {
     TaskID: number;
+    TaskSubGroupID: number;
     Title: string;
     Type: string;
     EstimatedEffort: number;
@@ -92,5 +104,11 @@ export class UpdateTaskView extends CommonClass {
     AcceptedEffort: number;
     AcceptedCompletionDate?: Date;
     Outputs: Output[];
+}
+
+export class TaskSubGroupView {
+    TaskGroupID: number;
+    TaskSubGroupID: number;
+    Title: string;
 }
 

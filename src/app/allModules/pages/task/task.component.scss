@@ -227,7 +227,7 @@
       justify-content: center;
     }
 
-    .tableLeftBorder{
+    .tableLeftBorder {
       border-left: 1px solid rgba(0, 0, 0, 0.12);
     }
   }
@@ -302,6 +302,24 @@
   }
   .removeIcon {
     height: 20px;
+    cursor: pointer !important;
+  }
+  .Rectangle {
+    // width: 152px;
+    min-height: 50px;
+    border-radius: 9px;
+    border: solid 1px #cccccc;
+    background-color: #ffffff;
+  }
+  .Rectangle-106 {
+    width: 36px;
+    height: 33px;
+    opacity: 0.2;
+    border-radius: 2px;
+    background-color: #f9d2a8;
+  }
+  .addAttachmentClass{
+    color: #4784f7;
     cursor: pointer !important;
   }
 }
