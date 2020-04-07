@@ -72,7 +72,7 @@
                 </div>
                 <div fxFlex="50">
                   <mat-form-field class="pl-8" style="width: 100%;">
-                    <mat-select placeholder="Type" formControlName="Type">
+                    <mat-select (selectionChange)="typeSelected($event)" placeholder="Type" formControlName="Type">
                       <mat-option value="UI">UI</mat-option>
                       <mat-option value="Service">Service</mat-option>
                       <mat-option value="General">General</mat-option>
@@ -126,6 +126,21 @@
                   </mat-form-field>
                 </div>
                 <div fxFlex="50">
+                  <mat-form-field class="pl-8" style="width: 100%;">
+                    <mat-select placeholder="Task Sub Group" formControlName="TaskSubGroupID">
+                      <mat-option [value]="tas.TaskSubGroupID" *ngFor="let tas of AllTaskSubGroupView">
+                        {{tas.Title}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="taskFormGroup.get('TaskSubGroupID').touched && taskFormGroup.get('TaskSubGroupID').hasError('required')">
+                      Task Sub Group is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div fxLayout="row" fxLayoutAlign="start">
+                <div fxFlex="50">
                   <mat-form-field class="pl-8" style="width: 100%;" *ngIf="(CurrentUserRole | lowercase)==='developer'">
                     <input matInput placeholder="Accepted Effort" formControlName="AcceptedEffort">
                     <mat-error
@@ -138,8 +153,6 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
-              </div>
-              <div fxLayout="row" fxLayoutAlign="start">
                 <div fxFlex="50">
                   <mat-form-field class="pl-8" style="width: 100%;" *ngIf="(CurrentUserRole | lowercase)==='developer'">
                     <input matInput placeholder="Accepted Completion Date" [matDatepicker]="picker2"
@@ -153,11 +166,9 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
-                <div fxFlex="50">
-                </div>
               </div>
             </form>
-            <div fxFlex fxLayout="column">
+            <div fxFlex fxLayout="column" *ngIf="(SelectedTask?.Type| lowercase)==='ui'">
               <div style="margin-left: 7px">
                 <span><strong>Input Table</strong></span>
               </div>
@@ -187,7 +198,7 @@
                   <div fxFlex="45">
                     <mat-form-field class="pl-8 pr-12" style="width: 100%;">
                       <input matInput placeholder="Remarks" formControlName="Remarks" #inputRemarks
-                        (keydown.enter)="AddInputToTable()">
+                        (keydown.enter)="InputEnterKeyDown()">
                       <mat-error
                         *ngIf="inputFormGroup.get('Remarks').touched && inputFormGroup.get('Remarks').hasError('required')">
                         Remarks is required
@@ -200,8 +211,7 @@
                 </form>
               </div>
               <div style="margin-left: 8px;margin-top: 10px;">
-                <table *ngIf="InputsByTask?.length" class="table" mat-table [dataSource]="InputdataSource" matSort
-                  [@animateStagger]="{value:'50'}">
+                <table *ngIf="InputsByTask?.length" class="table" mat-table [dataSource]="InputdataSource" matSort>
 
                   <ng-container matColumnDef="Field">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;"> Field </th>
@@ -241,7 +251,7 @@
               </div>
             </div>
 
-            <div fxFlex fxLayout="column">
+            <div fxFlex fxLayout="column" *ngIf="(SelectedTask?.Type| lowercase)==='ui'">
               <div style="margin-left: 7px">
                 <span><strong>Output Table</strong></span>
               </div>
@@ -280,7 +290,7 @@
                   <div fxFlex="45">
                     <mat-form-field class="pl-8 pr-12" style="width: 100%;">
                       <input matInput placeholder="Remarks" formControlName="Remarks" #outputRemarks
-                        (keydown.enter)="AddOutputToTable()">
+                        (keydown.enter)="OutputEnterKeyDown()">
                       <mat-error
                         *ngIf="outputFormGroup.get('Remarks').touched && outputFormGroup.get('Remarks').hasError('required')">
                         Remarks is required
@@ -293,8 +303,7 @@
                 </form>
               </div>
               <div style="margin-left: 8px;margin-top: 10px;">
-                <table *ngIf="OutputsByTask?.length" class="table" mat-table [dataSource]="OutputdataSource" matSort
-                  [@animateStagger]="{value:'50'}">
+                <table *ngIf="OutputsByTask?.length" class="table" mat-table [dataSource]="OutputdataSource" matSort>
 
                   <ng-container matColumnDef="Level">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> Level </th>
@@ -348,8 +357,8 @@
                       novalidate [formGroup]="logicFormGroup">
                       <div fxFlex="90">
                         <mat-form-field class="pl-8 pr-12" style="width: 100%;">
-                          <input matInput placeholder="LogicText" formControlName="LogicText"
-                            (keydown.enter)="LogicEnterKeyDown($event)">
+                          <input matInput placeholder="LogicText" formControlName="LogicText" #logicText
+                            (keydown.enter)="LogicEnterKeyDown()">
                           <mat-error
                             *ngIf="logicFormGroup.get('LogicText').touched && logicFormGroup.get('LogicText').hasError('required')">
                             Logic Text is required
@@ -362,8 +371,7 @@
                     </form>
                   </div>
                   <div style="margin-left: 8px;margin-top: 10px;">
-                    <table *ngIf="LogicsByTask?.length" class="table" mat-table [dataSource]="LogicdataSource" matSort
-                      [@animateStagger]="{value:'50'}">
+                    <table *ngIf="LogicsByTask?.length" class="table" mat-table [dataSource]="LogicdataSource" matSort>
 
                       <ng-container matColumnDef="LogicText">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 90%;"> LogicText </th>
@@ -403,8 +411,8 @@
                       novalidate [formGroup]="validationFormGroup">
                       <div fxFlex="90">
                         <mat-form-field class="pl-8 pr-12" style="width: 100%;">
-                          <input matInput placeholder="Validation Text" formControlName="ValidationText"
-                            (keydown.enter)="AddValidationToTable()">
+                          <input matInput placeholder="Validation Text" formControlName="ValidationText" #validationText
+                            (keydown.enter)="ValidationEnterKeyDown()">
                           <mat-error
                             *ngIf="validationFormGroup.get('ValidationText').touched && validationFormGroup.get('ValidationText').hasError('required')">
                             Validation Text is required
@@ -418,7 +426,7 @@
                   </div>
                   <div style="margin-left: 8px;margin-top: 10px;">
                     <table *ngIf="ValidationsByTask?.length" class="table" mat-table [dataSource]="ValidationdataSource"
-                      matSort [@animateStagger]="{value:'50'}">
+                      matSort>
 
                       <ng-container matColumnDef="ValidationText">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 90%;"> ValidationText </th>
@@ -449,25 +457,9 @@
                   </div>
                 </div>
               </div>
-              <div fxLayout="row" fxLayoutAlign="start">
 
-                <div fxFlex="50">
-                  <div style="margin-left: 7px">
-                    <span><strong>Sketch</strong></span>
-                  </div>
-                  <div style="margin-left: 7px;margin-top: 15px">
-                    <!-- <span>Attachments</span> -->
-                    <span style="color: #4784f7;"> + Add an Attachment. </span>
-                  </div>
-                </div>
-                <div fxFlex="50">
-                  <!-- <div style="margin-left: 7px">
-                    <span>Attachments</span>
-                   <span style="color: #4784f7;"> + Add an Attachment. </span> 
-                  </div> -->
-                </div>
 
-                <!-- <div fxFlex="50">
+              <!-- <div fxFlex="50">
                   <div style="margin-left: 7px">
                     <span><strong>Sketch Table</strong></span>
                   </div>
@@ -491,7 +483,7 @@
                   </div>
                   <div style="margin-left: 8px;margin-top: 10px;">
                     <table class="table" mat-table [dataSource]="sketchdataSource" matSort
-                      [@animateStagger]="{value:'50'}">
+                      >
 
                       <ng-container matColumnDef="Text">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Text </th>
@@ -510,6 +502,35 @@
                   </div>
                 </div> -->
 
+            </div>
+            <div fxFlex fxLayout="column">
+              <div fxLayout="row" fxLayoutAlign="start">
+                <div fxFlex="50">
+                  <div style="margin-left: 7px">
+                    <span><strong>Sketch</strong></span>
+                  </div>
+                  <div class="my-16">
+                    <span class="addAttachmentClass" (click)="fileInput1.click()"> + Add an Attachment. </span>
+                    <input hidden type="file" accept="image/x-png,image/gif,image/jpeg,image/jpg" #fileInput1 id="file"
+                      (change)="handleFileInput($event)" />
+                  </div>
+                </div>
+                <div fxFlex="50">
+                </div>
+              </div>
+              <div class="m-4" *ngFor="let fil of fileToUploadList;let index=index;" fxLayout="row wrap"
+                fxLayoutAlign="start">
+                <div fxFlex="33" fxLayout class="Rectangle">
+                  <div class="Rectangle-106 m-8">
+                    <img class="m-8" src="assets/images/imageIcon.png">
+                  </div>
+                  <div fxFlex class="m-8" fxLayout="column">
+                    <div fxFlex>{{fil.name}}</div>
+                    <div fxFlex *ngIf="fil.size">{{math.round(fil.size / 1024) + ' KB'}}</div>
+                    <div fxFlex *ngIf="SketchViewsByTask[index]?.ContentLength">
+                      {{math.round(SketchViewsByTask[index]?.ContentLength / 1024) + ' KB'}}</div>
+                  </div>
+                </div>
               </div>
             </div>
             <div fxFlex fxLayout="column">
