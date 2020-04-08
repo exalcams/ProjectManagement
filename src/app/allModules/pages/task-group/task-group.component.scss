@@ -1,12 +1,12 @@
 @import "src/@fuse/scss/fuse";
 
 #taskgroup {
-  // .progressBarPostion {
-  //   position: absolute !important;
-  //   bottom: 50%;
-  //   z-index: 1;
-  //   left: 55%;
-  // }
+  .progressBarPosition {
+    position: absolute !important;
+    bottom: 50%;
+    z-index: 1;
+    left: 55%;
+  }
 
   .leftCard {
     @include mat-elevation(2);

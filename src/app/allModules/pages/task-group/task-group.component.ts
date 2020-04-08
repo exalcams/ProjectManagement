@@ -634,6 +634,7 @@ export class TaskGroupComponent implements OnInit {
       },
       (err) => {
         console.error(err);
+        this.ResetControl();
         this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
         this.IsProgressBarVisibile = false;
       }
@@ -657,6 +658,7 @@ export class TaskGroupComponent implements OnInit {
       },
       (err) => {
         console.error(err);
+        this.ResetControl();
         this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
         this.IsProgressBarVisibile = false;
       }
@@ -679,6 +681,7 @@ export class TaskGroupComponent implements OnInit {
       },
       (err) => {
         console.error(err);
+        this.ResetControl();
         this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
         this.IsProgressBarVisibile = false;
       }

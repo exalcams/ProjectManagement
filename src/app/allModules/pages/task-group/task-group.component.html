@@ -181,7 +181,7 @@
               <!-- Sub-Group Information -->
               <div class="task-sub-group">
                 <div>
-                  <span style="border-bottom: 2px solid #efb577 !important;"><strong>Sprinter</strong></span>
+                  <span style="border-bottom: 2px solid #efb577 !important;"><strong>Sprint</strong></span>
                 </div>
                 <div>
                   <!-- Sub-Group Form  -->
@@ -293,7 +293,7 @@
                     </div>
 
                     <!-- Sub Group Table -->
-                    <div style="margin-left: 8px;margin-top: 10px;">
+                    <div style="margin-left: 8px;margin-top: 10px; width:70vw; overflow: auto;">
 
                       <!-- <table class="table" mat-table [dataSource]="dataSource" matSort [@animateStagger]="{value:'50'}">
 
@@ -491,5 +491,8 @@
         </div>
       </div>
     </div>
+    <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPosition" color="accent" mode="indeterminate">
+    </mat-progress-spinner>
+    <div id="overlay" *ngIf="IsProgressBarVisibile"></div>
   </div>
 </div>
