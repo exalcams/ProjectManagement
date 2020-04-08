@@ -169,7 +169,7 @@ export class TaskComponent implements OnInit {
     this.inputFormGroup = this._formBuilder.group({
       Field: ['', Validators.required],
       Validation: ['', Validators.required],
-      Remarks: ['', Validators.required],
+      Remarks: [''],
     });
   }
 
@@ -178,7 +178,7 @@ export class TaskComponent implements OnInit {
       Level: ['', Validators.required],
       Field: ['', Validators.required],
       Validation: ['', Validators.required],
-      Remarks: ['', Validators.required],
+      Remarks: [''],
     });
   }
 
@@ -834,5 +834,17 @@ export class TaskComponent implements OnInit {
       this.fileToUpload = evt.target.files[0];
       this.fileToUploadList.push(this.fileToUpload);
     }
+  }
+
+  numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode === 8 || charCode === 9 || charCode === 13 || charCode === 46
+      || charCode === 37 || charCode === 39 || charCode === 123 || charCode === 190) {
+      return true;
+    }
+    else if (charCode < 48 || charCode > 57) {
+      return false;
+    }
+    return true;
   }
 }
