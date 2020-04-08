@@ -1,10 +1,11 @@
 import { Project } from './project';
 import { List } from 'lodash';
+import { Guid } from 'guid-typescript';
 
 export class TaskGroup {
     TaskGroupID: number;
     ProjectID: number;
-    OwnerID: number;
+    OwnerIDList: Guid[];
     Title: string;
     PlannedStartDate: Date;
     PlannedEndDate: Date;
@@ -24,7 +25,7 @@ export class TaskGroup {
 export class TaskSubGroup {
     TaskSubGroupID: number;
     TaskGroupID: number;
-    OwnerID: number;
+    OwnerIDList: Guid[];
     Title: string;
     PlannedStartDate: Date;
     PlannedEndDate: Date;
@@ -39,7 +40,7 @@ export class TaskSubGroup {
     ModifiedOn?: Date;
     ModifiedBy: string;
     OwnerName: string;
-
+    Action: string;
 
 }
 export class Owner {
@@ -52,7 +53,7 @@ export class Owner {
     CreatedBy: string;
     ModifiedOn?: Date;
     ModifiedBy: string;
- 
+
 }
 
 export class OwnerMaster {
@@ -65,5 +66,5 @@ export class OwnerMaster {
     CreatedBy: string;
     ModifiedOn?: Date;
     ModifiedBy: string;
- 
+
 }

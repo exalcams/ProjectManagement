@@ -4,12 +4,14 @@ import { Router } from '@angular/router';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { MatSnackBar, MatDialogConfig, MatDialog } from '@angular/material';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { AuthenticationDetails } from 'app/models/master';
+import { AuthenticationDetails, UserView, UserWithRole } from 'app/models/master';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Guid } from 'guid-typescript';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
-import { Project, Owner } from 'app/models/project';
+import { Project } from 'app/models/project';
 import { ProjectService } from 'app/services/project.service';
+// import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import { MasterService } from 'app/services/master.service';
 @Component({
   selector: 'app-project',
   templateUrl: './project.component.html',
@@ -27,10 +29,15 @@ export class ProjectComponent implements OnInit {
   IsProgressBarVisibile: boolean;
   selectID: number;
   projectMainFormGroup: FormGroup;
-  AllOwners: Owner[] = [];
+  AllOwners: UserWithRole[] = [];
+  SelectedOwners: UserWithRole[] = [];
+  SelectedOwnerIDList: Guid[] = [];
+  AppIDListAllID: Guid;
   searchText = '';
+  // dropdownSettings: IDropdownSettings = {};
   constructor(
     private _projectService: ProjectService,
+    private _masterService: MasterService,
     private _router: Router,
     public snackBar: MatSnackBar,
     private dialog: MatDialog,
@@ -39,6 +46,8 @@ export class ProjectComponent implements OnInit {
     this.authenticationDetails = new AuthenticationDetails();
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.IsProgressBarVisibile = true;
+    this.AppIDListAllID = Guid.createEmpty();
+    this.AllProjectsCount = 0;
   }
 
   ngOnInit(): void {
@@ -54,19 +63,31 @@ export class ProjectComponent implements OnInit {
 
       this.projectMainFormGroup = this._formBuilder.group({
         Title: ['', Validators.required],
-        OwnerID: ['', Validators.required],
-        // email: ['', [Validators.required, Validators.email]],
-        // contactNumber: ['', [Validators.required, Validators.pattern]],
-        // // plant: ['', Validators.required],
-        // profile: ['']
+        OwnerIDList: [[], Validators.required]
       });
       this.GetAllOwners();
       this.GetAllProjects();
+     // this.IntializeDropDownSettings();
     } else {
       this._router.navigate(['/auth/login']);
     }
 
   }
+
+  // IntializeDropDownSettings(): void {
+  //   this.dropdownSettings = {
+  //     singleSelection: false,
+  //     idField: 'UserID',
+  //     textField: 'UserName',
+  //     // selectAllText: 'Select All',
+  //     // unSelectAllText: 'UnSelect All',
+  //     enableCheckAll: false,
+  //     closeDropDownOnSelection: true,
+  //     itemsShowLimit: 3,
+  //     allowSearchFilter: true
+  //   };
+  // }
+
   ResetControl(): void {
     this.SelectedProject = new Project();
     // this.selectID = Guid.createEmpty();
@@ -79,10 +100,16 @@ export class ProjectComponent implements OnInit {
   }
 
   GetAllOwners(): void {
-    this._projectService.GetAllOwners().subscribe(
+    this._masterService.GetAllUsers().subscribe(
       (data) => {
-        // this.AllOwners = <Owner[]>data;
-        this.AllOwners = JSON.parse(data.toString());
+        // this.AllOwners = <UserWithRole[]>data;
+        this.AllOwners = <UserWithRole[]>data;
+        if (this.AllOwners && this.AllOwners.length > 0) {
+          const xy = this.AllOwners.filter(x => x.UserName === 'All')[0];
+          if (xy) {
+            this.AppIDListAllID = xy.UserID;
+          }
+        }
         // console.log(this.AllOwners);
       },
       (err) => {
@@ -121,8 +148,24 @@ export class ProjectComponent implements OnInit {
   SetProjectValues(): void {
     // this.projectMainFormGroup.get('ProjectID').patchValue(this.SelectedProject.ProjectID);
     // this.projectMainFormGroup.get('plant').patchValue(this.SelectedProject.Plant);
-    this.projectMainFormGroup.get('OwnerID').patchValue(this.SelectedProject.OwnerID);
+    // this.SelectedProject.OwnerIDList.forEach(x=>x==)
+    // const t = [];
+    // this.SelectedProject.OwnerIDList.forEach(x => {
+    //   t.push(x.toString());
+    // });
+    this.projectMainFormGroup.get('OwnerIDList').patchValue(this.SelectedProject.OwnerIDList);
     this.projectMainFormGroup.get('Title').patchValue(this.SelectedProject.Title);
+  }
+
+  OnOwnerNameChanged(): void {
+    // console.log('changed');
+    const SelectedValues = this.projectMainFormGroup.get('OwnerIDList').value as Guid[];
+    if (SelectedValues.includes(this.AppIDListAllID)) {
+      this.projectMainFormGroup.get('OwnerIDList').patchValue([this.AppIDListAllID]);
+      this.notificationSnackBarComponent.openSnackBar('All have all the menu items, please uncheck All if you want to select specific menu', SnackBarStatus.info, 4000);
+
+    }
+    // console.log(this.roleMainFormGroup.get('appIDList').value);
   }
 
   OpenConfirmationDialog(Actiontype: string, Catagory: string): void {
@@ -153,7 +196,12 @@ export class ProjectComponent implements OnInit {
     // this.SelectedProject.Plant = this.projectMainFormGroup.get('plant').value;
     // this.SelectedProject.OwnerID = <Guid>this.projectMainFormGroup.get('roleID').value;
     // this.SelectedProject.ProjectID = this.projectMainFormGroup.get('ProjectID').value;
-    this.SelectedProject.OwnerID = this.projectMainFormGroup.get('OwnerID').value;
+    // this.SelectedOwners.forEach(x => {
+    //   const UserID = x.UserID;
+    //   this.SelectedOwnerIDList.push(UserID);
+    // });
+    // this.SelectedProject.OwnerIDList = this.SelectedOwnerIDList;
+    this.SelectedProject.OwnerIDList = <Guid[]>this.projectMainFormGroup.get('OwnerIDList').value;
   }
 
   CreateProject(): void {

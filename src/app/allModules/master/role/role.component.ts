@@ -29,6 +29,7 @@ export class RoleComponent implements OnInit {
   AllMenuApps: MenuApp[] = [];
   searchText = '';
   AppIDListAllID: number;
+  
   constructor(
     private _masterService: MasterService,
     private _router: Router,

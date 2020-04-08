@@ -269,4 +269,20 @@
     position: fixed;
     bottom: 80px !important;
   }
+  .addIcon {
+    height: 20px;
+    margin-top: 25px;
+    cursor: pointer !important;
+  }
+  .removeIcon {
+    height: 20px;
+    padding-left: 30px;
+    cursor: pointer !important;
+  }
+  .mat-column-Action {
+    max-width: 104px !important;
+  }
+  .errorClass {
+    color: red !important;
+  }
 }

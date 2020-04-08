@@ -56,6 +56,7 @@ import { DecimalPipe } from '@angular/common';
 import { TaskGroupComponent } from './task-group/task-group.component';
 import { ProjectComponent } from './project/project.component';
 import { TaskComponent } from './task/task.component';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 const routes = [
     {
@@ -131,6 +132,7 @@ const routes = [
         FuseHighlightModule,
         FuseMaterialColorPickerModule,
         FuseWidgetModule,
+        NgMultiSelectDropDownModule,
 
         FormsModule,
 
