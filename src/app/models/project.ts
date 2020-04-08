@@ -1,3 +1,5 @@
+import { Guid } from 'guid-typescript';
+
 export class Project {
     OwnerID: number;
     ProjectID: number;
@@ -8,6 +10,8 @@ export class Project {
     ModifiedOn?: Date;
     ModifiedBy: string;
     OwnerMaster: Owner;
+    OwnerIDList: Guid[];
+    
 
 }
 export class Owner {

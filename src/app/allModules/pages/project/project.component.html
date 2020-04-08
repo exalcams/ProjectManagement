@@ -19,72 +19,28 @@
             </mat-toolbar-row>
           </mat-toolbar>
 
-          <!-- *ngFor="let project of AllProjects" -->
-          <!-- [ngClass]="{
-            'highLight' : S073R4?.length == 2,
-            'unselecthighLight' : S073R4?.length == 0,
-         }" -->
           <mat-card class="mx-8 my-4 p-8 leftCard" *ngFor="let project of AllProjects | filter: searchText"
-          (click)="loadSelectedProject(project)"
-          [style.border-left-color]="selectID==project.ProjectID?'#efb577':'#cccccc'">
-            <div fxLayout fxLayoutAlign="space-between center" >
+            (click)="loadSelectedProject(project)"
+            [style.border-left-color]="selectID==project.ProjectID?'#efb577':'#cccccc'">
+            <div fxLayout fxLayoutAlign="space-between center">
               <div fxFlex><strong>{{project.Title}}</strong></div>
               <div fxFlex fxLayoutAlign="end">{{project.CreatedOn | date:'dd/MM/yyyy'}}</div>
             </div>
-            <div style="font-size: 11px">
+            <!-- <div style="font-size: 11px">
               <div style="margin-top: 10px;color: #2e2e2e">
                 <span style="margin-right: 10px">{{project.OwnerMaster.OwnerName}}</span>
               </div>
-            </div>
+            </div> -->
             <div *ngIf="(AllProjects | filter: searchText).length === 0" class="no-results-message">
               <span class="pl-12"> No results..</span>
-          </div>
+            </div>
           </mat-card>
-
-
-          <!-- 
-          <div class="unselecthighLight mx-8 my-4 p-8">
-            <div fxLayout fxLayoutAlign="space-between center">
-              <div fxFlex><strong>Project Title:E-way Bill</strong></div>
-            </div>
-            <div style="font-size: 11px">
-              <div style="margin-top: 10px;color: #2e2e2e">
-                <span style="margin-right: 10px">Owner:MS</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="unselecthighLight mx-8 my-4 p-8">
-            <div fxLayout fxLayoutAlign="space-between center">
-              <div fxFlex><strong>Project Title:Icon</strong></div>
-            </div>
-            <div style="font-size: 11px">
-              <div style="margin-top: 10px;color: #2e2e2e">
-                <span style="margin-right: 10px">Owner:MS</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="unselecthighLight mx-8 my-4 p-8">
-            <div fxLayout fxLayoutAlign="space-between center">
-              <div fxFlex><strong>Project Title:PM</strong></div>
-            </div>
-            <div style="font-size: 11px">
-              <div style="margin-top: 10px;color: #2e2e2e">
-                <span style="margin-right: 10px">Owner:MS</span>
-              </div>
-            </div>
-          </div> -->
-
         </div>
       </div>
 
       <div class="borderRight1"></div>
       <div fxFlex="70" class="side-bar">
         <mat-card class="cardHeader p-8" style="background-color: #fffdf9;">
-          <!-- <div fxLayout fxFlex class="h2" fxLayoutAlign="start">
-            <button mat-stroked-button color="warn" style="background-color: white;"><span style="color: #ef8377;">Delete</span></button>
-          </div> -->
           <div fxLayout fxFlex class="h2" fxLayoutAlign="end">
             <button (click)="DeleteClicked()" *ngIf="SelectedProject.ProjectID" mat-stroked-button color="warn"
               style="background-color: white;"><span style="color: #ef8377;">Delete</span>
@@ -103,9 +59,6 @@
               [formGroup]="projectMainFormGroup" novalidate>
               <div fxLayout="row" fxLayoutAlign="start">
                 <div fxFlex="50">
-                  <!-- <mat-form-field class="pl-8" style="width: 80%;">
-                    <input matInput placeholder="Title">
-                  </mat-form-field> -->
                   <mat-form-field class="pl-8" style="width: 80%;">
                     <input matInput placeholder="Title" formControlName="Title">
                     <mat-error
@@ -114,36 +67,23 @@
                   </mat-form-field>
                 </div>
                 <div fxFlex="50">
-                  <!-- <mat-form-field class="pl-8" style="width: 100%;" >
-                    <input matInput placeholder="Owner">
-                  </mat-form-field> -->
                   <mat-form-field class="p-8" style="width: 100%;">
-                    <mat-select placeholder="Owner" formControlName="OwnerID"
-                     >
-                      
-                      <mat-option *ngFor="let rol of AllOwners" [value]="rol.OwnerID"
-                        (click)="onOwnerClick(rol.OwnerName)">
-                        {{rol.OwnerName}}</mat-option>
+                    <mat-select placeholder="Owner" formControlName="OwnerIDList" multiple
+                    (selectionChange)="OnOwnerNameChanged()">
+                      <mat-option *ngFor="let owner of AllOwners" [value]="owner.UserID">
+                        {{owner.UserName}}</mat-option>
                     </mat-select>
                     <mat-error
-                      *ngIf="projectMainFormGroup.get('OwnerID').touched && projectMainFormGroup.get('OwnerID').hasError('required')">
+                      *ngIf="projectMainFormGroup.get('OwnerIDList').touched && projectMainFormGroup.get('OwnerIDList').hasError('required')">
                       Owner
                       Name required</mat-error>
                   </mat-form-field>
+                  <!-- <ng-multiselect-dropdown class="p-8" style="width: 100%;" [placeholder]="'Owner'" [data]="AllOwners"
+                  [(ngModel)]="SelectedOwners" [settings]="dropdownSettings" (onSelect)="onItemSelect($event)"
+                  (onSelectAll)="onSelectAll($event)" formControlName="OwnerIDList">
+                </ng-multiselect-dropdown> -->
                 </div>
               </div>
-
-              <!-- <div fxLayout="row" fxLayoutAlign="start">
-                <div>
-                  <span>Task Sub-Group</span>
-                  <div class="borderclass"></div>
-                </div>
-              </div>
-              <div fxLayout>
-                <div fxFlex fxLayoutAlign="end">
-                  <button mat-fab color="#f6b570"><mat-icon>add</mat-icon></button>
-                </div>
-              </div> -->
               <div fxLayout>
                 <div fxFlex fxLayoutAlign="end">
                   <button class="float" mat-fab style="background-color: #f6b570" (click)="ResetControl()">
