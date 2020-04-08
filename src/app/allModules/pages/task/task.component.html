@@ -116,7 +116,7 @@
               <div fxLayout="row" fxLayoutAlign="start">
                 <div fxFlex="50">
                   <mat-form-field class="pl-8 pr-24" style="width: 100%;">
-                    <mat-select placeholder="Assigned To" formControlName="AssignedTo">
+                    <mat-select multiple placeholder="Assigned To" formControlName="AssignedTo">
                       <mat-option [value]="dev.UserID" *ngFor="let dev of AllDevelopers">{{dev.UserName}}</mat-option>
                     </mat-select>
                     <!-- <input matInput placeholder="Assigned To" formControlName="AssignedTo"> -->
@@ -128,9 +128,9 @@
                 </div>
                 <div fxFlex="50">
                   <mat-form-field class="pl-8 pr-24" style="width: 100%;">
-                    <mat-select placeholder="Task Sub Group" formControlName="TaskSubGroupID">
+                    <mat-select placeholder="Sprint" formControlName="TaskSubGroupID">
                       <mat-option [value]="tas.TaskSubGroupID" *ngFor="let tas of AllTaskSubGroupView">
-                        {{tas.Title}}
+                        {{tas.TaskSubGroupTitle + ' - ' + tas.TaskGroupTitle + ' - '+ tas.ProjectTitle}}
                       </mat-option>
                     </mat-select>
                     <mat-error
@@ -143,7 +143,7 @@
               <div fxLayout="row" fxLayoutAlign="start">
                 <div fxFlex="50">
                   <mat-form-field class="pl-8 pr-24" style="width: 100%;"
-                    *ngIf="(CurrentUserRole | lowercase)==='developer'">
+                    *ngIf="((CurrentUserRole | lowercase)==='developer') || taskFormGroup.get('AcceptedEffort')?.value">
                     <input matInput placeholder="Accepted Effort (hrs)" formControlName="AcceptedEffort"
                       (keydown)="numberOnly($event)">
                     <mat-error
@@ -158,7 +158,7 @@
                 </div>
                 <div fxFlex="50">
                   <mat-form-field class="pl-8 pr-24" style="width: 100%;"
-                    *ngIf="(CurrentUserRole | lowercase)==='developer'">
+                    *ngIf="((CurrentUserRole | lowercase)==='developer') || taskFormGroup.get('AcceptedCompletionDate')?.value">
                     <input matInput placeholder="Accepted Completion Date" [matDatepicker]="picker2"
                       formControlName="AcceptedCompletionDate">
                     <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
@@ -525,7 +525,7 @@
               </div>
               <div class="m-4" *ngFor="let fil of fileToUploadList;let index=index;" fxLayout="row wrap"
                 fxLayoutAlign="start">
-                <div fxFlex="33" fxLayout class="Rectangle">
+                <div fxFlex="33" fxLayout class="Rectangle" (click)="GetAttachment(fil.name,fil)">
                   <div class="Rectangle-106 m-8">
                     <img class="m-8" src="assets/images/imageIcon.png">
                   </div>
