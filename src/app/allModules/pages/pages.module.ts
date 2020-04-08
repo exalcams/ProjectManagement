@@ -56,6 +56,7 @@ import { DecimalPipe } from '@angular/common';
 import { TaskGroupComponent } from './task-group/task-group.component';
 import { ProjectComponent } from './project/project.component';
 import { TaskComponent } from './task/task.component';
+import { AttachmentDialogComponent } from './attachment-dialog/attachment-dialog.component';
 // import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 const routes = [
@@ -137,10 +138,12 @@ const routes = [
         FormsModule,
 
     ],
-    declarations: [DashboardComponent, TaskGroupComponent, ProjectComponent, TaskComponent],
+    declarations: [DashboardComponent, TaskGroupComponent, ProjectComponent, TaskComponent, AttachmentDialogComponent],
     providers: [
         DecimalPipe
     ],
-    entryComponents: []
+    entryComponents: [
+        AttachmentDialogComponent
+    ]
 })
 export class PagesModule { }

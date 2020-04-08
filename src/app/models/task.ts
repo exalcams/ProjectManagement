@@ -1,3 +1,5 @@
+import { Guid } from 'guid-typescript';
+
 export class CommonClass {
     IsActive: boolean;
     CreatedOn: Date;
@@ -13,7 +15,7 @@ export class Task extends CommonClass {
     Type: string;
     EstimatedEffort: number;
     CompletionBefore: Date;
-    AssignedTo: string;
+    AssignedTo: Guid[];
     AcceptedEffort: number;
     AcceptedCompletionDate?: Date;
 }
@@ -62,7 +64,7 @@ export class TaskView extends CommonClass {
     Type: string;
     EstimatedEffort: number;
     CompletionBefore: Date;
-    AssignedTo: string;
+    AssignedTo: Guid[];
     AcceptedEffort: number;
     AcceptedCompletionDate?: Date;
     Inputs: Input[];
@@ -85,7 +87,7 @@ export class CreateTaskView extends CommonClass {
     Type: string;
     EstimatedEffort: number;
     CompletionBefore: Date;
-    AssignedTo: string;
+    AssignedTo: Guid[];
     AcceptedEffort: number;
     AcceptedCompletionDate?: Date;
     Inputs: Input[];
@@ -100,7 +102,7 @@ export class UpdateTaskView extends CommonClass {
     Type: string;
     EstimatedEffort: number;
     CompletionBefore: Date;
-    AssignedTo: string;
+    AssignedTo: Guid[];
     AcceptedEffort: number;
     AcceptedCompletionDate?: Date;
     Outputs: Output[];
@@ -109,6 +111,8 @@ export class UpdateTaskView extends CommonClass {
 export class TaskSubGroupView {
     TaskGroupID: number;
     TaskSubGroupID: number;
-    Title: string;
+    TaskSubGroupTitle: string;
+    TaskGroupTitle: string;
+    ProjectTitle: string;
 }
 

@@ -12,6 +12,7 @@ import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notific
 import { ProjectService } from 'app/services/project.service';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { Guid } from 'guid-typescript';
+import { AttachmentDialogComponent } from '../attachment-dialog/attachment-dialog.component';
 
 @Component({
   selector: 'app-task',
@@ -141,9 +142,9 @@ export class TaskComponent implements OnInit {
     this.taskFormGroup = this._formBuilder.group({
       Title: ['', Validators.required],
       Type: ['', Validators.required],
-      EstimatedEffort: ['', [Validators.required, Validators.pattern('^[0-9]*([.][0-9]{1,3})?$')]],
+      EstimatedEffort: ['', [Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
       CompletionBefore: ['', Validators.required],
-      AssignedTo: ['', Validators.required],
+      AssignedTo: [[], Validators.required],
       TaskSubGroupID: ['', Validators.required],
       AcceptedEffort: [''],
       AcceptedCompletionDate: ['']
@@ -153,7 +154,7 @@ export class TaskComponent implements OnInit {
 
   DynamicallyAddAcceptedValidation(): void {
     if (this.CurrentUserRole.toLocaleLowerCase() === 'developer') {
-      this.taskFormGroup.get('AcceptedEffort').setValidators([Validators.required, Validators.pattern('^[0-9]*([.][0-9]{1,3})?$')]);
+      this.taskFormGroup.get('AcceptedEffort').setValidators([Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]);
       this.taskFormGroup.get('AcceptedEffort').updateValueAndValidity();
       this.taskFormGroup.get('AcceptedCompletionDate').setValidators(Validators.required);
       this.taskFormGroup.get('AcceptedCompletionDate').updateValueAndValidity();
@@ -169,7 +170,7 @@ export class TaskComponent implements OnInit {
     this.inputFormGroup = this._formBuilder.group({
       Field: ['', Validators.required],
       Validation: ['', Validators.required],
-      Remarks: ['', Validators.required],
+      Remarks: [''],
     });
   }
 
@@ -178,7 +179,7 @@ export class TaskComponent implements OnInit {
       Level: ['', Validators.required],
       Field: ['', Validators.required],
       Validation: ['', Validators.required],
-      Remarks: ['', Validators.required],
+      Remarks: [''],
     });
   }
 
@@ -833,6 +834,32 @@ export class TaskComponent implements OnInit {
     if (evt.target.files && evt.target.files.length > 0) {
       this.fileToUpload = evt.target.files[0];
       this.fileToUploadList.push(this.fileToUpload);
+    }
+  }
+
+  numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode === 8 || charCode === 9 || charCode === 13 || charCode === 46
+      || charCode === 37 || charCode === 39 || charCode === 123 || charCode === 190) {
+      return true;
+    }
+    else if (charCode < 48 || charCode > 57) {
+      return false;
+    }
+    return true;
+  }
+  GetAttachment(fileName: string, file?: File): void {
+    if (file && file.size) {
+      const fileData = new Blob([file], { type: file.type });
+      const dialogConfig: MatDialogConfig = {
+        data: file,
+        panelClass: 'attachment-dialog'
+      };
+      const dialogRef = this.dialog.open(AttachmentDialogComponent, dialogConfig);
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+        }
+      });
     }
   }
 }
