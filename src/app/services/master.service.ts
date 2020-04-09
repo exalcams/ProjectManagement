@@ -190,6 +190,11 @@ export class MasterService {
       .pipe(catchError(this.errorHandler));
   }
 
+  GetAllDevelopersAndTLs(): Observable<UserView[] | string> {
+    return this._httpClient.get<UserView[]>(`${this.baseAddress}api/Master/GetAllDevelopersAndTLs`)
+      .pipe(catchError(this.errorHandler));
+  }
+
   UpdateUser(user: UserWithRole): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}api/Master/UpdateUser`,
       user,

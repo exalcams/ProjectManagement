@@ -116,3 +116,8 @@ export class TaskSubGroupView {
     ProjectTitle: string;
 }
 
+export class AttachmentDetails {
+    FileName: string;
+    blob: Blob;
+}
+

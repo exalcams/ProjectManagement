@@ -6,8 +6,8 @@
     }
     .mat-dialog-container {
         padding: 0px;
-        width: 740px;
-        // width:60vw !important;
+        //width: 1140px;
+        width:75vw !important;
         overflow-x: hidden;
         border-radius: 0px;
     }
@@ -15,6 +15,7 @@
         margin: 0px;
         padding: 0px;
         padding-left: 5px;
+        max-height: 80vh;
     }
     .toolBg {
         background-color: #121214 !important;

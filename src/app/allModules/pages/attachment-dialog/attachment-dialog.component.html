@@ -14,7 +14,7 @@
   </mat-toolbar>
 
   <div mat-dialog-content>
-    <div fxLayout style="height: 60vh">
+    <div fxLayout style="height: 80vh">
       <div fxFlex="99.9" class="role-side-bar">
         <div fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto">
           <iframe *ngIf="AttachmentData" style="width:100%;height:100%;" [src]="AttachmentData"></iframe>
@@ -25,6 +25,6 @@
   </div>
 
   <mat-dialog-actions class="m-0 p-16" align="end">
-    <button mat-button type="button" (click)="CloseClicked()">Cancel</button>
+    <button mat-button type="button" (click)="CloseClicked()">Close</button>
   </mat-dialog-actions>
 </div>

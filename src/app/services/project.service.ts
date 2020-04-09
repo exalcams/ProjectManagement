@@ -95,6 +95,11 @@ export class ProjectService {
       .pipe(catchError(this.errorHandler));
   }
 
+  GetAllTasksByTL(UserID: Guid): Observable<Task[] | string> {
+    return this._httpClient.get<Task[]>(`${this.baseAddress}api/Project/GetAllTasksByTL?UserID=${UserID}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
   CreateTask(task: TaskView): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}api/Project/CreateTask`,
       task,
@@ -167,6 +172,14 @@ export class ProjectService {
   }
   GetSketchViewsByTask(TaskID: number): Observable<SketchView[] | string> {
     return this._httpClient.get<SketchView[]>(`${this.baseAddress}api/Project/GetSketchViewsByTask?TaskID=${TaskID}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  DowloandTaskImage(AttachmentName: string): Observable<Blob | string> {
+    return this._httpClient.get(`${this.baseAddress}api/Project/DowloandTaskImage?AttachmentName=${AttachmentName}`, {
+      responseType: 'blob',
+      headers: new HttpHeaders().append('Content-Type', 'application/json')
+    })
       .pipe(catchError(this.errorHandler));
   }
 }
