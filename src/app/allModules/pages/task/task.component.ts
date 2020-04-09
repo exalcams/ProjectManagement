@@ -7,7 +7,7 @@ import { NotificationSnackBarComponent } from 'app/notifications/notification-sn
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MasterService } from 'app/services/master.service';
 import { Router } from '@angular/router';
-import { Task, TaskView, Input, Output, Logic, Validation, TaskSubGroupView, SketchView } from 'app/models/task';
+import { Task, TaskView, Input, Output, Logic, Validation, TaskSubGroupView, SketchView, AttachmentDetails } from 'app/models/task';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { ProjectService } from 'app/services/project.service';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
@@ -76,7 +76,7 @@ export class TaskComponent implements OnInit {
   ValidationdataSource = new MatTableDataSource<Validation>();
   sketchdataSource = new MatTableDataSource<any>();
   selection = new SelectionModel<any>(true, []);
-  AllDevelopers: UserView[] = [];
+  AllDevelopersAndTLs: UserView[] = [];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('inputValidation') inputValidation: ElementRef;
@@ -121,7 +121,7 @@ export class TaskComponent implements OnInit {
       this.InitializeOutputFormGroup();
       this.InitializeLogicFormGroup();
       this.InitializeValidationFormGroup();
-      this.GetAllDevelopers();
+      this.GetAllDevelopersAndTLs();
       this.GetAllTaskSubGroupView();
       this.GetAllTask();
     } else {
@@ -201,6 +201,7 @@ export class TaskComponent implements OnInit {
     this.selectID = 0;
     this.taskFormGroup.reset();
     Object.keys(this.taskFormGroup.controls).forEach(key => {
+      this.taskFormGroup.get(key).enable();
       this.taskFormGroup.get(key).markAsUntouched();
     });
     // this.fileToUpload = null;
@@ -268,10 +269,10 @@ export class TaskComponent implements OnInit {
   //   this.fileToUpload = null;
   //   this.fileToUploadList = [];
   // }
-  GetAllDevelopers(): void {
-    this._masterService.GetAllDevelopers().subscribe(
+  GetAllDevelopersAndTLs(): void {
+    this._masterService.GetAllDevelopersAndTLs().subscribe(
       (data) => {
-        this.AllDevelopers = <UserView[]>data;
+        this.AllDevelopersAndTLs = <UserView[]>data;
       },
       (err) => {
         console.error(err);
@@ -293,7 +294,11 @@ export class TaskComponent implements OnInit {
   GetAllTask(): void {
     if (this.CurrentUserRole.toLocaleLowerCase() === 'developer') {
       this.GetAllTasksByDeveloper();
-    } else {
+    }
+    else if (this.CurrentUserRole.toLocaleLowerCase() === 'team lead') {
+      this.GetAllTasksByTL();
+    }
+    else {
       this.GetAllTasks();
     }
   }
@@ -334,9 +339,29 @@ export class TaskComponent implements OnInit {
     );
   }
 
+  GetAllTasksByTL(): void {
+    this.IsProgressBarVisibile = true;
+    this._projectService.GetAllTasksByTL(this.CurrentUserID).subscribe(
+      (data) => {
+        this.IsProgressBarVisibile = false;
+        this.AllTasks = <Task[]>data;
+        if (this.AllTasks && this.AllTasks.length) {
+          this.loadSelectedTask(this.AllTasks[0]);
+        }
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+      }
+    );
+  }
+
   loadSelectedTask(selectedTask: Task): void {
+    this.ResetControl();
     this.SelectedTask = selectedTask;
     this.selectID = selectedTask.TaskID;
+    this.EnableAllTaskFields();
     this.SetTaskValues();
     this.GetTaskSubItems();
   }
@@ -350,7 +375,11 @@ export class TaskComponent implements OnInit {
     this.InputdataSource.filter = filterValue.trim().toLowerCase();
   }
 
-
+  EnableAllTaskFields(): void {
+    Object.keys(this.taskFormGroup.controls).forEach(key => {
+      this.taskFormGroup.get(key).enable();
+    });
+  }
   SetTaskValues(): void {
     this.taskFormGroup.get('Title').patchValue(this.SelectedTask.Title);
     this.taskFormGroup.get('Type').patchValue(this.SelectedTask.Type);
@@ -360,6 +389,43 @@ export class TaskComponent implements OnInit {
     this.taskFormGroup.get('TaskSubGroupID').patchValue(this.SelectedTask.TaskSubGroupID);
     this.taskFormGroup.get('AcceptedEffort').patchValue(this.SelectedTask.AcceptedEffort);
     this.taskFormGroup.get('AcceptedCompletionDate').patchValue(this.SelectedTask.AcceptedCompletionDate);
+    this.DisableTaskFields();
+  }
+
+  DisableTaskFields(): void {
+    if (this.CurrentUserRole.toLocaleLowerCase() === 'developer') {
+      this.DisableTaskFieldsForAssignedToUser();
+    }
+    else if (this.CurrentUserRole.toLocaleLowerCase() === 'team lead') {
+      if (this.SelectedTask.CreatedBy !== this.CurrentUserID.toString()) {
+        this.DisableTaskFieldsForAssignedToUser();
+      } else {
+        if (!this.SelectedTask.AssignedTo.includes(this.CurrentUserID)) {
+          if (this.SelectedTask.AcceptedCompletionDate) {
+            this.DisableAllTaskFields();
+          } else {
+            this.DisableTaskFieldsForCreatedUser();
+          }
+        }
+      }
+    }
+  }
+
+  DisableTaskFieldsForAssignedToUser(): void {
+    this.taskFormGroup.get('Title').disable();
+    this.taskFormGroup.get('Type').disable();
+    this.taskFormGroup.get('EstimatedEffort').disable();
+    this.taskFormGroup.get('CompletionBefore').disable();
+    this.taskFormGroup.get('AssignedTo').disable();
+    this.taskFormGroup.get('TaskSubGroupID').disable();
+  }
+  DisableTaskFieldsForCreatedUser(): void {
+    this.taskFormGroup.get('AcceptedEffort').disable();
+    this.taskFormGroup.get('AcceptedCompletionDate').disable();
+  }
+  DisableAllTaskFields(): void {
+    this.DisableTaskFieldsForAssignedToUser();
+    this.DisableTaskFieldsForCreatedUser();
   }
 
   GetTaskSubItems(): void {
@@ -850,16 +916,41 @@ export class TaskComponent implements OnInit {
   }
   GetAttachment(fileName: string, file?: File): void {
     if (file && file.size) {
-      const fileData = new Blob([file], { type: file.type });
-      const dialogConfig: MatDialogConfig = {
-        data: file,
-        panelClass: 'attachment-dialog'
-      };
-      const dialogRef = this.dialog.open(AttachmentDialogComponent, dialogConfig);
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
+      const blob = new Blob([file], { type: file.type });
+      this.OpenAttachmentDialog(fileName, blob);
+    } else {
+      this.IsProgressBarVisibile = true;
+      this._projectService.DowloandTaskImage(fileName).subscribe(
+        data => {
+          if (data) {
+            let fileType = 'image/jpg';
+            fileType = fileName.includes('.jpg') ? 'image/jpg' : fileName.includes('.jpeg') ? 'image/jpeg' :
+              fileName.includes('.png') ? 'image/png' : fileName.includes('.gif') ? 'image/gif' : '';
+            const blob = new Blob([data], { type: fileType });
+            this.OpenAttachmentDialog(fileName, blob);
+          }
+          this.IsProgressBarVisibile = false;
+        },
+        error => {
+          console.error(error);
+          this.IsProgressBarVisibile = false;
         }
-      });
+      );
     }
+  }
+  OpenAttachmentDialog(FileName: string, blob: Blob): void {
+    const attachmentDetails: AttachmentDetails = {
+      FileName: FileName,
+      blob: blob
+    };
+    const dialogConfig: MatDialogConfig = {
+      data: attachmentDetails,
+      panelClass: 'attachment-dialog'
+    };
+    const dialogRef = this.dialog.open(AttachmentDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+      }
+    });
   }
 }
