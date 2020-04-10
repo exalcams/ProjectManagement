@@ -41,7 +41,7 @@ export class TaskSubGroup {
     ModifiedBy: string;
     OwnerName: string;
     Action: string;
-
+    ProjectID: number;
 }
 export class Owner {
     OwnerID: number;

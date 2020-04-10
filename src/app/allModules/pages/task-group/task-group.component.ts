@@ -130,9 +130,9 @@ export class TaskGroupComponent implements OnInit {
         PlannedStartDate: ['', Validators.required],
         PlannedEndDate: ['', Validators.required],
         PlannedEffort: ['', [Validators.required, Validators.pattern('^[0-9]*([.][0-9]{1,3})?$')]],
-        ActualStartDate: [''],
-        ActualEndDate: [''],
-        ActualEffort: ['', Validators.pattern('^[0-9]*([.][0-9]{1,3})?$')]
+        // ActualStartDate: [''],
+        // ActualEndDate: [''],
+        // ActualEffort: ['', Validators.pattern('^[0-9]*([.][0-9]{1,3})?$')]
       });
       this.GetAllOwners();
       this.GetAllProjects();
@@ -393,6 +393,10 @@ export class TaskGroupComponent implements OnInit {
   AddTaskSubGroupToTable(): void {
     if (this.taskSubGroupMainFormGroup.valid) {
       const taskSubGroup = this.GetTaskSubGroupValues();
+      if (taskSubGroup) {
+        this.AddTaskSubGroupByProjectID(taskSubGroup);
+      }
+
       // tslint:disable-next-line:max-line-length
       // this.AllTaskSubGroups.forEach(x => {
       //   this.TotalSubGroupActualEffort = this.TotalSubGroupActualEffort + x.ActualEffort;
@@ -417,6 +421,29 @@ export class TaskGroupComponent implements OnInit {
     } else {
       this.ShowValidationErrors(this.taskSubGroupMainFormGroup);
     }
+  }
+
+  AddTaskSubGroupByProjectID(taskSubGroup: TaskSubGroup): void {
+    // this.GetTaskGroupValues();
+    // this.SelectedTaskGroup.ProjectID = this.taskGroupMainFormGroup.get('ProjectID').value;
+    taskSubGroup.ProjectID = this.taskGroupMainFormGroup.get('ProjectID').value;
+    taskSubGroup.CreatedBy = this.authenticationDetails.userID.toString();
+    this.IsProgressBarVisibile = true;
+    this._taskGroupService.AddTaskSubGroupByProjectID(taskSubGroup).subscribe(
+      (data) => {
+        // console.log(data);
+        // this.ResetControl();
+        // this.notificationSnackBarComponent.openSnackBar('TaskGroup created successfully', SnackBarStatus.success);
+        this.IsProgressBarVisibile = false;
+        // this.GetAllTaskGroups();
+      },
+      (err) => {
+        console.error(err);
+        // this.ResetControl();
+        // this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+        this.IsProgressBarVisibile = false;
+      }
+    );
   }
 
   RemoveTaskSubGroupFromTable(): void {
@@ -461,9 +488,9 @@ export class TaskGroupComponent implements OnInit {
     taskSubGroup.PlannedStartDate = this.taskSubGroupMainFormGroup.get('PlannedStartDate').value;
     taskSubGroup.PlannedEndDate = this.taskSubGroupMainFormGroup.get('PlannedEndDate').value;
     taskSubGroup.PlannedEffort = this.taskSubGroupMainFormGroup.get('PlannedEffort').value;
-    taskSubGroup.ActualEffort = this.taskSubGroupMainFormGroup.get('ActualEffort').value;
-    taskSubGroup.ActualEndDate = this.taskSubGroupMainFormGroup.get('ActualEndDate').value;
-    taskSubGroup.ActualStartDate = this.taskSubGroupMainFormGroup.get('ActualStartDate').value;
+    // taskSubGroup.ActualEffort = this.taskSubGroupMainFormGroup.get('ActualEffort').value;
+    // taskSubGroup.ActualEndDate = this.taskSubGroupMainFormGroup.get('ActualEndDate').value;
+    // taskSubGroup.ActualStartDate = this.taskSubGroupMainFormGroup.get('ActualStartDate').value;
 
     return taskSubGroup;
   }
@@ -511,9 +538,9 @@ export class TaskGroupComponent implements OnInit {
     this.taskSubGroupMainFormGroup.get('PlannedStartDate').patchValue(this.SelectedTaskSubGroup.PlannedStartDate);
     this.taskSubGroupMainFormGroup.get('PlannedEndDate').patchValue(this.SelectedTaskSubGroup.PlannedEndDate);
     this.taskSubGroupMainFormGroup.get('PlannedEffort').patchValue(this.SelectedTaskSubGroup.PlannedEffort);
-    this.taskSubGroupMainFormGroup.get('ActualStartDate').patchValue(this.SelectedTaskSubGroup.ActualStartDate);
-    this.taskSubGroupMainFormGroup.get('ActualEndDate').patchValue(this.SelectedTaskSubGroup.ActualEndDate);
-    this.taskSubGroupMainFormGroup.get('ActualEffort').patchValue(this.SelectedTaskSubGroup.ActualEffort);
+    // this.taskSubGroupMainFormGroup.get('ActualStartDate').patchValue(this.SelectedTaskSubGroup.ActualStartDate);
+    // this.taskSubGroupMainFormGroup.get('ActualEndDate').patchValue(this.SelectedTaskSubGroup.ActualEndDate);
+    // this.taskSubGroupMainFormGroup.get('ActualEffort').patchValue(this.SelectedTaskSubGroup.ActualEffort);
   }
 
   ClearTaskSubGroupMainFormGroup(): void {

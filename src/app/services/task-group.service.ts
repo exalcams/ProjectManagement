@@ -4,7 +4,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { TaskGroup } from 'app/models/task-group';
+import { TaskGroup, TaskSubGroup } from 'app/models/task-group';
 import { $ } from 'protractor';
 
 @Injectable({
@@ -61,6 +61,16 @@ export class TaskGroupService {
             .pipe(catchError(this.errorHandler));
     }
 
+    AddTaskSubGroupByProjectID(taskSubGroup: TaskSubGroup): Observable<any> {
+        return this._httpClient.post<any>(`${this.baseAddress}api/Project/AddTaskSubGroupByProjectID`,
+        taskSubGroup,
+            {
+                headers: new HttpHeaders({
+                    'Content-Type': 'application/json'
+                })
+            })
+            .pipe(catchError(this.errorHandler));
+    }
 
     CreateTaskGroup(project: TaskGroup): Observable<any> {
         return this._httpClient.post<any>(`${this.baseAddress}api/Project/CreateTaskGroup`,
@@ -72,6 +82,7 @@ export class TaskGroupService {
             })
             .pipe(catchError(this.errorHandler));
     }
+    
 
     UpdateTaskGroup(project: TaskGroup): Observable<any> {
         return this._httpClient.post<any>(`${this.baseAddress}api/Project/UpdateTaskGroup`,

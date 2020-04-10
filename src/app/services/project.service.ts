@@ -35,6 +35,63 @@ export class ProjectService {
     return throwError(error.error || error.message || 'Server Error');
   }
 
+  // Dashboard
+
+  GetAllNewTasksToday(): Observable<Task[] | string> {
+    return this._httpClient.get<Task[]>(`${this.baseAddress}api/Project/GetAllNewTasksToday`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAllNewTasksCountToday(): Observable<any | string> {
+    return this._httpClient.get<any>(`${this.baseAddress}api/Project/GetAllNewTasksCountToday`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAllTasks1(): Observable<Task[] | string> {
+    return this._httpClient.get<Task[]>(`${this.baseAddress}api/Project/GetAllTasks1`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAllTasksCount(): Observable<any | string> {
+    return this._httpClient.get<any>(`${this.baseAddress}api/Project/GetAllTasksCount`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAllOpenTasks(): Observable<Task[] | string> {
+    return this._httpClient.get<Task[]>(`${this.baseAddress}api/Project/GetAllOpenTasks`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAllOpenTasksCount(): Observable<any | string> {
+    return this._httpClient.get<any>(`${this.baseAddress}api/Project/GetAllOpenTasksCount`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAllEscalatedTasksToday(): Observable<Task[] | string> {
+    return this._httpClient.get<Task[]>(`${this.baseAddress}api/Project/GetAllEscalatedTasksToday`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAllEscalatedTasksCountToday(): Observable<any | string> {
+    return this._httpClient.get<any>(`${this.baseAddress}api/Project/GetAllEscalatedTasksCountToday`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAllReworkTasksToday(): Observable<Task[] | string> {
+    return this._httpClient.get<Task[]>(`${this.baseAddress}api/Project/GetAllReworkTasksToday`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAllReworkTasksCountToday(): Observable<any | string> {
+    return this._httpClient.get<any>(`${this.baseAddress}api/Project/GetAllReworkTasksCountToday`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAllTasksByChoice(Choice: string): Observable<Task[] | string> {
+    return this._httpClient.get<Task[]>(`${this.baseAddress}api/Project/GetAllTasksByChoice?Choice=${Choice}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
   // Projects
   GetAllProjects(): Observable<any | string> {
     return this._httpClient.get<any>(`${this.baseAddress}api/Project/GetAllProjects`)
@@ -85,6 +142,7 @@ export class ProjectService {
     return this._httpClient.get<TaskSubGroupView[]>(`${this.baseAddress}api/Project/GetAllTaskSubGroupView`)
       .pipe(catchError(this.errorHandler));
   }
+
   GetAllTasks(): Observable<Task[] | string> {
     return this._httpClient.get<Task[]>(`${this.baseAddress}api/Project/GetAllTasks`)
       .pipe(catchError(this.errorHandler));
@@ -182,4 +240,5 @@ export class ProjectService {
     })
       .pipe(catchError(this.errorHandler));
   }
+
 }
