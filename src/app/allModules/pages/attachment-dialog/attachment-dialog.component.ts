@@ -16,7 +16,7 @@ export class AttachmentDialogComponent implements OnInit {
   public AttachmentData: any;
   constructor(
     public matDialogRef: MatDialogRef<AttachmentDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) private attachmentDetails: AttachmentDetails,
+    @Inject(MAT_DIALOG_DATA) public attachmentDetails: AttachmentDetails,
     private sanitizer: DomSanitizer
   ) { }
 

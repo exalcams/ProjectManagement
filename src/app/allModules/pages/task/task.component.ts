@@ -885,15 +885,15 @@ export class TaskComponent implements OnInit {
   }
 
   DeleteClicked(): void {
-    if (this.taskFormGroup.valid) {
-      if (this.SelectedTask.TaskID) {
-        const Actiontype = 'Delete';
-        const Catagory = 'Task';
-        this.OpenConfirmationDialog(Actiontype, Catagory);
-      }
-    } else {
-      this.ShowValidationErrors(this.taskFormGroup);
+    // if (this.taskFormGroup.valid) {
+    if (this.SelectedTask.TaskID) {
+      const Actiontype = 'Delete';
+      const Catagory = 'Task';
+      this.OpenConfirmationDialog(Actiontype, Catagory);
     }
+    // } else {
+    //   this.ShowValidationErrors(this.taskFormGroup);
+    // }
   }
 
   handleFileInput(evt): void {
@@ -924,8 +924,10 @@ export class TaskComponent implements OnInit {
         data => {
           if (data) {
             let fileType = 'image/jpg';
-            fileType = fileName.includes('.jpg') ? 'image/jpg' : fileName.includes('.jpeg') ? 'image/jpeg' :
-              fileName.includes('.png') ? 'image/png' : fileName.includes('.gif') ? 'image/gif' : '';
+            fileType = fileName.toLowerCase().includes('.jpg') ? 'image/jpg' :
+              fileName.toLowerCase().includes('.jpeg') ? 'image/jpeg' :
+                fileName.toLowerCase().includes('.png') ? 'image/png' :
+                  fileName.toLowerCase().includes('.gif') ? 'image/gif' : '';
             const blob = new Blob([data], { type: fileType });
             this.OpenAttachmentDialog(fileName, blob);
           }
@@ -952,5 +954,12 @@ export class TaskComponent implements OnInit {
       if (result) {
       }
     });
+  }
+  GetTaskGroupTitle(subTaskGroupID: number): string {
+    const tas = this.AllTaskSubGroupView.find(x => x.TaskSubGroupID === subTaskGroupID);
+    if (tas) {
+      return tas.ProjectTitle + ' - ' + tas.TaskGroupTitle + ' - ' + tas.TaskSubGroupTitle;
+    }
+    return '';
   }
 }

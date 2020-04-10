@@ -26,10 +26,11 @@
                     [style.border-left-color]="selectID==usr.TaskID?'#efb577':'#cccccc'">
                     <div fxLayout fxLayoutAlign="space-between center">
                       <div fxFlex><strong>{{usr.Title}}</strong></div>
+                      <div fxFlex fxLayoutAlign="end" class="mr-8">{{usr.Type}}</div>
                     </div>
                     <div style="font-size: 11px">
                       <div style="margin-top: 10px;color: #2e2e2e">
-                        <span style="margin-right: 10px">{{usr.Type}}</span>
+                        <span style="margin-right: 10px">{{GetTaskGroupTitle(usr.TaskSubGroupID)}}</span>
                       </div>
                     </div>
                   </div>
@@ -178,7 +179,7 @@
                 <span><strong>Input Table</strong></span>
               </div>
               <div *ngIf="(CurrentUserRole  | lowercase)==='team lead'&&
-              SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true">
+              (SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true)">
                 <form autocomplete="off" fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto" name="form" novalidate
                   [formGroup]="inputFormGroup">
                   <div fxFlex="25">
@@ -237,10 +238,10 @@
 
                   <ng-container matColumnDef="Action">
                     <th [style.display]="((CurrentUserRole  | lowercase)==='team lead' &&
-                    SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true)?'table-cell':'none'"
+                    (SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true))?'table-cell':'none'"
                       mat-header-cell *matHeaderCellDef mat-sort-header style="width: 5%;"> </th>
                     <td [style.display]="((CurrentUserRole  | lowercase)==='team lead' &&
-                    SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true)?'table-cell':'none'" mat-cell
+                    (SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true))?'table-cell':'none'" mat-cell
                       *matCellDef="let element" style="width: 5%;">
                       <img class="removeIcon" src="assets/images/remove-button.png"
                         (click)="RemoveInputFromTable(element)">
@@ -368,12 +369,12 @@
                     <!-- <span><strong>Logic Table</strong></span> -->
                   </div>
                   <div *ngIf="(CurrentUserRole  | lowercase)==='team lead' && 
-                  SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true">
+                  (SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true)">
                     <form autocomplete="off" fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto" name="form"
                       novalidate [formGroup]="logicFormGroup">
                       <div fxFlex="90">
                         <mat-form-field class="pl-8 pr-12" style="width: 100%;">
-                          <input matInput placeholder="LogicText" formControlName="LogicText" #logicText
+                          <input matInput placeholder="Logic Text" formControlName="LogicText" #logicText
                             (keydown.enter)="LogicEnterKeyDown()">
                           <mat-error
                             *ngIf="logicFormGroup.get('LogicText').touched && logicFormGroup.get('LogicText').hasError('required')">
@@ -397,10 +398,10 @@
 
                       <ng-container matColumnDef="Action">
                         <th [style.display]="((CurrentUserRole  | lowercase)==='team lead' &&
-                        SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true)?'table-cell':'none'"
+                        (SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true))?'table-cell':'none'"
                           mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> </th>
                         <td [style.display]="((CurrentUserRole  | lowercase)==='team lead' &&
-                        SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true)?'table-cell':'none'"
+                        (SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true))?'table-cell':'none'"
                           mat-cell *matCellDef="let element" style="width: 10%;">
                           <img class="removeIcon" src="assets/images/remove-button.png"
                             (click)="RemoveLogicFromTable(element)">
@@ -425,7 +426,7 @@
                     <!-- <span><strong>Validation Table</strong></span> -->
                   </div>
                   <div *ngIf="(CurrentUserRole  | lowercase)==='team lead' && 
-                    SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true">
+                    (SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true)">
                     <form autocomplete="off" fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto" name="form"
                       novalidate [formGroup]="validationFormGroup">
                       <div fxFlex="90">
@@ -455,10 +456,10 @@
 
                       <ng-container matColumnDef="Action">
                         <th [style.display]="((CurrentUserRole  | lowercase)==='team lead' &&
-                        SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true)?'table-cell':'none'"
+                        (SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true))?'table-cell':'none'"
                           mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> </th>
                         <td [style.display]="((CurrentUserRole  | lowercase)==='team lead' &&
-                        SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true)?'table-cell':'none'"
+                        (SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true))?'table-cell':'none'"
                           mat-cell *matCellDef="let element" style="width: 10%;">
                           <img class="removeIcon" src="assets/images/remove-button.png"
                             (click)="RemoveValidationFromTable(element)">
