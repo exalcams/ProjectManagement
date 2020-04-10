@@ -18,6 +18,9 @@ export class Task extends CommonClass {
     AssignedTo: Guid[];
     AcceptedEffort: number;
     AcceptedCompletionDate?: Date;
+    TaskGroupTitle: string;
+    TaskSubGroupTitle: string;
+    OwnerNames: string;
 }
 
 export class Input extends CommonClass {

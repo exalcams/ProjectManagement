@@ -239,7 +239,7 @@
                         </mat-form-field>
                       </div>
                       <div fxFlex="50">
-                        <mat-form-field class="pl-8" style="width: 50%;">
+                        <mat-form-field class="pl-8" style="width: 100%;">
                           <input matInput placeholder="Planned Effort (hrs)" formControlName="PlannedEffort">
                           <mat-error
                             *ngIf="taskSubGroupMainFormGroup.get('PlannedEffort').touched &&  taskSubGroupMainFormGroup.get('PlannedEffort').hasError('required')">
@@ -248,7 +248,7 @@
                             && taskSubGroupMainFormGroup.get('PlannedEffort').hasError('pattern')">
                             Enter Valid Number</mat-error>
                         </mat-form-field>
-                        <mat-form-field *ngIf="SelectedTaskGroup.TaskGroupID" class="pl-8" style="width: 50%;">
+                        <!-- <mat-form-field *ngIf="SelectedTaskGroup.TaskGroupID" class="pl-8" style="width: 50%;">
                           <mat-label>Actual End Date</mat-label>
                           <input matInput [matDatepicker]="picker7" formControlName="ActualEndDate">
                           <mat-datepicker-toggle matSuffix [for]="picker7"></mat-datepicker-toggle>
@@ -257,10 +257,10 @@
                             *ngIf="taskSubGroupMainFormGroup.get('ActualEndDate').touched && taskSubGroupMainFormGroup.get('ActualEndDate').hasError('required')">
                             Actual End date is required
                           </mat-error>
-                        </mat-form-field>
+                        </mat-form-field> -->
                       </div>
                     </div>
-                    <div fxLayout="row" fxLayoutAlign="start">
+                    <!-- <div fxLayout="row" fxLayoutAlign="start">
                       <div fxFlex="50" *ngIf="SelectedTaskGroup.TaskGroupID">
                         <mat-form-field class="pl-8" style="width: 40%;">
                           <mat-label>Actual Start Date</mat-label>
@@ -282,7 +282,7 @@
                             Enter Valid Number</mat-error>
                         </mat-form-field>
                       </div>
-                    </div>
+                    </div> -->
                     <div fxLayout="row" fxLayoutAlign="end">
                       <button (click)="AddTaskSubGroupToTable()" mat-stroked-button
                         style="margin-left: 10px;height: 30px;color: #efb577;"><span
@@ -417,9 +417,9 @@
 
                           <ng-container matColumnDef="ActualStartDate">
                             <th mat-header-cell *matHeaderCellDef>Ac. St. Dt.</th>
-                            <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                            <td mat-cell *matCellDef="let row; let index = index"  [formGroupName]="index">                     
                               <input matInput [matDatepicker]="picker23" (click)="picker23.open()"
-                                formControlName="ActualStartDate">
+                                formControlName="ActualStartDate" style="outline: 1px solid black; height: 20px;">
                               <mat-datepicker #picker23></mat-datepicker>
                               <span class="pl-4 errorClass" *ngIf="SprintFormGroup.get('Sprints').controls[index].get('ActualStartDate').touched && 
                         SprintFormGroup.get('Sprints').controls[index].get('ActualStartDate').hasError('required')">
@@ -431,8 +431,8 @@
                           <ng-container matColumnDef="ActualEndDate">
                             <th mat-header-cell *matHeaderCellDef>Ac. Et. Dt.</th>
                             <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                              <input matInput [matDatepicker]="picker24" (click)="picker24.open()"
-                                formControlName="ActualEndDate">
+                              <input appearance="outline" matInput [matDatepicker]="picker24" (click)="picker24.open()"
+                                formControlName="ActualEndDate" style="outline: 1px solid black; height: 20px;">
                               <mat-datepicker #picker24></mat-datepicker>
                               <span class="pl-4 errorClass" *ngIf="SprintFormGroup.get('Sprints').controls[index].get('ActualEndDate').touched && 
                         SprintFormGroup.get('Sprints').controls[index].get('ActualEndDate').hasError('required')">
@@ -444,7 +444,7 @@
                           <ng-container matColumnDef="ActualEffort">
                             <th mat-header-cell *matHeaderCellDef> Ac Effort </th>
                             <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                              <input matInput formControlName="ActualEffort">
+                              <input matInput formControlName="ActualEffort" style="outline: 1px solid black; height: 20px;">
                               <span class="pl-4 errorClass" *ngIf="SprintFormGroup.get('Sprints').controls[index].get('ActualEffort').touched && 
                         SprintFormGroup.get('Sprints').controls[index].get('ActualEffort').hasError('required')">
                                 *
