@@ -49,7 +49,11 @@ export class TaskGroupService {
         return this._httpClient.get<any>(`${this.baseAddress}api/Project/GetAllTaskSubGroupsBasedTaskGroup?TaskGroupID=` + taskGroupID)
             .pipe(catchError(this.errorHandler));
     }
-
+    
+    GetAllTaskGroupsBasedProjectID(projectID: number): Observable<any | string> {
+        return this._httpClient.get<any>(`${this.baseAddress}api/Project/GetAllTaskGroupsBasedProjectID?ProjectID=` + projectID)
+            .pipe(catchError(this.errorHandler));
+    }
 
     GetAllOwners(): Observable<any | string> {
         return this._httpClient.get<any>(`${this.baseAddress}api/Project/GetAllOwners`)

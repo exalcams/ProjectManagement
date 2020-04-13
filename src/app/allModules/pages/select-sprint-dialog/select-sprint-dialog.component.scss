@@ -1,0 +1,47 @@
+@import "src/@fuse/scss/fuse";
+
+.select-sprint-dialog {
+  @include media-breakpoint("xs") {
+    width: 100%;
+  }
+
+  @include media-breakpoint-up("sm") {
+    width: 640px;
+  }
+  .mat-radio-button {
+    margin: 0 5px;
+  }
+  .mat-dialog-container {
+    padding: 0;
+    border-radius: 10px;
+  }
+
+  .dialog-content-wrapper {
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .disabledClass {
+    color: rgba(0, 0, 0, 0.38);
+  }
+
+  .hbgg {
+    background-color: #006666 !important;
+  }
+
+  .hbg {
+    color: #006666 !important;
+  }
+  .hbo {
+    color: #f89406 !important;
+  }
+  .toolBg {
+    background-color: #121214 !important;
+    color: white !important;
+  }
+  .btnBg{
+    background-color: #efb577 !important;
+    color: white !important;
+  }
+}

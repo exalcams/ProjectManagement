@@ -107,7 +107,7 @@ export class MenuAppComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       result => {
         if (result) {
-          if (Actiontype === 'Create') {
+          if (Actiontype === 'Save') {
             this.CreateMenuApp();
           } else if (Actiontype === 'Update') {
             this.UpdateMenuApp();
@@ -199,7 +199,7 @@ export class MenuAppComponent implements OnInit {
         const Catagory = 'MenuApp';
         this.OpenConfirmationDialog(Actiontype, Catagory);
       } else {
-        const Actiontype = 'Create';
+        const Actiontype = 'Save';
         const Catagory = 'MenuApp';
         this.OpenConfirmationDialog(Actiontype, Catagory);
       }

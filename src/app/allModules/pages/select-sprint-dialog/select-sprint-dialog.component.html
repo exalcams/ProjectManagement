@@ -1,0 +1,56 @@
+<div class="dialog-content-wrapper">
+  <mat-toolbar class="toolBg m-0">
+    <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+      <span class="title dialog-title">Select Sprint</span>
+      <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+        <mat-icon svgIcon="closeIcon"></mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
+    <form name="selectSprintForm" [formGroup]="selectSprintForm" novalidate fxLayout="column" fxFlex>
+
+      <mat-form-field>
+        <!-- (click)="onProjectClick(project.ProjectID)" -->
+        <mat-select placeholder="Project" formControlName="ProjectID" (selectionChange)="OnProjectChanged()">
+          <mat-option *ngFor="let project of AllProjects" [value]="project.ProjectID">
+            {{project.Title}}</mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="selectSprintForm.get('ProjectID').touched && selectSprintForm.get('ProjectID').hasError('required')">
+          Project required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-select placeholder="TaskGroup" formControlName="TaskGroupID" (selectionChange)="OnTaskGroupChanged()">
+          <mat-option *ngFor="let taskGroup of AllTaskGroups" [value]="taskGroup.TaskGroupID">
+            {{taskGroup.Title}}</mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="selectSprintForm.get('TaskGroupID').touched && selectSprintForm.get('TaskGroupID').hasError('required')">
+          Task Group required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-select placeholder="TaskSubGroup" formControlName="TaskSubGroupID">
+          <mat-option *ngFor="let taskSubGroup of AllTaskSubGroups" [value]="taskSubGroup.TaskSubGroupID">
+            {{taskSubGroup.Title}}</mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="selectSprintForm.get('TaskSubGroupID').touched && selectSprintForm.get('TaskSubGroupID').hasError('required')">
+          Task Sub Group required</mat-error>
+      </mat-form-field>
+
+      <!-- <button mat-raised-button class="submit-button" aria-label="RESET MY PASSWORD" (click)="ChangePasswordClick()">
+              CHANGE MY PASSWORD
+          </button> -->
+    </form>
+
+  </div>
+
+  <mat-dialog-actions class="m-0 p-16" fxLayoutAlign="space-between center">
+    <button mat-button type="button" (click)="CloseClicked()">Cancel</button>
+    <button mat-button type="button" class="btnBg" (click)="YesClicked()">Yes</button>
+  </mat-dialog-actions>
+</div>

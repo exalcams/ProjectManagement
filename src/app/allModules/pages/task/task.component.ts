@@ -7,12 +7,13 @@ import { NotificationSnackBarComponent } from 'app/notifications/notification-sn
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MasterService } from 'app/services/master.service';
 import { Router } from '@angular/router';
-import { Task, TaskView, Input, Output, Logic, Validation, TaskSubGroupView, SketchView, AttachmentDetails } from 'app/models/task';
+import { Task, TaskView, Input, Output, Logic, Validation, TaskSubGroupView, SketchView, AttachmentDetails, AcceptTaskView } from 'app/models/task';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { ProjectService } from 'app/services/project.service';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { Guid } from 'guid-typescript';
 import { AttachmentDialogComponent } from '../attachment-dialog/attachment-dialog.component';
+import { SelectSprintDialogComponent } from '../select-sprint-dialog/select-sprint-dialog.component';
 
 @Component({
   selector: 'app-task',
@@ -35,6 +36,8 @@ export class TaskComponent implements OnInit {
   outputFormGroup: FormGroup;
   logicFormGroup: FormGroup;
   validationFormGroup: FormGroup;
+  acceptTaskFormGroup: FormGroup;
+  SelectedAcceptTask: AcceptTaskView;
   searchText = '';
   AllTaskSubGroupView: TaskSubGroupView[] = [];
   AllTasks: Task[] = [];
@@ -121,6 +124,7 @@ export class TaskComponent implements OnInit {
       this.InitializeOutputFormGroup();
       this.InitializeLogicFormGroup();
       this.InitializeValidationFormGroup();
+      this.InitializeAcceptTaskFormGroup();
       this.GetAllDevelopersAndTLs();
       this.GetAllTaskSubGroupView();
       this.GetAllTask();
@@ -149,7 +153,7 @@ export class TaskComponent implements OnInit {
       AcceptedEffort: [''],
       AcceptedCompletionDate: ['']
     });
-    this.DynamicallyAddAcceptedValidation();
+    // this.DynamicallyAddAcceptedValidation();
   }
 
   DynamicallyAddAcceptedValidation(): void {
@@ -195,9 +199,19 @@ export class TaskComponent implements OnInit {
     });
   }
 
+  InitializeAcceptTaskFormGroup(): void {
+    this.acceptTaskFormGroup = this._formBuilder.group({
+      AcceptedEffort: ['', Validators.required],
+      AcceptedCompletionDate: ['', Validators.required],
+      Remarks: ['', Validators.required]
+    });
+  }
+
+
   ResetControl(): void {
     this.SelectedTask = new Task();
     this.SelectedTaskView = new TaskView();
+    this.SelectedAcceptTask = new AcceptTaskView();
     this.selectID = 0;
     this.taskFormGroup.reset();
     Object.keys(this.taskFormGroup.controls).forEach(key => {
@@ -214,6 +228,7 @@ export class TaskComponent implements OnInit {
     this.ClearLogicDataSource();
     this.ClearValidationDataSource();
     this.ClearSketchFiles();
+    this.ClearAcceptTaskedFormGroup();
   }
 
   ClearInputFormGroup(): void {
@@ -235,6 +250,7 @@ export class TaskComponent implements OnInit {
     });
 
   }
+
   ClearOutputDataSource(): void {
     this.OutputsByTask = [];
     this.OutputdataSource = new MatTableDataSource(this.OutputsByTask);
@@ -246,29 +262,42 @@ export class TaskComponent implements OnInit {
       this.logicFormGroup.get(key).markAsUntouched();
     });
   }
+
   ClearLogicDataSource(): void {
     this.LogicsByTask = [];
     this.LogicdataSource = new MatTableDataSource(this.LogicsByTask);
   }
+
   ClearValidationFormGroup(): void {
     this.validationFormGroup.reset();
     Object.keys(this.validationFormGroup.controls).forEach(key => {
       this.validationFormGroup.get(key).markAsUntouched();
     });
   }
+
+  ClearAcceptTaskedFormGroup(): void {
+    this.acceptTaskFormGroup.reset();
+    Object.keys(this.acceptTaskFormGroup.controls).forEach(key => {
+      this.acceptTaskFormGroup.get(key).markAsUntouched();
+    });
+  }
+
   ClearValidationDataSource(): void {
     this.ValidationsByTask = [];
     this.ValidationdataSource = new MatTableDataSource(this.ValidationsByTask);
   }
+
   ClearSketchFiles(): void {
     this.SketchViewsByTask = [];
     this.fileToUploadList = [];
     this.fileToUpload = null;
   }
+
   // ClearFileList(): void {
   //   this.fileToUpload = null;
   //   this.fileToUploadList = [];
   // }
+
   GetAllDevelopersAndTLs(): void {
     this._masterService.GetAllDevelopersAndTLs().subscribe(
       (data) => {
@@ -279,6 +308,7 @@ export class TaskComponent implements OnInit {
       }
     );
   }
+
   GetAllTaskSubGroupView(): void {
     this._projectService.GetAllTaskSubGroupView().subscribe(
       (data) => {
@@ -302,6 +332,7 @@ export class TaskComponent implements OnInit {
       this.GetAllTasks();
     }
   }
+
   GetAllTasks(): void {
     this.IsProgressBarVisibile = true;
     this._projectService.GetAllTasks().subscribe(
@@ -319,7 +350,6 @@ export class TaskComponent implements OnInit {
       }
     );
   }
-
 
   GetAllTasksByDeveloper(): void {
     this.IsProgressBarVisibile = true;
@@ -365,12 +395,14 @@ export class TaskComponent implements OnInit {
     this.SetTaskValues();
     this.GetTaskSubItems();
   }
+
   typeSelected(event): void {
     const selectedType = event.value;
     if (event.value) {
       this.SelectedTask.Type = event.value;
     }
   }
+
   applyFilter(filterValue: string): void {
     this.InputdataSource.filter = filterValue.trim().toLowerCase();
   }
@@ -380,6 +412,7 @@ export class TaskComponent implements OnInit {
       this.taskFormGroup.get(key).enable();
     });
   }
+
   SetTaskValues(): void {
     this.taskFormGroup.get('Title').patchValue(this.SelectedTask.Title);
     this.taskFormGroup.get('Type').patchValue(this.SelectedTask.Type);
@@ -418,11 +451,15 @@ export class TaskComponent implements OnInit {
     this.taskFormGroup.get('CompletionBefore').disable();
     this.taskFormGroup.get('AssignedTo').disable();
     this.taskFormGroup.get('TaskSubGroupID').disable();
+    this.taskFormGroup.get('AcceptedEffort').disable();
+    this.taskFormGroup.get('AcceptedCompletionDate').disable();
   }
+
   DisableTaskFieldsForCreatedUser(): void {
     this.taskFormGroup.get('AcceptedEffort').disable();
     this.taskFormGroup.get('AcceptedCompletionDate').disable();
   }
+
   DisableAllTaskFields(): void {
     this.DisableTaskFieldsForAssignedToUser();
     this.DisableTaskFieldsForCreatedUser();
@@ -499,6 +536,7 @@ export class TaskComponent implements OnInit {
       }
     );
   }
+
   GetSketchViewsByTask(): void {
     this.IsProgressBarVisibile = true;
     this._projectService.GetSketchViewsByTask(this.SelectedTask.TaskID).subscribe(
@@ -554,6 +592,7 @@ export class TaskComponent implements OnInit {
       this.ShowValidationErrors(this.outputFormGroup);
     }
   }
+
   InputEnterKeyDown(): boolean {
     this.inputRemarks.nativeElement.blur();
     this.AddInputToTable();
@@ -660,6 +699,7 @@ export class TaskComponent implements OnInit {
     }
     this.OutputdataSource = new MatTableDataSource(this.OutputsByTask);
   }
+
   RemoveLogicFromTable(logic: Logic): void {
     const index: number = this.LogicsByTask.indexOf(logic);
     if (index > -1) {
@@ -688,12 +728,18 @@ export class TaskComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       result => {
         if (result) {
-          if (Actiontype === 'Create') {
+          if (Actiontype === 'Save') {
             this.CreateTask();
           } else if (Actiontype === 'Update') {
             this.UpdateTask();
           } else if (Actiontype === 'Delete') {
             this.DeleteTask();
+          }
+          else if (Actiontype === 'Accept') {
+            this.AcceptTask();
+          }
+          else if (Actiontype === 'Complete') {
+            this.CompleteTask();
           }
         }
       });
@@ -878,7 +924,7 @@ export class TaskComponent implements OnInit {
       const Catagory = 'Task';
       this.OpenConfirmationDialog(Actiontype, Catagory);
     } else {
-      const Actiontype = 'Create';
+      const Actiontype = 'Save';
       const Catagory = 'Task';
       this.OpenConfirmationDialog(Actiontype, Catagory);
     }
@@ -914,6 +960,7 @@ export class TaskComponent implements OnInit {
     }
     return true;
   }
+
   GetAttachment(fileName: string, file?: File): void {
     if (file && file.size) {
       const blob = new Blob([file], { type: file.type });
@@ -940,6 +987,7 @@ export class TaskComponent implements OnInit {
       );
     }
   }
+
   OpenAttachmentDialog(FileName: string, blob: Blob): void {
     const attachmentDetails: AttachmentDetails = {
       FileName: FileName,
@@ -955,6 +1003,7 @@ export class TaskComponent implements OnInit {
       }
     });
   }
+
   GetTaskGroupTitle(subTaskGroupID: number): string {
     const tas = this.AllTaskSubGroupView.find(x => x.TaskSubGroupID === subTaskGroupID);
     if (tas) {
@@ -962,4 +1011,91 @@ export class TaskComponent implements OnInit {
     }
     return '';
   }
+
+  AcceptTaskClicked(): void {
+    if (this.acceptTaskFormGroup.valid) {
+      const Actiontype = 'Accept';
+      const Catagory = 'Task';
+      this.OpenConfirmationDialog(Actiontype, Catagory);
+    } else {
+      this.ShowValidationErrors(this.acceptTaskFormGroup);
+    }
+  }
+
+  GetAcceptTaskValues(): void {
+    this.SelectedAcceptTask = new AcceptTaskView();
+    this.SelectedAcceptTask.TaskID = this.SelectedTask.TaskID;
+    this.SelectedAcceptTask.Title = this.SelectedTask.Title;
+    this.SelectedAcceptTask.TaskSubGroupID = this.SelectedTask.TaskSubGroupID;
+    this.SelectedAcceptTask.AcceptedEffort = this.acceptTaskFormGroup.get('AcceptedEffort').value;
+    this.SelectedAcceptTask.AcceptedCompletionDate = this.acceptTaskFormGroup.get('AcceptedCompletionDate').value;
+    this.SelectedAcceptTask.Remarks = this.acceptTaskFormGroup.get('Remarks').value;
+  }
+
+  AcceptTask(): void {
+    this.GetAcceptTaskValues();
+    this.SelectedAcceptTask.ModifiedBy = this.authenticationDetails.userID.toString();
+    this.IsProgressBarVisibile = true;
+    this._projectService.AcceptTask(this.SelectedAcceptTask).subscribe(
+      (data) => {
+        // console.log(data);
+        this.ResetControl();
+        this.notificationSnackBarComponent.openSnackBar('Task Accepted successfully', SnackBarStatus.success);
+        this.IsProgressBarVisibile = false;
+        this.GetAllTask();
+      },
+      (err) => {
+        console.error(err);
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+        this.IsProgressBarVisibile = false;
+      }
+    );
+  }
+
+  CompleteTaskClicked(): void {
+    if (this.SelectedTask.TaskID) {
+      const Actiontype = 'Complete';
+      const Catagory = 'Task';
+      this.OpenConfirmationDialog(Actiontype, Catagory);
+    }
+  }
+
+  CompleteTask(): void {
+    this.GetTaskValues();
+    this.SelectedTask.ModifiedBy = this.authenticationDetails.userID.toString();
+    this.IsProgressBarVisibile = true;
+    this._projectService.CompleteTask(this.SelectedTask).subscribe(
+      (data) => {
+        // console.log(data);
+        this.ResetControl();
+        this.notificationSnackBarComponent.openSnackBar('Task completed successfully', SnackBarStatus.success);
+        this.IsProgressBarVisibile = false;
+        this.GetAllTask();
+      },
+      (err) => {
+        console.error(err);
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+        this.IsProgressBarVisibile = false;
+      }
+    );
+  }
+
+  OpenSelectSprintDialog(): void {
+    this.ResetControl();
+    // const attachmentDetails: AttachmentDetails = {
+    //   FileName: FileName,
+    //   blob: blob
+    // };
+    const dialogConfig: MatDialogConfig = {
+      data: 'SelectSprint',
+      panelClass: 'select-sprint-dialog'
+    };
+    const dialogRef = this.dialog.open(SelectSprintDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
+  }
+
 }

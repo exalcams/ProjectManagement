@@ -279,10 +279,14 @@
   .DeleteBtn {
     color: #ef8377;
     background-color: white;
+    margin-top: 14px;
+    height: 40px;
   }
   .SaveBtn {
     background-color: #efb577;
     color: white;
+    margin-top: 14px;
+    height: 40px;
   }
   .leftCard {
     @include mat-elevation(2);
@@ -319,7 +323,7 @@
     border-radius: 2px;
     background-color: #f9d2a8;
   }
-  .addAttachmentClass{
+  .addAttachmentClass {
     color: #4784f7;
     cursor: pointer !important;
   }
