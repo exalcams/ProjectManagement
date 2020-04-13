@@ -47,14 +47,66 @@
       </div>
       <div fxFlex="77" class="side-bar">
         <mat-card class="cardHeader p-8" style="background-color: #fffdf9;">
+          <div fxFlex *ngIf="((CurrentUserRole | lowercase)==='developer' || SelectedTask?.AssignedTo?.includes(CurrentUserID))
+           && SelectedTask?.AcceptedCompletionDate?.hasValue">
+            <form autocomplete="off" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" name="form" novalidate
+              [formGroup]="acceptTaskFormGroup">
+              <div fxLayout="row" fxLayoutAlign="start">
+                <div fxFlex="30">
+                  <mat-form-field class="pl-8 pr-24" style="width: 100%;" *ngIf="(CurrentUserRole | lowercase)==='developer' || SelectedTask?.AssignedTo?.includes(CurrentUserID)
+                  || acceptTaskFormGroup.get('AcceptedEffort')?.value">
+                    <input matInput placeholder="Accepted Effort (hrs)" formControlName="AcceptedEffort"
+                      (keydown)="numberOnly($event)">
+                    <mat-error
+                      *ngIf="acceptTaskFormGroup.get('AcceptedEffort').touched && acceptTaskFormGroup.get('AcceptedEffort').hasError('required')">
+                      Accepted Effort is required
+                    </mat-error>
+                    <mat-error *ngIf="acceptTaskFormGroup.get('AcceptedEffort').touched && !acceptTaskFormGroup.get('AcceptedEffort').hasError('required')
+                  &&acceptTaskFormGroup.get('AcceptedEffort').hasError('pattern')">
+                      Enter a valid number
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="35">
+                  <mat-form-field class="pl-8 pr-24" style="width: 100%;" *ngIf="(CurrentUserRole | lowercase)==='developer' || SelectedTask?.AssignedTo?.includes(CurrentUserID)
+                || acceptTaskFormGroup.get('AcceptedEffort')?.value">
+                    <input matInput placeholder="Accepted Completion Date" [matDatepicker]="picker200"
+                      formControlName="AcceptedCompletionDate">
+                    <mat-datepicker-toggle matSuffix [for]="picker200"></mat-datepicker-toggle>
+                    <mat-datepicker #picker200></mat-datepicker>
+                    <mat-error
+                      *ngIf="acceptTaskFormGroup.get('AcceptedCompletionDate').touched && acceptTaskFormGroup.get('AcceptedCompletionDate').hasError('required')">
+                      Accepted Completion Date is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="35">
+                  <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                    <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
+                      cdkAutosizeMaxRows="5" placeholder="Remarks" formControlName="Remarks"></textarea>
+                    <mat-error
+                      *ngIf="acceptTaskFormGroup.get('Remarks').touched && acceptTaskFormGroup.get('Remarks').hasError('required')">
+                      Remarks is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </form>
+          </div>
           <div fxLayout fxFlex class="h2" fxLayoutAlign="end">
+            <button (click)="AcceptTaskClicked()" class="SaveBtn mr-12" mat-raised-button *ngIf="((CurrentUserRole | lowercase)==='developer' || SelectedTask?.AssignedTo?.includes(CurrentUserID))
+           && SelectedTask?.AcceptedCompletionDate?.hasValue">
+              Accept</button>
+            <button (click)="CompleteTaskClicked()" class="SaveBtn mr-12" mat-raised-button *ngIf="((CurrentUserRole | lowercase)==='developer' || SelectedTask?.AssignedTo?.includes(CurrentUserID))
+             && !SelectedTask?.AcceptedCompletionDate?.hasValue">
+              Complete</button>
             <button (click)="DeleteClicked()" class="DeleteBtn mr-12" *ngIf="SelectedTask.TaskID" mat-stroked-button>
               Delete</button>
             <button mat-raised-button class="mr-12" (click)="ResetControl()" *ngIf="!SelectedTask.TaskID">
               Clear
             </button>
             <button (click)="SaveClicked()" class="SaveBtn" mat-raised-button>
-              {{SelectedTask.TaskID?'Update':'Create'}}</button>
+              {{SelectedTask.TaskID?'Update':'Save'}}</button>
           </div>
         </mat-card>
         <div class="sidenav-content" fxFlex fxLayout="column">
@@ -178,8 +230,8 @@
               <div style="margin-left: 7px">
                 <span><strong>Input Table</strong></span>
               </div>
-              <div *ngIf="(CurrentUserRole  | lowercase)==='team lead'&&
-              (SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true)">
+              <!-- *ngIf="(SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true)"(CurrentUserRole  | lowercase)==='team lead'&& -->
+              <div>
                 <form autocomplete="off" fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto" name="form" novalidate
                   [formGroup]="inputFormGroup">
                   <div fxFlex="25">
@@ -237,12 +289,12 @@
                   </ng-container>
 
                   <ng-container matColumnDef="Action">
-                    <th [style.display]="((CurrentUserRole  | lowercase)==='team lead' &&
-                    (SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true))?'table-cell':'none'"
-                      mat-header-cell *matHeaderCellDef mat-sort-header style="width: 5%;"> </th>
-                    <td [style.display]="((CurrentUserRole  | lowercase)==='team lead' &&
-                    (SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true))?'table-cell':'none'" mat-cell
-                      *matCellDef="let element" style="width: 5%;">
+                    <!-- [style.display]="((CurrentUserRole  | lowercase)==='team lead' &&
+                    (SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true))?'table-cell':'none'" -->
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 5%;"> </th>
+                    <!-- [style.display]="((CurrentUserRole  | lowercase)==='team lead' &&
+                    (SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true))?'table-cell':'none'" -->
+                    <td mat-cell *matCellDef="let element" style="width: 5%;">
                       <img class="removeIcon" src="assets/images/remove-button.png"
                         (click)="RemoveInputFromTable(element)">
                     </td>
@@ -262,14 +314,15 @@
 
             <div fxFlex fxLayout="column" *ngIf="(SelectedTask?.Type| lowercase)==='ui'">
               <div style="margin-left: 7px">
-                <span *ngIf="(CurrentUserRole | lowercase)==='developer' || 
-                SelectedTask?.AssignedTo?.includes(CurrentUserID) || OutputsByTask?.length">
+                <!-- *ngIf="(CurrentUserRole | lowercase)==='developer' || 
+                SelectedTask?.AssignedTo?.includes(CurrentUserID) || OutputsByTask?.length" -->
+                <span>
                   <strong>Output Table</strong></span>
               </div>
               <div>
+                <!-- *ngIf="(CurrentUserRole | lowercase)==='developer' || SelectedTask?.AssignedTo?.includes(CurrentUserID)" -->
                 <form autocomplete="off" fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto" name="form" novalidate
-                  [formGroup]="outputFormGroup" *ngIf="(CurrentUserRole | lowercase)==='developer' || 
-                  SelectedTask?.AssignedTo?.includes(CurrentUserID)">
+                  [formGroup]="outputFormGroup">
                   <div fxFlex="10">
                     <mat-form-field class="pl-8 pr-12" style="width: 100%;">
                       <input matInput placeholder="Level" formControlName="Level" (keyup.enter)="keytab('outputField')">
@@ -339,12 +392,12 @@
                   </ng-container>
 
                   <ng-container matColumnDef="Action">
-                    <th [style.display]="((CurrentUserRole | lowercase)==='developer' || 
-                    SelectedTask?.AssignedTo?.includes(CurrentUserID))?'table-cell':'none'" mat-header-cell
-                      *matHeaderCellDef mat-sort-header style="width: 5%;"> </th>
-                    <td [style.display]="((CurrentUserRole | lowercase)==='developer' || 
-                    SelectedTask?.AssignedTo?.includes(CurrentUserID))?'table-cell':'none'" mat-cell
-                      *matCellDef="let element" style="width: 5%;">
+                    <!-- [style.display]="((CurrentUserRole | lowercase)==='developer' || 
+                    SelectedTask?.AssignedTo?.includes(CurrentUserID))?'table-cell':'none'" -->
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 5%;"> </th>
+                    <!-- [style.display]="((CurrentUserRole | lowercase)==='developer' || 
+                    SelectedTask?.AssignedTo?.includes(CurrentUserID))?'table-cell':'none'" -->
+                    <td mat-cell *matCellDef="let element" style="width: 5%;">
                       <img class="removeIcon" src="assets/images/remove-button.png"
                         (click)="RemoveOutputFromTable(element)">
                     </td>
@@ -368,8 +421,8 @@
                   <div style="margin-left: 7px">
                     <!-- <span><strong>Logic Table</strong></span> -->
                   </div>
-                  <div *ngIf="(CurrentUserRole  | lowercase)==='team lead' && 
-                  (SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true)">
+                  <div
+                    *ngIf="(CurrentUserRole  | lowercase)==='team lead' &&(SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true)">
                     <form autocomplete="off" fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto" name="form"
                       novalidate [formGroup]="logicFormGroup">
                       <div fxFlex="90">
@@ -558,8 +611,8 @@
             <div fxFlex fxLayout="column">
               <div fxLayout>
                 <div fxFlex fxLayoutAlign="end">
-                  <button *ngIf="(CurrentUserRole  | lowercase)==='team lead'" class="floatBtn" mat-fab
-                    (click)="ResetControl()">
+                  <button *ngIf="(CurrentUserRole  | lowercase)==='team lead' && SelectedTask.TaskID" class="floatBtn"
+                    mat-fab (click)="OpenSelectSprintDialog()">
                     <mat-icon style="color: white;">add</mat-icon>
                   </button>
                   <!-- <button mat-raised-button color="accent" (click)="SubmitClicked()">Submit</button> -->

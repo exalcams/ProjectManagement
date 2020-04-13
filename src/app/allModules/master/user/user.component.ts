@@ -131,7 +131,7 @@ export class UserComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       result => {
         if (result) {
-          if (Actiontype === 'Create') {
+          if (Actiontype === 'Save') {
             this.CreateUser();
           } else if (Actiontype === 'Update') {
             this.UpdateUser();
@@ -227,7 +227,7 @@ export class UserComponent implements OnInit {
         const Catagory = 'User';
         this.OpenConfirmationDialog(Actiontype, Catagory);
       } else {
-        const Actiontype = 'Create';
+        const Actiontype = 'Save';
         const Catagory = 'User';
         this.OpenConfirmationDialog(Actiontype, Catagory);
       }

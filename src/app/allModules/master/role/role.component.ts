@@ -144,7 +144,7 @@ export class RoleComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       result => {
         if (result) {
-          if (Actiontype === 'Create') {
+          if (Actiontype === 'Save') {
             this.CreateRole();
           } else if (Actiontype === 'Update') {
             this.UpdateRole();
@@ -237,7 +237,7 @@ export class RoleComponent implements OnInit {
         const Catagory = 'Role';
         this.OpenConfirmationDialog(Actiontype, Catagory);
       } else {
-        const Actiontype = 'Create';
+        const Actiontype = 'Save';
         const Catagory = 'Role';
         this.OpenConfirmationDialog(Actiontype, Catagory);
       }

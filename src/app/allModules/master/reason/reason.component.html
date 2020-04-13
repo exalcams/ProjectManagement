@@ -41,7 +41,7 @@
           <form class="p-24 normal" autocomplete="off" fxLayout="column" fxLayoutAlign="start" name="form"
             [formGroup]="ReasonFormGroup">
             <div fxLayout="row" class="pt-8">
-              <div fxFlex class="h2 mb-24">{{SelectedReason.ReasonID?'Update':'Create'}} Reason</div>
+              <div fxFlex class="h2 mb-24">{{SelectedReason.ReasonID?'Update':'Save'}} Reason</div>
             </div>
             <div fxLayout="row wrap" fxLayoutAlign="start" fxFlex="1 0 auto">
               <mat-form-field fxFlex>
@@ -61,7 +61,7 @@
                 Delete
               </button>
               <button mat-raised-button class="btnBg" type="button" (click)="SaveClicked()">
-                {{SelectedReason.ReasonID?'Update':'Create'}}
+                {{SelectedReason.ReasonID?'Update':'Save'}}
               </button>
             </div>
           </form>

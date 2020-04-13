@@ -114,7 +114,7 @@ export class ReasonComponent implements OnInit {
         const Actiontype = 'Update';
         this.OpenConfirmationDialog(Actiontype);
       } else {
-        const Actiontype = 'Create';
+        const Actiontype = 'Save';
         this.OpenConfirmationDialog(Actiontype);
       }
     } else {
@@ -170,7 +170,7 @@ export class ReasonComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       result => {
         if (result) {
-          if (Actiontype === 'Create') {
+          if (Actiontype === 'Save') {
             this.CreateReason();
           } else if (Actiontype === 'Update') {
             this.UpdateReason();

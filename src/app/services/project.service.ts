@@ -5,7 +5,7 @@ import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import { Project } from 'app/models/project';
-import { Task, TaskView, Logic, Validation, TaskSubGroupView, SketchView } from 'app/models/task';
+import { Task, TaskView, Logic, Validation, TaskSubGroupView, SketchView, AcceptTaskView } from 'app/models/task';
 import { Guid } from 'guid-typescript';
 
 @Injectable({
@@ -36,7 +36,6 @@ export class ProjectService {
   }
 
   // Dashboard
-
   GetAllNewTasksToday(): Observable<Task[] | string> {
     return this._httpClient.get<Task[]>(`${this.baseAddress}api/Project/GetAllNewTasksToday`)
       .pipe(catchError(this.errorHandler));
@@ -137,7 +136,6 @@ export class ProjectService {
   }
 
   // Task
-
   GetAllTaskSubGroupView(): Observable<TaskSubGroupView[] | string> {
     return this._httpClient.get<TaskSubGroupView[]>(`${this.baseAddress}api/Project/GetAllTaskSubGroupView`)
       .pipe(catchError(this.errorHandler));
@@ -216,18 +214,22 @@ export class ProjectService {
     return this._httpClient.get<Input[]>(`${this.baseAddress}api/Project/GetInputsByTask?TaskID=${TaskID}`)
       .pipe(catchError(this.errorHandler));
   }
+
   GetOutputsByTask(TaskID: number): Observable<Output[] | string> {
     return this._httpClient.get<Output[]>(`${this.baseAddress}api/Project/GetOutputsByTask?TaskID=${TaskID}`)
       .pipe(catchError(this.errorHandler));
   }
+
   GetLogicsByTask(TaskID: number): Observable<Logic[] | string> {
     return this._httpClient.get<Logic[]>(`${this.baseAddress}api/Project/GetLogicsByTask?TaskID=${TaskID}`)
       .pipe(catchError(this.errorHandler));
   }
+
   GetValidationsByTask(TaskID: number): Observable<Validation[] | string> {
     return this._httpClient.get<Validation[]>(`${this.baseAddress}api/Project/GetValidationsByTask?TaskID=${TaskID}`)
       .pipe(catchError(this.errorHandler));
   }
+
   GetSketchViewsByTask(TaskID: number): Observable<SketchView[] | string> {
     return this._httpClient.get<SketchView[]>(`${this.baseAddress}api/Project/GetSketchViewsByTask?TaskID=${TaskID}`)
       .pipe(catchError(this.errorHandler));
@@ -238,6 +240,28 @@ export class ProjectService {
       responseType: 'blob',
       headers: new HttpHeaders().append('Content-Type', 'application/json')
     })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  AcceptTask(task: AcceptTaskView): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Project/AcceptTask`,
+      task,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  CompleteTask(task: Task): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Project/CompleteTask`,
+      task,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
       .pipe(catchError(this.errorHandler));
   }
 

@@ -562,7 +562,7 @@ export class TaskGroupComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       result => {
         if (result) {
-          if (Actiontype === 'Create') {
+          if (Actiontype === 'Save') {
             this.CreateTaskGroup();
           } else if (Actiontype === 'Update') {
             this.UpdateTaskGroup();
@@ -738,7 +738,7 @@ export class TaskGroupComponent implements OnInit {
         const Catagory = 'TaskGroup';
         this.OpenConfirmationDialog(Actiontype, Catagory);
       } else {
-        const Actiontype = 'Create';
+        const Actiontype = 'Save';
         const Catagory = 'TaskGroup';
         this.OpenConfirmationDialog(Actiontype, Catagory);
       }

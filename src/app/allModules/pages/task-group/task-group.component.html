@@ -56,7 +56,7 @@
               Clear
             </button>
             <button (click)="SaveClicked()" mat-raised-button style="margin-left: 10px;background-color: #efb577;"><span
-                style="color: white;"> {{SelectedTaskGroup.TaskGroupID?'Update':'Create'}}</span>
+                style="color: white;"> {{SelectedTaskGroup.TaskGroupID?'Update':'Save'}}</span>
             </button>
           </div>
         </mat-card>
@@ -479,7 +479,7 @@
 
               <div fxLayout>
                 <div fxFlex fxLayoutAlign="end">
-                  <button class="float" mat-fab style="background-color: #f6b570; z-index: 100;"
+                  <button class="float" mat-fab *ngIf="SelectedTaskGroup.TaskGroupID" style="background-color: #f6b570; z-index: 100;"
                     (click)="ResetControl()">
                     <mat-icon style="color: white;">add</mat-icon>
                   </button>

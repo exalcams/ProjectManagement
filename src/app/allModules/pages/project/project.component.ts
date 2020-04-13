@@ -180,7 +180,7 @@ export class ProjectComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       result => {
         if (result) {
-          if (Actiontype === 'Create') {
+          if (Actiontype === 'Save') {
             this.CreateProject();
           } else if (Actiontype === 'Update') {
             this.UpdateProject();
@@ -283,7 +283,7 @@ export class ProjectComponent implements OnInit {
         const Catagory = 'Project';
         this.OpenConfirmationDialog(Actiontype, Catagory);
       } else {
-        const Actiontype = 'Create';
+        const Actiontype = 'Save';
         const Catagory = 'Project';
         this.OpenConfirmationDialog(Actiontype, Catagory);
       }

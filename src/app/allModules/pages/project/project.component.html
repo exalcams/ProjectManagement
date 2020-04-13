@@ -49,7 +49,7 @@
               Clear
             </button>
             <button (click)="SaveClicked()" mat-raised-button style="margin-left: 10px;background-color: #efb577;">
-              <span style="color: white;"> {{SelectedProject.ProjectID?'Update':'Create'}}</span>
+              <span style="color: white;"> {{SelectedProject.ProjectID?'Update':'Save'}}</span>
             </button>
           </div>
         </mat-card>
@@ -86,7 +86,7 @@
               </div>
               <div fxLayout>
                 <div fxFlex fxLayoutAlign="end">
-                  <button class="float" mat-fab style="background-color: #f6b570" (click)="ResetControl()">
+                  <button class="float" mat-fab *ngIf="SelectedProject.ProjectID" style="background-color: #f6b570" (click)="ResetControl()">
                     <mat-icon style="color: white;">add</mat-icon>
                   </button>
                 </div>

@@ -124,3 +124,26 @@ export class AttachmentDetails {
     blob: Blob;
 }
 
+export class AcceptTaskView extends CommonClass {
+    TaskID: number;
+    TaskSubGroupID: number;
+    Title: string;
+    Type: string;
+    EstimatedEffort: number;
+    CompletionBefore: Date;
+    AssignedTo: Guid[];
+    AcceptedEffort: number;
+    AcceptedCompletionDate?: Date;
+    Remarks: string;
+}
+
+export class SelectSprint extends CommonClass {
+    TaskGroupID: number;
+    TaskSubGroupID: number;
+    ProjectID: number;
+    TaskGroupTitle: string;
+    TaskSubGroupTitle: string;
+    Sprint: string;
+    OwnerNames: string;
+}
+
