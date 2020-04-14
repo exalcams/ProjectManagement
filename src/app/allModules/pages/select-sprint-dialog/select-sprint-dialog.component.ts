@@ -91,13 +91,30 @@ export class SelectSprintDialogComponent implements OnInit {
   YesClicked(): void {
     if (this.selectSprintForm.valid) {
       this.selectSprint = new SelectSprint();
+      let projectTitle;
+      let taskGroupTitle;
+      let taskSubGroupTitle;
       this.selectSprint.ProjectID = this.selectSprintForm.get('ProjectID').value;
+      const project = this.AllProjects.find(x => x.ProjectID === this.selectSprint.ProjectID);
+      if (project) {
+        projectTitle = project.Title;
+      }     
       this.selectSprint.TaskGroupID = this.selectSprintForm.get('TaskGroupID').value;
+      const taskGroup = this.AllTaskGroups.find(x => x.TaskGroupID === this.selectSprint.TaskGroupID);
+      if (taskGroup) {
+        taskGroupTitle = taskGroup.Title;
+      }
       this.selectSprint.TaskSubGroupID = this.selectSprintForm.get('TaskSubGroupID').value;
-      if (this.selectSprint.TaskSubGroupID) {
-        this.notificationSnackBarComponent.openSnackBar('task sub group cannot be empty', SnackBarStatus.danger);
+      const taskSubGroup = this.AllTaskSubGroups.find(x => x.TaskSubGroupID === this.selectSprint.TaskSubGroupID);
+      if (taskSubGroup) {
+        taskSubGroupTitle = taskSubGroup.Title;
+      }
+      let sprint;
+      sprint = projectTitle + ' - ' + taskGroupTitle + ' - ' + taskSubGroupTitle;
+      if (!this.selectSprint.TaskSubGroupID) {
+        this.notificationSnackBarComponent.openSnackBar('sprint cannot be empty', SnackBarStatus.danger);
       } else {
-        this.matDialogRef.close(this.selectSprint);
+        this.matDialogRef.close(this.selectSprint.TaskSubGroupID);
       }
     } else {
       Object.keys(this.selectSprintForm.controls).forEach(key => {
@@ -111,6 +128,7 @@ export class SelectSprintDialogComponent implements OnInit {
   CloseClicked(): void {
     // console.log('Called');
     this.matDialogRef.close(null);
+    
   }
 
   OnProjectChanged(): void {
@@ -119,18 +137,18 @@ export class SelectSprintDialogComponent implements OnInit {
     if (selectedProjectID) {
       // this.roleMainFormGroup.get('appIDList').patchValue([this.AppIDListAllID]);
       // this.notificationSnackBarComponent.openSnackBar('All have all the menu items, please uncheck All if you want to select specific menu', SnackBarStatus.info, 4000);
-       this.GetAllTaskGroupsBasedProjectID(selectedProjectID);
+      this.GetAllTaskGroupsBasedProjectID(selectedProjectID);
     }
     // console.log(this.roleMainFormGroup.get('appIDList').value);
   }
 
   OnTaskGroupChanged(): void {
     // console.log('changed');
-    const selectedTaskGroupID = this.selectSprintForm.get('ProjectID').value as number;
+    const selectedTaskGroupID = this.selectSprintForm.get('TaskGroupID').value as number;
     if (selectedTaskGroupID) {
       // this.roleMainFormGroup.get('appIDList').patchValue([this.AppIDListAllID]);
       // this.notificationSnackBarComponent.openSnackBar('All have all the menu items, please uncheck All if you want to select specific menu', SnackBarStatus.info, 4000);
-       this.GetAllTaskSubGroupsBasedTaskGroup(selectedTaskGroupID);
+      this.GetAllTaskSubGroupsBasedTaskGroup(selectedTaskGroupID);
     }
     // console.log(this.roleMainFormGroup.get('appIDList').value);
   }
