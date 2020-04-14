@@ -207,7 +207,6 @@ export class TaskComponent implements OnInit {
     });
   }
 
-
   ResetControl(): void {
     this.SelectedTask = new Task();
     this.SelectedTaskView = new TaskView();
@@ -746,6 +745,7 @@ export class TaskComponent implements OnInit {
   }
 
   GetTaskValues(): void {
+    // if (this.taskFormGroup.valid) {
     this.SelectedTask.Title = this.SelectedTaskView.Title = this.taskFormGroup.get('Title').value;
     this.SelectedTask.Type = this.SelectedTaskView.Type = this.taskFormGroup.get('Type').value;
     this.SelectedTask.EstimatedEffort = this.SelectedTaskView.EstimatedEffort = this.taskFormGroup.get('EstimatedEffort').value;
@@ -754,6 +754,10 @@ export class TaskComponent implements OnInit {
     this.SelectedTask.TaskSubGroupID = this.SelectedTaskView.TaskSubGroupID = this.taskFormGroup.get('TaskSubGroupID').value;
     this.SelectedTask.AcceptedEffort = this.SelectedTaskView.AcceptedEffort = this.taskFormGroup.get('AcceptedEffort').value;
     this.SelectedTask.AcceptedCompletionDate = this.SelectedTaskView.AcceptedCompletionDate = this.taskFormGroup.get('AcceptedCompletionDate').value;
+    // }
+    // else {
+    //   this.ShowValidationErrors(this.taskFormGroup);
+    // }
   }
 
   GetTaskSubItemValues(): void {
@@ -899,23 +903,23 @@ export class TaskComponent implements OnInit {
   }
 
   SaveClicked(): void {
-    if (this.taskFormGroup.valid) {
-      // const file: File = this.fileToUpload;
-      this.GetTaskValues();
-      this.GetTaskSubItemValues();
-      if (this.SelectedTask.Type.toLocaleLowerCase() === 'ui') {
-        if (this.SelectedTaskView.Inputs && this.SelectedTaskView.Inputs.length &&
-          this.SelectedTaskView.Inputs.length > 0) {
-          this.SetActionToOpenConfirmation();
-        } else {
-          this.notificationSnackBarComponent.openSnackBar('Please add atleast one record for input table', SnackBarStatus.danger);
-        }
-      } else {
+    // if (this.taskFormGroup.valid) {
+    // const file: File = this.fileToUpload;
+    this.GetTaskValues();
+    this.GetTaskSubItemValues();
+    if (this.SelectedTask.Type.toLocaleLowerCase() === 'ui') {
+      if (this.SelectedTaskView.Inputs && this.SelectedTaskView.Inputs.length &&
+        this.SelectedTaskView.Inputs.length > 0) {
         this.SetActionToOpenConfirmation();
+      } else {
+        this.notificationSnackBarComponent.openSnackBar('Please add atleast one record for input table', SnackBarStatus.danger);
       }
     } else {
-      this.ShowValidationErrors(this.taskFormGroup);
+      this.SetActionToOpenConfirmation();
     }
+    // } else {
+    //   this.ShowValidationErrors(this.taskFormGroup);
+    // }
   }
 
   SetActionToOpenConfirmation(): void {
@@ -1093,7 +1097,12 @@ export class TaskComponent implements OnInit {
     const dialogRef = this.dialog.open(SelectSprintDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-
+        console.log(result);
+        // this.taskFormGroup.get('TaskSubGroupID').patchValue(result);
+        this.taskFormGroup.patchValue({
+          TaskSubGroupID: result,
+        });
+        console.log(this.taskFormGroup.get('TaskSubGroupID').value);
       }
     });
   }

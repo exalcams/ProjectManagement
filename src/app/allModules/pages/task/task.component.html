@@ -48,7 +48,7 @@
       <div fxFlex="77" class="side-bar">
         <mat-card class="cardHeader p-8" style="background-color: #fffdf9;">
           <div fxFlex *ngIf="((CurrentUserRole | lowercase)==='developer' || SelectedTask?.AssignedTo?.includes(CurrentUserID))
-           && SelectedTask?.AcceptedCompletionDate?.hasValue">
+           && !SelectedTask?.AcceptedCompletionDate">
             <form autocomplete="off" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" name="form" novalidate
               [formGroup]="acceptTaskFormGroup">
               <div fxLayout="row" fxLayoutAlign="start">
@@ -95,14 +95,17 @@
           </div>
           <div fxLayout fxFlex class="h2" fxLayoutAlign="end">
             <button (click)="AcceptTaskClicked()" class="SaveBtn mr-12" mat-raised-button *ngIf="((CurrentUserRole | lowercase)==='developer' || SelectedTask?.AssignedTo?.includes(CurrentUserID))
-           && SelectedTask?.AcceptedCompletionDate?.hasValue">
+           && !SelectedTask?.AcceptedCompletionDate">
               Accept</button>
             <button (click)="CompleteTaskClicked()" class="SaveBtn mr-12" mat-raised-button *ngIf="((CurrentUserRole | lowercase)==='developer' || SelectedTask?.AssignedTo?.includes(CurrentUserID))
-             && !SelectedTask?.AcceptedCompletionDate?.hasValue">
+             && SelectedTask?.AcceptedCompletionDate">
               Complete</button>
+              <button (click)="CompleteTaskClicked()" class="DeleteBtn mr-12" mat-raised-button *ngIf="((CurrentUserRole | lowercase)==='team lead' || (SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true))
+              && SelectedTask?.AcceptedCompletionDate">
+               Reject</button>
             <button (click)="DeleteClicked()" class="DeleteBtn mr-12" *ngIf="SelectedTask.TaskID" mat-stroked-button>
               Delete</button>
-            <button mat-raised-button class="mr-12" (click)="ResetControl()" *ngIf="!SelectedTask.TaskID">
+            <button mat-raised-button class="ClearBtn mr-12" (click)="ResetControl()" *ngIf="!SelectedTask.TaskID">
               Clear
             </button>
             <button (click)="SaveClicked()" class="SaveBtn" mat-raised-button>
@@ -226,6 +229,21 @@
                 </div>
               </div>
             </form>
+            <div fxFlex fxLayout="column">
+              <div fxLayout>
+                <div fxFlex fxLayoutAlign="end">
+                  <mat-sidenav-container class="example-container">
+                    <mat-sidenav #sidenav mode="side" [(opened)]="opened" (opened)="events.push('open!')"
+                                 (closed)="events.push('close!')">
+                      Sidenav content
+                    </mat-sidenav> 
+                    <mat-sidenav-content>
+                      <button mat-button (click)="sidenav.toggle()">TimeLine</button>
+                    </mat-sidenav-content>
+                  </mat-sidenav-container>
+                </div>
+              </div>
+            </div>
             <div fxFlex fxLayout="column" class="mt-24" *ngIf="(SelectedTask?.Type| lowercase)==='ui'">
               <div style="margin-left: 7px">
                 <span><strong>Input Table</strong></span>
@@ -311,7 +329,6 @@
                 <!-- </div> -->
               </div>
             </div>
-
             <div fxFlex fxLayout="column" *ngIf="(SelectedTask?.Type| lowercase)==='ui'">
               <div style="margin-left: 7px">
                 <!-- *ngIf="(CurrentUserRole | lowercase)==='developer' || 
