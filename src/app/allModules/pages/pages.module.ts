@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { FuseSidebarModule } from '@fuse/components';
+import { FuseSidebarModule, FuseThemeOptionsModule } from '@fuse/components';
 
 import {
     MatFormFieldModule,
@@ -58,6 +58,8 @@ import { ProjectComponent } from './project/project.component';
 import { TaskComponent } from './task/task.component';
 import { AttachmentDialogComponent } from './attachment-dialog/attachment-dialog.component';
 import { SelectSprintDialogComponent } from './select-sprint-dialog/select-sprint-dialog.component';
+import { TaskTimelineModule } from './task-timeline/task-timeline.module';
+
 // import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 const routes = [
@@ -129,6 +131,8 @@ const routes = [
 
         FuseSharedModule,
         FuseSidebarModule,
+        FuseThemeOptionsModule,
+        TaskTimelineModule,
 
         FuseCountdownModule,
         FuseHighlightModule,

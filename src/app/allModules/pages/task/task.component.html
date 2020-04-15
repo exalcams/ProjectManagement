@@ -1,4 +1,4 @@
-<div id="chat" class="page-layout carded fullwidth">
+<div id="task" class="page-layout carded fullwidth">
   <div class="center normal" style="margin-top: -27px !important;padding:32px 0px 1px !important;">
     <div fxLayout class="content-card1">
       <div fxFlex="23" class="side-bar">
@@ -100,9 +100,9 @@
             <button (click)="CompleteTaskClicked()" class="SaveBtn mr-12" mat-raised-button *ngIf="((CurrentUserRole | lowercase)==='developer' || SelectedTask?.AssignedTo?.includes(CurrentUserID))
              && SelectedTask?.AcceptedCompletionDate">
               Complete</button>
-              <button (click)="CompleteTaskClicked()" class="DeleteBtn mr-12" mat-raised-button *ngIf="((CurrentUserRole | lowercase)==='team lead' || (SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true))
+            <!-- <button (click)="RejectTaskClicked()" class="DeleteBtn mr-12" mat-stroked-button *ngIf="((CurrentUserRole | lowercase)==='team lead' || (SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true))
               && SelectedTask?.AcceptedCompletionDate">
-               Reject</button>
+               Reject</button> -->
             <button (click)="DeleteClicked()" class="DeleteBtn mr-12" *ngIf="SelectedTask.TaskID" mat-stroked-button>
               Delete</button>
             <button mat-raised-button class="ClearBtn mr-12" (click)="ResetControl()" *ngIf="!SelectedTask.TaskID">
@@ -229,18 +229,21 @@
                 </div>
               </div>
             </form>
+            <!-- Sidenav -->
             <div fxFlex fxLayout="column">
               <div fxLayout>
                 <div fxFlex fxLayoutAlign="end">
-                  <mat-sidenav-container class="example-container">
+                  <!-- <mat-sidenav-container class="sidenav-container">
                     <mat-sidenav #sidenav mode="side" [(opened)]="opened" (opened)="events.push('open!')"
-                                 (closed)="events.push('close!')">
+                      (closed)="events.push('close!')">
                       Sidenav content
-                    </mat-sidenav> 
+                    </mat-sidenav>
                     <mat-sidenav-content>
-                      <button mat-button (click)="sidenav.toggle()">TimeLine</button>
+                      <button mat-button>
+                        <mat-icon aria-hidden="false" (click)="sidenav.toggle()">keyboard_arrow_left</mat-icon>
+                      </button>
                     </mat-sidenav-content>
-                  </mat-sidenav-container>
+                  </mat-sidenav-container> -->
                 </div>
               </div>
             </div>
@@ -640,6 +643,16 @@
         </div>
       </div>
     </div>
+    <!-- THEME OPTIONS PANEL -->
+    <button mat-icon-button class="taskTimelineBtn mat-elevation-z2 theme-options-button" [ngClass]="{'right-side-panel': fuseConfig.layout.sidepanel.position === 'right',
+                      'side-panel-hidden': fuseConfig.layout.sidepanel.hidden === true}"
+      (click)="toggleSidebarOpen('taskTimeline')">
+      <mat-icon>keyboard_arrow_left</mat-icon>
+    </button>
+    <fuse-sidebar name="taskTimeline" class="theme-options-sidebar" position="right" [invisibleOverlay]="true">
+      <task-timeline [AllTaskLogs]='AllTaskLogs'></task-timeline>
+    </fuse-sidebar>
+    <!-- / THEME OPTIONS PANEL -->
     <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
     </mat-progress-spinner>
     <div id="overlay" *ngIf="IsProgressBarVisibile"></div>

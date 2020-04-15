@@ -23,6 +23,29 @@ export class Task extends CommonClass {
     OwnerNames: string;
 }
 
+export class TaskLog extends CommonClass {
+    // Log fields
+    LogID: number;
+    LogTypeID: number;
+    LogType: string;
+    LogText: string;
+    Status: string;
+    Remarks: string;
+
+    TaskID: number;
+    TaskSubGroupID: number;
+    Title: string;
+    Type: string;
+    EstimatedEffort: number;
+    CompletionBefore: Date;
+    AssignedTo: Guid[];
+    AcceptedEffort: number;
+    AcceptedCompletionDate?: Date;
+    TaskGroupTitle: string;
+    TaskSubGroupTitle: string;
+    OwnerNames: string;
+}
+
 export class Input extends CommonClass {
     InputID: number;
     TaskID: number;

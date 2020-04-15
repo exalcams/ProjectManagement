@@ -1,6 +1,55 @@
 @import "src/@fuse/scss/fuse";
 
-#chat {
+#task {
+  .theme-options-button {
+    position: absolute;
+    top: 183px;
+    right: 0;
+    width: 48px;
+    height: 48px;
+    line-height: 48px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 0;
+    margin: 0;
+    pointer-events: auto;
+    opacity: 0.9;
+    z-index: 998;
+
+    &.right-side-panel {
+      @include media-breakpoint-up("lg") {
+        right: 12px;
+      }
+    }
+
+    &.side-panel-hidden {
+      right: 0 !important;
+    }
+
+    // mat-icon {
+    //   animation: rotating 3s linear infinite;
+    // }
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+  .taskTimelineBtn {
+    background-color: #f6b570;
+    color: white;
+  }
+  .theme-options-sidebar {
+    width: 360px;
+    min-width: 360px;
+    max-width: 360px;
+  }
+  .sidenav-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
   .progressBarPostion {
     position: absolute !important;
     bottom: 50%;
@@ -52,7 +101,6 @@
       //   }
     }
   }
-
   .borderRight1 {
     border-left: 1px solid black;
     border-radius: 1px;
@@ -194,13 +242,11 @@
   @mixin TableBorderRight($color) {
     border-right: 1px solid $color;
   }
-
   .TablePadFont {
     padding: 5px;
     font-size: 12px;
     // min-width: 100px !important;
   }
-
   table {
     width: 100%;
 
@@ -282,7 +328,7 @@
     margin-top: 14px;
     height: 40px;
   }
-  .ClearBtn{
+  .ClearBtn {
     margin-top: 14px;
     height: 40px;
   }

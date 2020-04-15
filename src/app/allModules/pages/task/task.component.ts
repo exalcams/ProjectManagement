@@ -7,13 +7,18 @@ import { NotificationSnackBarComponent } from 'app/notifications/notification-sn
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MasterService } from 'app/services/master.service';
 import { Router } from '@angular/router';
-import { Task, TaskView, Input, Output, Logic, Validation, TaskSubGroupView, SketchView, AttachmentDetails, AcceptTaskView } from 'app/models/task';
+import { Task, TaskView, Input, Output, Logic, Validation, TaskSubGroupView, SketchView, AttachmentDetails, AcceptTaskView, TaskLog } from 'app/models/task';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { ProjectService } from 'app/services/project.service';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { Guid } from 'guid-typescript';
 import { AttachmentDialogComponent } from '../attachment-dialog/attachment-dialog.component';
 import { SelectSprintDialogComponent } from '../select-sprint-dialog/select-sprint-dialog.component';
+import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
+import { FuseConfigService } from '@fuse/services/config.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { ShareParameterService } from 'app/services/share-parameters.service';
 
 @Component({
   selector: 'app-task',
@@ -23,6 +28,9 @@ import { SelectSprintDialogComponent } from '../select-sprint-dialog/select-spri
   animations: fuseAnimations
 })
 export class TaskComponent implements OnInit {
+  fuseConfig: any;
+  // Private
+  private _unsubscribeAll: Subject<any>;
   MenuItems: string[];
   AllMenuApps: MenuApp[] = [];
   SelectedMenuApp: MenuApp;
@@ -41,6 +49,7 @@ export class TaskComponent implements OnInit {
   searchText = '';
   AllTaskSubGroupView: TaskSubGroupView[] = [];
   AllTasks: Task[] = [];
+  AllTaskLogs: TaskLog[] = [];
   selectID: number;
   SelectedTask: Task;
   SelectedTaskView: TaskView;
@@ -99,13 +108,18 @@ export class TaskComponent implements OnInit {
     private _router: Router,
     public snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private _formBuilder: FormBuilder
+    private _formBuilder: FormBuilder,
+    private _fuseSidebarService: FuseSidebarService,
+    private _fuseConfigService: FuseConfigService,
+    private _shareParameterService: ShareParameterService
   ) {
     this.SelectedTask = new Task();
     this.SelectedTaskView = new TaskView();
     this.authenticationDetails = new AuthenticationDetails();
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.IsProgressBarVisibile = true;
+    // Set the private defaults
+    this._unsubscribeAll = new Subject();
   }
 
   ngOnInit(): void {
@@ -140,6 +154,20 @@ export class TaskComponent implements OnInit {
     this.sketchdataSource = new MatTableDataSource(
       allSketchDetails
     );
+
+    // Subscribe to config changes
+    this._fuseConfigService.config
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((config) => {
+        this.fuseConfig = config;
+      });
+  }
+
+  // tslint:disable-next-line:use-life-cycle-interface
+  ngOnDestroy(): void {
+    // Unsubscribe from all subscriptions
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
   }
 
   InitializeTaskFormGroup(): void {
@@ -387,6 +415,7 @@ export class TaskComponent implements OnInit {
   }
 
   loadSelectedTask(selectedTask: Task): void {
+    this.GetAllTaskLogsByTaskID(selectedTask.TaskID);
     this.ResetControl();
     this.SelectedTask = selectedTask;
     this.selectID = selectedTask.TaskID;
@@ -739,6 +768,9 @@ export class TaskComponent implements OnInit {
           }
           else if (Actiontype === 'Complete') {
             this.CompleteTask();
+          }
+          else if (Actiontype === 'Reject') {
+            this.RejectTask();
           }
         }
       });
@@ -1107,4 +1139,63 @@ export class TaskComponent implements OnInit {
     });
   }
 
+  RejectTaskClicked(): void {
+    if (this.SelectedTask.TaskID) {
+      const Actiontype = 'Reject';
+      const Catagory = 'Task';
+      this.OpenConfirmationDialog(Actiontype, Catagory);
+    }
+  }
+
+  RejectTask(): void {
+    this.GetTaskValues();
+    this.SelectedTask.ModifiedBy = this.authenticationDetails.userID.toString();
+    this.IsProgressBarVisibile = true;
+    this._projectService.RejectTask(this.SelectedTask).subscribe(
+      (data) => {
+        // console.log(data);
+        this.ResetControl();
+        this.notificationSnackBarComponent.openSnackBar('Task rejected successfully', SnackBarStatus.success);
+        this.IsProgressBarVisibile = false;
+        this.GetAllTask();
+      },
+      (err) => {
+        console.error(err);
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+        this.IsProgressBarVisibile = false;
+      }
+    );
+  }
+
+  /**
+ * Toggle sidebar open
+ *
+ * @param key
+ */
+  toggleSidebarOpen(key): void {
+    // this._shareParameterService.SetCurrentTask(this.SelectedTask);
+    this._fuseSidebarService.getSidebar(key).toggleOpen();
+  }
+
+  loadSelectedTaskTimline(): void {
+
+  }
+
+  GetAllTaskLogsByTaskID(TaskID: number): void {
+    this._projectService.GetAllTaskLogsByTaskID(TaskID).subscribe(
+      (data) => {
+        this.AllTaskLogs = <TaskLog[]>data;
+        this._shareParameterService.SetTaskLogs(this.AllTaskLogs);
+        //   if (this.AllTaskLogs && this.AllTaskLogs.length) {
+        //     this.loadSelectedTask(this.AllTaskLogs[0]);
+        //   }
+        console.log(this.AllTaskLogs);
+      },
+      (err) => {
+        console.error(err);
+        // this.IsProgressBarVisibile = false;
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+      }
+    );
+  }
 }
