@@ -5,7 +5,7 @@ import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import { Project } from 'app/models/project';
-import { Task, TaskView, Logic, Validation, TaskSubGroupView, SketchView, AcceptTaskView } from 'app/models/task';
+import { Task, TaskView, Logic, Validation, TaskSubGroupView, SketchView, AcceptTaskView, TaskLog } from 'app/models/task';
 import { Guid } from 'guid-typescript';
 
 @Injectable({
@@ -262,6 +262,22 @@ export class ProjectService {
           'Content-Type': 'application/json'
         })
       })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  RejectTask(task: Task): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Project/RejectTask`,
+      task,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+  
+  GetAllTaskLogsByTaskID(TaskID: number): Observable<TaskLog[] | string> {
+    return this._httpClient.get<TaskLog[]>(`${this.baseAddress}api/Project/GetAllTaskLogsByTaskID?TaskID=${TaskID}`)
       .pipe(catchError(this.errorHandler));
   }
 

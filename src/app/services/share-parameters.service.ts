@@ -1,15 +1,32 @@
 import { Injectable } from '@angular/core';
+import { Subject, Observable, BehaviorSubject } from 'rxjs';
+import { Task, TaskLog } from 'app/models/task';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShareParameterService {
-  public CurrentInvoiceDetail: any;
-  constructor() { }
-  SetInvoiceDetail(InvoiceDetail: any): void {
-    this.CurrentInvoiceDetail = InvoiceDetail;
+  public CurrentTask: Task;
+  public CurrentTaskLogs: TaskLog[] = [];
+
+  GetCurrentTask(): Task {
+    return this.CurrentTask;
   }
-  GetInvoiceDetail(): any {
-    return this.CurrentInvoiceDetail;
+
+  SetCurrentTask(CurrentTask: Task): void {
+    this.CurrentTask = CurrentTask;
   }
+
+  SetTaskLogs(taskLogs: TaskLog[]): void {
+    console.log(taskLogs);
+    this.CurrentTaskLogs = taskLogs;
+  }
+
+  GetTaskLogs(): TaskLog[] {
+    console.log(this.CurrentTaskLogs);
+    return this.CurrentTaskLogs;
+  }
+
+
 }
