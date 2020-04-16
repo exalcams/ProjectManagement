@@ -98,7 +98,7 @@
            && !SelectedTask?.AcceptedCompletionDate">
               Accept</button>
             <button (click)="CompleteTaskClicked()" class="SaveBtn mr-12" mat-raised-button *ngIf="((CurrentUserRole | lowercase)==='developer' || SelectedTask?.AssignedTo?.includes(CurrentUserID))
-             && SelectedTask?.AcceptedCompletionDate">
+             && SelectedTask?.AcceptedCompletionDate && !SelectedTask?.CompletionDate">
               Complete</button>
             <!-- <button (click)="RejectTaskClicked()" class="DeleteBtn mr-12" mat-stroked-button *ngIf="((CurrentUserRole | lowercase)==='team lead' || (SelectedTask.TaskID?SelectedTask?.CreatedBy === CurrentUserID:true))
               && SelectedTask?.AcceptedCompletionDate">
@@ -643,7 +643,7 @@
         </div>
       </div>
     </div>
-    <!-- THEME OPTIONS PANEL -->
+    <!-- TASK TIMELINE PANEL -->
     <button mat-icon-button class="taskTimelineBtn mat-elevation-z2 theme-options-button" [ngClass]="{'right-side-panel': fuseConfig.layout.sidepanel.position === 'right',
                       'side-panel-hidden': fuseConfig.layout.sidepanel.hidden === true}"
       (click)="toggleSidebarOpen('taskTimeline')">
@@ -652,7 +652,7 @@
     <fuse-sidebar name="taskTimeline" class="theme-options-sidebar" position="right" [invisibleOverlay]="true">
       <task-timeline [AllTaskLogs]='AllTaskLogs'></task-timeline>
     </fuse-sidebar>
-    <!-- / THEME OPTIONS PANEL -->
+    <!-- / TASK TIMELINE PANEL -->
     <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
     </mat-progress-spinner>
     <div id="overlay" *ngIf="IsProgressBarVisibile"></div>

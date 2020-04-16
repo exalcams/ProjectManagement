@@ -72,7 +72,6 @@ task-timeline {
             }
         }
     }
-
     .roundCommon {
         height: 20px;
         width: 20px;
@@ -90,4 +89,66 @@ task-timeline {
         background-color: #2ecc71;
         border: 2px solid #2ecc71;
     }
+    .vertical-line {
+        width: 3px;
+        min-height: 50px;
+        border: 2px solid gray;
+        background: gray;
+        // margin: 5px auto 0px auto;
+        margin: 21px -2px -8px -12px !important;
+    }
+
+    // .fuse-sidebar {
+    //     display: flex;
+    //     flex-direction: column;
+    //     flex: 1 0 auto;
+    //     position: absolute;
+    //     top: 183;
+    //     bottom: 0;
+    //     overflow-x: hidden;
+    //     overflow-y: auto;
+    //     -webkit-overflow-scrolling: touch;
+    //     width: 280px;
+    //     min-width: 280px;
+    //     max-width: 280px;
+    //     z-index: 1000;
+    //     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.35);
+
+    //     @include media-breakpoint-down("xs") {
+    //         min-width: 0 !important;
+    //         max-width: 80vw !important;
+    //         width: 80vw !important;
+    //     }
+
+    //     &.left-positioned {
+    //         left: 0;
+    //         transform: translateX(-100%);
+    //     }
+
+    //     &.right-positioned {
+    //         right: 0;
+    //         transform: translateX(100%);
+    //     }
+
+    //     &.open {
+    //         transform: translateX(0);
+    //     }
+
+    //     &.locked-open {
+    //         position: relative !important;
+    //         transform: translateX(0) !important;
+    //     }
+
+    //     &.folded {
+    //         position: absolute !important;
+    //         top: 0;
+    //         bottom: 0;
+    //     }
+
+    //     &.animations-enabled {
+    //         transition-property: transform, width, min-width, max-width;
+    //         transition-duration: 150ms;
+    //         transition-timing-function: ease-in-out;
+    //     }
+    // }
 }

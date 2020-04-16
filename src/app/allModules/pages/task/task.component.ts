@@ -418,6 +418,7 @@ export class TaskComponent implements OnInit {
     this.GetAllTaskLogsByTaskID(selectedTask.TaskID);
     this.ResetControl();
     this.SelectedTask = selectedTask;
+    console.log(this.SelectedTask);
     this.selectID = selectedTask.TaskID;
     this.EnableAllTaskFields();
     this.SetTaskValues();
