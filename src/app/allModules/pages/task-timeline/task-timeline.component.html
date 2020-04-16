@@ -1,27 +1,32 @@
 <div class="theme-options-panel" fusePerfectScrollbar>
 
     <div class="header">
-
-        <span class="title">Task Timeline For Task ID {{AllTaskLogs[0]?.LogTypeID}}</span>
-
+        <!-- Task ID {{AllTaskLogs[0]?.LogTypeID}} -->
+        <span class="title">Task Timeline</span>
         <button mat-icon-button class="close-button" (click)="toggleSidebarOpen('taskTimeline')">
             <mat-icon>close</mat-icon>
         </button>
-
     </div>
 
     <div fxLayout fxLayoutAlign="center" class="m-4" *ngFor="let taskLog of AllTaskLogs;let i=index;let last = last">
         <div fxFlex="8" fxLayoutAlign="start start" style="margin-left: 35px">
             <div class="ml-4">
                 <div class="round" [style.background-color]="last?'#2ecc71':'white'"></div>
-                <div fxFlex class="vertical-line"></div>
+                <div fxFlex class="vertical-line" *ngIf="!last"></div>
             </div>
         </div>
         <div fxFlex fxLayout class="mb-8">
             <div fxFlex fxLayoutAlign="center"></div>
             <div fxFlex="95" fxLayout fxLayoutAlign="center">
                 <div fxFlex="70">
-                    <span>{{taskLog.Status}}</span>-<span>{{taskLog.CreatedOn | date:'dd/MM/yyyy'}}</span>
+                    <div fxFlex fxLayout="column">
+                        <div fxLayout>
+                            <span>{{taskLog.Status}}</span>-<span>{{taskLog.CreatedOn | date:'dd/MM/yyyy'}}</span>
+                        </div>
+                        <div fxFlex>
+                            <span>{{taskLog.Remarks}}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

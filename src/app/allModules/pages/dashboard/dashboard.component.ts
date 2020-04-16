@@ -87,7 +87,8 @@ export class DashboardComponent implements OnInit {
             this.GetAllOpenTasksCount();
             this.GetAllEscalatedTasksCountToday();
             this.GetAllReworkTasksCountToday();
-            this.GetAllTasks();
+            // this.GetAllTasks();
+            this.LoadSelectedTask('new');
         } else {
             this._router.navigate(['/auth/login']);
         }

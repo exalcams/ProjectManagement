@@ -21,6 +21,9 @@ export class Task extends CommonClass {
     TaskGroupTitle: string;
     TaskSubGroupTitle: string;
     OwnerNames: string;
+    CompletionDate?: Date;
+    Status: string;
+    Remarks: string;
 }
 
 export class TaskLog extends CommonClass {
