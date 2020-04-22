@@ -20,6 +20,7 @@ import { MasterService } from 'app/services/master.service';
   animations: fuseAnimations
 })
 export class ProjectComponent implements OnInit {
+  EnableAddProjectButton: boolean;
   MenuItems: string[];
   AllProjects: Project[] = [];
   AllProjectsCount: number;
@@ -48,6 +49,7 @@ export class ProjectComponent implements OnInit {
     this.IsProgressBarVisibile = true;
     this.AppIDListAllID = Guid.createEmpty();
     this.AllProjectsCount = 0;
+    this.EnableAddProjectButton = true;
   }
 
   ngOnInit(): void {
@@ -67,7 +69,7 @@ export class ProjectComponent implements OnInit {
       });
       this.GetAllOwners();
       this.GetAllProjects();
-     // this.IntializeDropDownSettings();
+      // this.IntializeDropDownSettings();
     } else {
       this._router.navigate(['/auth/login']);
     }
@@ -89,6 +91,7 @@ export class ProjectComponent implements OnInit {
   // }
 
   ResetControl(): void {
+    this.EnableAddProjectButton = false;
     this.SelectedProject = new Project();
     // this.selectID = Guid.createEmpty();
     this.selectID = 0;
@@ -140,6 +143,7 @@ export class ProjectComponent implements OnInit {
   }
 
   loadSelectedProject(selectedProject: Project): void {
+    this.EnableAddProjectButton = true;
     this.selectID = selectedProject.ProjectID;
     this.SelectedProject = selectedProject;
     this.SetProjectValues();

@@ -31,6 +31,7 @@ export class TaskComponent implements OnInit {
   fuseConfig: any;
   // Private
   private _unsubscribeAll: Subject<any>;
+  EnableAddTaskButton: boolean;
   MenuItems: string[];
   AllMenuApps: MenuApp[] = [];
   SelectedMenuApp: MenuApp;
@@ -118,6 +119,7 @@ export class TaskComponent implements OnInit {
     this.authenticationDetails = new AuthenticationDetails();
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.IsProgressBarVisibile = true;
+    this.EnableAddTaskButton = true;
     // Set the private defaults
     this._unsubscribeAll = new Subject();
   }
@@ -236,6 +238,7 @@ export class TaskComponent implements OnInit {
   }
 
   ResetControl(): void {
+    // this.EnableAddTaskButton = false;
     this.SelectedTask = new Task();
     this.SelectedTaskView = new TaskView();
     this.SelectedAcceptTask = new AcceptTaskView();
@@ -415,6 +418,7 @@ export class TaskComponent implements OnInit {
   }
 
   loadSelectedTask(selectedTask: Task): void {
+    this.EnableAddTaskButton = true;
     this.GetAllTaskLogsByTaskID(selectedTask.TaskID);
     this.ResetControl();
     this.SelectedTask = selectedTask;
@@ -1118,6 +1122,7 @@ export class TaskComponent implements OnInit {
   }
 
   OpenSelectSprintDialog(): void {
+    this.EnableAddTaskButton = false;
     this.ResetControl();
     // const attachmentDetails: AttachmentDetails = {
     //   FileName: FileName,
@@ -1129,13 +1134,14 @@ export class TaskComponent implements OnInit {
     };
     const dialogRef = this.dialog.open(SelectSprintDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(result => {
+      this.EnableAddTaskButton = true;
       if (result) {
-        console.log(result);
+        // console.log(result);
         // this.taskFormGroup.get('TaskSubGroupID').patchValue(result);
         this.taskFormGroup.patchValue({
           TaskSubGroupID: result,
         });
-        console.log(this.taskFormGroup.get('TaskSubGroupID').value);
+        // console.log(this.taskFormGroup.get('TaskSubGroupID').value);      
       }
     });
   }

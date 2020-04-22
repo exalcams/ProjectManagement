@@ -25,6 +25,8 @@ import { BehaviorSubject } from 'rxjs';
   animations: fuseAnimations
 })
 export class TaskGroupComponent implements OnInit {
+  EnableAddTaskGroupButton: boolean;
+  EnableAddTaskSubGroupButton: boolean;
   MenuItems: string[];
   AllTaskGroups: TaskGroup[] = [];
   AllTaskSubGroups: TaskSubGroup[] = [];
@@ -96,6 +98,8 @@ export class TaskGroupComponent implements OnInit {
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.IsProgressBarVisibile = true;
     this.isDeveloper = false;
+    this.EnableAddTaskGroupButton = true;
+    this.EnableAddTaskSubGroupButton = true;
     this.AllTaskSubGroupsCount = 0;
   }
 
@@ -189,6 +193,7 @@ export class TaskGroupComponent implements OnInit {
   }
 
   ResetControl(): void {
+    this.EnableAddTaskGroupButton = false;
     this.SelectedTaskGroup = new TaskGroup();
     this.SelectedTaskSubGroup = new TaskSubGroup();
     this.selectID = 0;
@@ -253,6 +258,7 @@ export class TaskGroupComponent implements OnInit {
   }
 
   LoadSelectedTaskGroup(selectedTaskGroup: TaskGroup): void {
+    this.EnableAddTaskGroupButton = true;
     this.selectID = selectedTaskGroup.TaskGroupID;
     this.SelectedTaskGroup = selectedTaskGroup;
     // if (this.selectID) {
@@ -391,34 +397,20 @@ export class TaskGroupComponent implements OnInit {
   }
 
   AddTaskSubGroupToTable(): void {
+    this.EnableAddTaskSubGroupButton = false;
     if (this.taskSubGroupMainFormGroup.valid) {
+      this.EnableAddTaskSubGroupButton = true;
       const taskSubGroup = this.GetTaskSubGroupValues();
       if (taskSubGroup) {
         this.AddTaskSubGroupByProjectID(taskSubGroup);
       }
-
-      // tslint:disable-next-line:max-line-length
-      // this.AllTaskSubGroups.forEach(x => {
-      //   this.TotalSubGroupActualEffort = this.TotalSubGroupActualEffort + x.ActualEffort;
-      // });
-      // if ((taskSubGroup.ActualEffort && this.SelectedTaskGroup.ActualEffort && taskSubGroup.ActualEffort - this.TotalSubGroupActualEffort >= this.SelectedTaskGroup.ActualEffort)
-      //   || (taskSubGroup.PlannedEffort && this.SelectedTaskGroup.PlannedEffort && taskSubGroup.PlannedEffort >= this.SelectedTaskGroup.PlannedEffort)) {
-      //   this.notificationSnackBarComponent.openSnackBar('Sprinter Actual or Planned effort cannot be more than Task Group ', SnackBarStatus.danger);
-      // }
-      // else {
-      // const input = new Input();
-      // input.Field = this.inputFormGroup.get('Field').value;
-      // input.Validation = this.inputFormGroup.get('Validation').value;
-      // input.Remarks = this.inputFormGroup.get('Remarks').value;
       if (!this.AllTaskSubGroups || !this.AllTaskSubGroups.length) {
         this.AllTaskSubGroups = [];
       }
-      // this.InputsByTask.push(input);
-      // this.InputdataSource = new MatTableDataSource(this.InputsByTask);
       this.LoadTaskSubGroupTable(taskSubGroup);
       this.ClearTaskSubGroupMainFormGroup();
-      // }
     } else {
+      this.EnableAddTaskSubGroupButton = true;
       this.ShowValidationErrors(this.taskSubGroupMainFormGroup);
     }
   }
@@ -446,7 +438,7 @@ export class TaskGroupComponent implements OnInit {
     );
   }
 
-  RemoveTaskSubGroupFromTable(): void {
+  RemoveTaskSubGroupFromTable(index: number): void {
     if (this.SprintFormGroup.enabled) {
       if (this.SprintFormArray.length > 0) {
         // const AttNames = this.SprintFormArray.controls[this.SprintFormArray.length - 1].get('AttachmentNames').value as string[];
@@ -457,7 +449,9 @@ export class TaskGroupComponent implements OnInit {
         //   const indexx = this.fileToUploadList.map(y => y.name).indexOf(x);
         //   this.fileToUploadList.splice(indexx, 1);
         // });
-        this.SprintFormArray.removeAt(this.SprintFormArray.length - 1);
+        // this.SprintFormArray.removeAt(this.SprintFormArray.length - 1);
+        this.SprintFormArray.removeAt(index);
+        // this.SprintFormArray.removeAt(this.SprintFormArray.value.findIndex(sprintForm => sprintForm.Title === row.Title));
         this.SprintDataSource.next(this.SprintFormArray.controls);
       } else {
         this.notificationSnackBarComponent.openSnackBar('no items to delete', SnackBarStatus.warning);
@@ -496,15 +490,8 @@ export class TaskGroupComponent implements OnInit {
   }
 
   LoadTaskSubGroupTable(taskSubGroup: TaskSubGroup): void {
-    // this.AllTaskSubGroups = [];
     this.AllTaskSubGroups.push(taskSubGroup);
     this.InsertSprintsFormGroup(taskSubGroup);
-    // if (this.AllTaskSubGroups.length > 0) {
-    //   this.dataSource = new MatTableDataSource(this.AllTaskSubGroups);
-    //   // console.log(this.AllTaskSubGroups);
-    //   this.dataSource.paginator = this.paginator;
-    //   this.dataSource.sort = this.sort;
-    // }
   }
 
   InsertSprintsFormGroup(sprintItem: TaskSubGroup): void {
@@ -599,6 +586,7 @@ export class TaskGroupComponent implements OnInit {
     SprintFormArray.controls.forEach((x, i) => {
       const taskSubGroup: TaskSubGroup = new TaskSubGroup();
       taskSubGroup.Title = x.get('Title').value;
+      taskSubGroup.TaskGroupID = this.SelectedTaskGroup.TaskGroupID;
       const OwnerNames = x.get('Owner').value;
       const OwnerNameList = OwnerNames.split(',');
       taskSubGroup.OwnerIDList = this.GetOwnerIDByOwnerNames(OwnerNameList);

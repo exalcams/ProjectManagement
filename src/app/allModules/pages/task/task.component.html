@@ -631,7 +631,7 @@
             <div fxFlex fxLayout="column">
               <div fxLayout>
                 <div fxFlex fxLayoutAlign="end">
-                  <button *ngIf="(CurrentUserRole  | lowercase)==='team lead' && SelectedTask.TaskID" class="floatBtn"
+                  <button *ngIf="((CurrentUserRole  | lowercase)==='team lead') && EnableAddTaskButton" class="floatBtn"
                     mat-fab (click)="OpenSelectSprintDialog()">
                     <mat-icon style="color: white;">add</mat-icon>
                   </button>

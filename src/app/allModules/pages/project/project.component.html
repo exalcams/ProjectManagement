@@ -69,7 +69,7 @@
                 <div fxFlex="50">
                   <mat-form-field class="p-8" style="width: 100%;">
                     <mat-select placeholder="Owner" formControlName="OwnerIDList" multiple
-                    (selectionChange)="OnOwnerNameChanged()">
+                      (selectionChange)="OnOwnerNameChanged()">
                       <mat-option *ngFor="let owner of AllOwners" [value]="owner.UserID">
                         {{owner.UserName}}</mat-option>
                     </mat-select>
@@ -86,7 +86,8 @@
               </div>
               <div fxLayout>
                 <div fxFlex fxLayoutAlign="end">
-                  <button class="float" mat-fab *ngIf="SelectedProject.ProjectID" style="background-color: #f6b570" (click)="ResetControl()">
+                  <button class="float" mat-fab *ngIf="EnableAddProjectButton" style="background-color: #f6b570"
+                    (click)="ResetControl()">
                     <mat-icon style="color: white;">add</mat-icon>
                   </button>
                 </div>
