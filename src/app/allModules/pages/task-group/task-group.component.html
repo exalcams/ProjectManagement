@@ -185,8 +185,8 @@
                 </div>
                 <div>
                   <!-- Sub-Group Form  -->
-                  <form [formGroup]="taskSubGroupMainFormGroup" fxLayout="column" fxLayoutAlign="start"
-                    fxFlex="1 0 auto" autocomplete="off" name="form" novalidate>
+                  <form [formGroup]="taskSubGroupMainFormGroup" fxLayout="column" #formDirective="ngForm"
+                    fxLayoutAlign="start" fxFlex="1 0 auto" autocomplete="off" name="form" novalidate>
                     <div fxLayout="row" fxLayoutAlign="start">
                       <div fxFlex="50">
                         <mat-form-field class="pl-8" style="width: 80%;">

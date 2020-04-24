@@ -7,7 +7,7 @@ import { NotificationSnackBarComponent } from 'app/notifications/notification-sn
 import { MatSnackBar, MatDialogConfig, MatDialog } from '@angular/material';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { AuthenticationDetails, UserWithRole } from 'app/models/master';
-import { FormGroup, FormBuilder, Validators, FormArray, AbstractControl, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray, AbstractControl, FormControl, FormGroupDirective } from '@angular/forms';
 import { Guid } from 'guid-typescript';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { TaskGroup, Owner, TaskSubGroup } from 'app/models/task-group';
@@ -70,6 +70,7 @@ export class TaskGroupComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   selection = new SelectionModel<any>(true, []);
+  @ViewChild('formDirective') formInput: FormGroupDirective;
 
   SprintFormGroup: FormGroup;
   SprintFormArray: FormArray = this._formBuilder.array([]);
@@ -399,7 +400,6 @@ export class TaskGroupComponent implements OnInit {
   AddTaskSubGroupToTable(): void {
     this.EnableAddTaskSubGroupButton = false;
     if (this.taskSubGroupMainFormGroup.valid) {
-      this.EnableAddTaskSubGroupButton = true;
       const taskSubGroup = this.GetTaskSubGroupValues();
       if (taskSubGroup) {
         this.AddTaskSubGroupByProjectID(taskSubGroup);
@@ -410,9 +410,10 @@ export class TaskGroupComponent implements OnInit {
       this.LoadTaskSubGroupTable(taskSubGroup);
       this.ClearTaskSubGroupMainFormGroup();
     } else {
-      this.EnableAddTaskSubGroupButton = true;
+      // this.EnableAddTaskSubGroupButton = true;
       this.ShowValidationErrors(this.taskSubGroupMainFormGroup);
     }
+    this.EnableAddTaskSubGroupButton = true;
   }
 
   AddTaskSubGroupByProjectID(taskSubGroup: TaskSubGroup): void {
@@ -531,9 +532,22 @@ export class TaskGroupComponent implements OnInit {
   }
 
   ClearTaskSubGroupMainFormGroup(): void {
+    this.formInput.resetForm();
     this.taskSubGroupMainFormGroup.reset();
+    // this.markFormGroupUnTouched(this.taskSubGroupMainFormGroup);
     Object.keys(this.taskSubGroupMainFormGroup.controls).forEach(key => {
+      this.taskSubGroupMainFormGroup.get(key).markAsPristine();
       this.taskSubGroupMainFormGroup.get(key).markAsUntouched();
+    });
+  }
+
+  private markFormGroupUnTouched(formGroup: FormGroup): void {
+    (<any>Object).values(formGroup.controls).forEach(control => {
+      control.markAsUntouched();
+
+      if (control.controls) {
+        this.markFormGroupUnTouched(control);
+      }
     });
   }
 
