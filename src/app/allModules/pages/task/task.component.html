@@ -2,9 +2,9 @@
   <div class="center normal" style="margin-top: -27px !important;padding:32px 0px 1px !important;">
     <div fxLayout class="content-card1">
       <div fxFlex="23" class="side-bar">
-        <mat-card class="cardHeader p-8" style="height: 52px !important;background-color: #fffdf9;">
+        <mat-card class="cardHeader p-8">
           <div fxLayout fxFlex fxLayoutAlign="center" class="h2">
-            <b>Task ({{AllTasks?.length}})</b>
+            <b style="margin-top: 20px;">Task ({{AllTasks?.length}})</b>
           </div>
         </mat-card>
         <div class="sidenav-header" style="background-color: #f5f5f5;">
@@ -46,10 +46,10 @@
         <div class="borderRight1"></div>
       </div>
       <div fxFlex="77" class="side-bar">
-        <mat-card class="cardHeader p-8" style="background-color: #fffdf9;">
+        <mat-card class="cardHeader p-8">
           <div fxFlex *ngIf="((CurrentUserRole | lowercase)==='developer' || SelectedTask?.AssignedTo?.includes(CurrentUserID))
            && !SelectedTask?.AcceptedCompletionDate">
-            <form autocomplete="off" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" name="form" novalidate
+            <form autocomplete="off" fxLayout="column"  fxLayoutAlign="start" fxFlex="1 0 auto" name="form" novalidate
               [formGroup]="acceptTaskFormGroup">
               <div fxLayout="row" fxLayoutAlign="start">
                 <div fxFlex="30">
@@ -114,8 +114,8 @@
         </mat-card>
         <div class="sidenav-content" fxFlex fxLayout="column">
           <mat-card style="margin-top: 5px;" fxFlex fxLayout="column">
-            <form autocomplete="off" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" name="form" novalidate
-              [formGroup]="taskFormGroup">
+            <form autocomplete="off" fxLayout="column" fxLayoutAlign="start"
+              fxFlex="1 0 auto" name="form" novalidate [formGroup]="taskFormGroup">
               <div fxLayout="row" fxLayoutAlign="start">
                 <div fxFlex="50">
                   <mat-form-field class="pl-8 pr-24" style="width: 100%;">
@@ -435,7 +435,7 @@
                 <!-- </div> -->
               </div>
             </div>
-            <div fxFlex fxLayout="column">
+            <div fxFlex fxLayout="column" >
               <div fxFlex fxLayout="row" fxLayoutAlign="start">
                 <div fxFlex="50" fxLayout="column">
                   <div style="margin-left: 7px">
@@ -628,6 +628,14 @@
                 </div>
               </div>
             </div>
+            <!-- <div fxFlex fxLayout="column" *ngIf="(CurrentUserRole | lowercase)==='developer' && AllTasks?.length === 0">
+              <div fxLayout="row" fxLayoutAlign="start">
+                <div class="no-results-message">
+                  <mat-icon svgIcon="infoIcon" style="color: #1b56ca;margin-top: 10px;margin-left: 70px"></mat-icon>
+                  <span style="margin-left: 10px;">No tasks..</span>
+                </div>
+              </div>
+            </div> -->
             <div fxFlex fxLayout="column">
               <div fxLayout>
                 <div fxFlex fxLayoutAlign="end">
@@ -644,7 +652,8 @@
       </div>
     </div>
     <!-- TASK TIMELINE PANEL -->
-    <button mat-icon-button class="taskTimelineBtn mat-elevation-z2 theme-options-button" [ngClass]="{'right-side-panel': fuseConfig.layout.sidepanel.position === 'right',
+    <button mat-icon-button  class="taskTimelineBtn mat-elevation-z2 theme-options-button"
+      [ngClass]="{'right-side-panel': fuseConfig.layout.sidepanel.position === 'right',
                       'side-panel-hidden': fuseConfig.layout.sidepanel.hidden === true}"
       (click)="toggleSidebarOpen('taskTimeline')">
       <mat-icon>keyboard_arrow_left</mat-icon>

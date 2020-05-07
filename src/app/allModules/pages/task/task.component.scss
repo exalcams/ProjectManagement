@@ -1,6 +1,10 @@
 @import "src/@fuse/scss/fuse";
 
 #task {
+  .cardHeader {
+    height: 82px !important;
+    background-color: #fffdf9 !important;
+  }
   .theme-options-button {
     position: absolute;
     top: 183px;
